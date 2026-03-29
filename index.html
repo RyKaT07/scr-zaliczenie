@@ -1,551 +1,1043 @@
 <!DOCTYPE html>
-<html lang="pl" data-theme="dark">
+<html lang="pl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SCR – Systemy Czasu Rzeczywistego</title>
+<title>Podstawy i Algorytmika SCR – Zaliczenie 30.03</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-:root {
-  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-}
+  :root {
+    --bg: #0e0f11;
+    --bg2: #16181c;
+    --bg3: #1e2026;
+    --border: #2a2d35;
+    --text: #e8eaf0;
+    --muted: #6b7080;
+    --accent: #4f8ef7;
+    --accent2: #7c3aed;
+    --green: #22c55e;
+    --red: #ef4444;
+    --yellow: #f59e0b;
+    --teal: #14b8a6;
+  }
 
-[data-theme="light"] {
-  --bg-primary: #ffffff;
-  --bg-secondary: #f8f9fa;
-  --bg-tertiary: #f0f1f3;
-  --text-primary: #1a1a2e;
-  --text-secondary: #5a5a7a;
-  --border-secondary: #d0d5dd;
-  --border-tertiary: #e4e7ec;
-  --border-info: #528bff;
-  --bg-info: #eef4ff;
-  --text-info: #3366cc;
-  --bg-success: #edfcf2;
-  --text-success: #1a7f37;
-  --bg-danger: #fef3f2;
-  --text-danger: #d1242f;
-  --bg-warning: #fff8e6;
-  --text-warning: #9a6700;
-  --tab-hover: #e8ecf0;
-}
+  * { box-sizing: border-box; margin: 0; padding: 0; }
 
-[data-theme="dark"] {
-  --bg-primary: #0d1117;
-  --bg-secondary: #161b22;
-  --bg-tertiary: #1c2129;
-  --text-primary: #e6edf3;
-  --text-secondary: #8b949e;
-  --border-secondary: #30363d;
-  --border-tertiary: #21262d;
-  --border-info: #58a6ff;
-  --bg-info: #121d2f;
-  --text-info: #58a6ff;
-  --bg-success: #0d2818;
-  --text-success: #3fb950;
-  --bg-danger: #2d1215;
-  --text-danger: #f85149;
-  --bg-warning: #2a1f05;
-  --text-warning: #d29922;
-  --tab-hover: #1c2129;
-}
+  body {
+    font-family: 'IBM Plex Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
 
-* { box-sizing: border-box; margin: 0; padding: 0 }
-body {
-  font-family: var(--font-sans);
-  background: var(--bg-primary);
-  color: var(--text-primary);
-  transition: background .25s, color .25s;
-  min-height: 100vh;
-}
+  /* HEADER */
+  header {
+    border-bottom: 1px solid var(--border);
+    padding: 28px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    background: var(--bg);
+    z-index: 100;
+  }
+  .logo {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+  }
+  .deadline {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--red);
+    background: rgba(239,68,68,0.1);
+    border: 1px solid rgba(239,68,68,0.25);
+    padding: 5px 12px;
+    border-radius: 4px;
+    letter-spacing: 0.05em;
+  }
 
-.container {
-  max-width: 820px;
-  margin: 0 auto;
-  padding: 20px 16px 40px;
-}
+  /* HERO */
+  .hero {
+    padding: 60px 40px 40px;
+    border-bottom: 1px solid var(--border);
+  }
+  .hero-tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  h1 {
+    font-size: clamp(28px, 5vw, 48px);
+    font-weight: 300;
+    line-height: 1.2;
+    margin-bottom: 20px;
+    letter-spacing: -0.02em;
+  }
+  h1 span {
+    color: var(--accent);
+    font-weight: 600;
+  }
+  .hero-sub {
+    font-size: 15px;
+    color: var(--muted);
+    max-width: 560px;
+    line-height: 1.6;
+  }
+  .topics-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 28px;
+  }
+  .topic-pill {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    padding: 5px 12px;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.15s;
+    background: transparent;
+  }
+  .topic-pill:hover, .topic-pill.active {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(79,142,247,0.08);
+  }
 
-/* Header */
-.header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 20px;
-  gap: 12px;
-}
-.header h1 {
-  font-size: 20px;
-  font-weight: 600;
-  color: var(--text-primary);
-}
-.header h1 span {
-  color: var(--text-info);
-}
+  /* MAIN LAYOUT */
+  .main {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    min-height: calc(100vh - 180px);
+  }
 
-/* Theme toggle */
-.theme-toggle {
-  background: var(--bg-tertiary);
-  border: 1px solid var(--border-secondary);
-  border-radius: 50%;
-  width: 38px;
-  height: 38px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  font-size: 18px;
-  transition: background .2s, border-color .2s;
-  flex-shrink: 0;
-}
-.theme-toggle:hover {
-  border-color: var(--text-info);
-}
-[data-theme="dark"] .icon-light { display: inline }
-[data-theme="dark"] .icon-dark { display: none }
-[data-theme="light"] .icon-light { display: none }
-[data-theme="light"] .icon-dark { display: inline }
+  /* SIDEBAR NAV */
+  .sidebar {
+    border-right: 1px solid var(--border);
+    padding: 32px 0;
+    position: sticky;
+    top: 73px;
+    height: calc(100vh - 73px);
+    overflow-y: auto;
+  }
+  .nav-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 0 24px;
+    margin-bottom: 12px;
+  }
+  .nav-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px 24px;
+    cursor: pointer;
+    transition: background 0.12s;
+    border-left: 2px solid transparent;
+  }
+  .nav-item:hover { background: var(--bg2); }
+  .nav-item.active {
+    background: var(--bg2);
+    border-left-color: var(--accent);
+  }
+  .nav-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    margin-top: 1px;
+    flex-shrink: 0;
+  }
+  .nav-text {
+    font-size: 12px;
+    line-height: 1.4;
+    color: var(--muted);
+  }
+  .nav-item.active .nav-text { color: var(--text); }
 
-/* Tabs */
-.tabs {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-bottom: 18px;
-}
-.tab {
-  padding: 8px 14px;
-  border-radius: 20px;
-  border: 1.5px solid var(--border-secondary);
-  background: transparent;
-  color: var(--text-secondary);
-  cursor: pointer;
-  font-size: 13px;
-  font-weight: 500;
-  transition: all .15s;
-  white-space: nowrap;
-  font-family: var(--font-sans);
-}
-.tab:hover {
-  background: var(--tab-hover);
-}
-.tab.active {
-  background: var(--bg-info);
-  border-color: var(--border-info);
-  color: var(--text-info);
-}
+  /* CONTENT */
+  .content {
+    padding: 40px 48px;
+    max-width: 860px;
+  }
 
-/* Panels & Cards */
-.panel { display: none }
-.panel.active { display: block }
-.card {
-  border: 1px solid var(--border-tertiary);
-  border-radius: 12px;
-  padding: 16px;
-  margin-bottom: 12px;
-  background: var(--bg-secondary);
-  transition: background .25s, border-color .25s;
-}
-.card h3 {
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--text-primary);
-  margin-bottom: 12px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid var(--border-tertiary);
-}
+  .panel { display: none; }
+  .panel.active { display: block; }
 
-/* Definition box */
-.def {
-  background: var(--bg-tertiary);
-  border-left: 3px solid var(--border-info);
-  padding: 12px 14px;
-  border-radius: 0 8px 8px 0;
-  font-size: 13.5px;
-  line-height: 1.65;
-  color: var(--text-primary);
-  margin-bottom: 12px;
-}
-.def b { font-weight: 600 }
+  .panel-header {
+    margin-bottom: 32px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--border);
+  }
+  .panel-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    margin-bottom: 10px;
+  }
+  .panel-title {
+    font-size: 26px;
+    font-weight: 300;
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+  }
+  .panel-question {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--muted);
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    padding: 10px 16px;
+    border-radius: 4px;
+    margin-top: 12px;
+  }
+  .panel-question::before {
+    content: 'dokładne brzmienie pytania: ';
+    color: var(--yellow);
+  }
 
-/* Lists */
-ul { padding-left: 18px; color: var(--text-primary) }
-li { margin-bottom: 7px; font-size: 13.5px; line-height: 1.6 }
-li b { font-weight: 600 }
+  /* BLOCKS */
+  .block {
+    margin-bottom: 24px;
+  }
+  .block-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
 
-/* Grid */
-.row2 {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-top: 10px;
-}
-.mini {
-  border: 1px solid var(--border-tertiary);
-  border-radius: 8px;
-  padding: 12px;
-  background: var(--bg-tertiary);
-  transition: background .25s;
-}
-.mini-t {
-  font-size: 12.5px;
-  font-weight: 600;
-  color: var(--text-secondary);
-  margin-bottom: 6px;
-}
+  .def-box {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    padding: 16px 20px;
+    border-radius: 0 6px 6px 0;
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--text);
+  }
+  .def-box strong { color: var(--accent); font-weight: 500; }
 
-/* Badges */
-.badge {
-  display: inline-block;
-  padding: 2px 9px;
-  border-radius: 20px;
-  font-size: 11px;
-  font-weight: 600;
-  margin-right: 4px;
-  margin-bottom: 4px;
-}
-.bi { background: var(--bg-info); color: var(--text-info) }
-.bg { background: var(--bg-success); color: var(--text-success) }
-.br { background: var(--bg-danger); color: var(--text-danger) }
-.bw { background: var(--bg-warning); color: var(--text-warning) }
-.bx { background: var(--bg-tertiary); color: var(--text-secondary) }
+  .cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .cards.two { grid-template-columns: 1fr 1fr; }
 
-/* Table */
-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 8px }
-th {
-  background: var(--bg-tertiary);
-  padding: 8px 10px;
-  text-align: left;
-  font-weight: 600;
-  color: var(--text-secondary);
-}
-td {
-  padding: 8px 10px;
-  border-top: 1px solid var(--border-tertiary);
-  color: var(--text-primary);
-  vertical-align: top;
-}
+  .card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 16px;
+  }
+  .card-tag {
+    display: inline-block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    padding: 3px 8px;
+    border-radius: 2px;
+    margin-bottom: 10px;
+    font-weight: 500;
+  }
+  .tag-red { background: rgba(239,68,68,0.15); color: #ef4444; }
+  .tag-yellow { background: rgba(245,158,11,0.15); color: #f59e0b; }
+  .tag-green { background: rgba(34,197,94,0.15); color: #22c55e; }
+  .tag-blue { background: rgba(79,142,247,0.15); color: #4f8ef7; }
+  .tag-teal { background: rgba(20,184,166,0.15); color: #14b8a6; }
+  .tag-gray { background: rgba(107,112,128,0.15); color: #9ca3af; }
+  .tag-purple { background: rgba(124,58,237,0.15); color: #a78bfa; }
 
-/* Algorithm blocks */
-.alg {
-  border: 1px solid var(--border-tertiary);
-  border-radius: 8px;
-  padding: 12px;
-  margin-bottom: 8px;
-  background: var(--bg-tertiary);
-  transition: background .25s;
-}
-.alg-t { font-size: 13.5px; font-weight: 600; color: var(--text-primary); margin-bottom: 5px }
-.alg-d { font-size: 13px; color: var(--text-secondary); line-height: 1.55 }
+  .card-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+  .card-desc {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+  .card-desc strong { color: var(--text); font-weight: 500; }
+  .card-example {
+    font-size: 11px;
+    color: var(--teal);
+    margin-top: 8px;
+    font-style: italic;
+  }
 
-/* Tip */
-.tip {
-  background: var(--bg-warning);
-  border-radius: 8px;
-  padding: 12px;
-  font-size: 13px;
-  color: var(--text-warning);
-  margin-top: 10px;
-}
+  ul.list {
+    padding-left: 0;
+    list-style: none;
+  }
+  ul.list li {
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--muted);
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  ul.list li:last-child { border-bottom: none; }
+  ul.list li::before {
+    content: '—';
+    color: var(--border);
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  ul.list li strong { color: var(--text); font-weight: 500; }
 
-/* VS comparison */
-.vs {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-top: 10px;
-}
-.vs-col { border-radius: 10px; padding: 14px }
-.vs-rtems { background: var(--bg-info) }
-.vs-qnx { background: var(--bg-success) }
-.vs-t { font-size: 14px; font-weight: 600; margin-bottom: 8px }
-.vs-item { font-size: 13px; line-height: 1.6; margin-bottom: 5px; color: var(--text-primary) }
+  .alg-row {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 14px 16px;
+    margin-bottom: 8px;
+    display: grid;
+    grid-template-columns: 180px 1fr auto;
+    gap: 16px;
+    align-items: start;
+  }
+  .alg-name { font-size: 13px; font-weight: 500; color: var(--text); }
+  .alg-abbr { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--accent); display: block; margin-bottom: 3px; }
+  .alg-desc { font-size: 12px; color: var(--muted); line-height: 1.55; }
+  .alg-desc strong { color: var(--text); font-weight: 500; }
+  .alg-badge { font-family: 'IBM Plex Mono', monospace; font-size: 10px; white-space: nowrap; }
 
-.sub { font-size: 12.5px; color: var(--text-secondary); margin-bottom: 8px }
+  .compare-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  .compare-table th {
+    text-align: left;
+    padding: 10px 16px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+  }
+  .compare-table td {
+    padding: 11px 16px;
+    border-bottom: 1px solid var(--border);
+    color: var(--muted);
+    line-height: 1.5;
+    vertical-align: top;
+  }
+  .compare-table td:first-child { color: var(--text); font-weight: 500; }
+  .compare-table tr:last-child td { border-bottom: none; }
+  .compare-table tr:hover td { background: var(--bg2); }
 
-/* ===== MOBILE ===== */
-@media (max-width: 600px) {
-  .container { padding: 14px 10px 30px }
-  .header h1 { font-size: 17px }
-  .tabs { gap: 5px }
-  .tab { padding: 7px 11px; font-size: 12px }
-  .card { padding: 13px }
-  .row2 { grid-template-columns: 1fr }
-  .vs { grid-template-columns: 1fr }
-  table { font-size: 12px }
-  th, td { padding: 6px 7px }
-}
+  .note-box {
+    background: rgba(245,158,11,0.07);
+    border: 1px solid rgba(245,158,11,0.2);
+    border-radius: 6px;
+    padding: 12px 16px;
+    font-size: 12px;
+    color: #f59e0b;
+    line-height: 1.6;
+    margin-top: 10px;
+  }
+  .note-box::before { content: '⚠ '; }
+
+  .info-box {
+    background: rgba(79,142,247,0.07);
+    border: 1px solid rgba(79,142,247,0.2);
+    border-radius: 6px;
+    padding: 12px 16px;
+    font-size: 12px;
+    color: var(--accent);
+    line-height: 1.6;
+    margin-top: 10px;
+  }
+
+  .vs-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 4px;
+  }
+  .vs-col {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 20px;
+  }
+  .vs-col.rtems { border-top: 2px solid var(--accent); }
+  .vs-col.qnx { border-top: 2px solid var(--green); }
+  .vs-title { font-size: 15px; font-weight: 500; margin-bottom: 4px; }
+  .vs-rtems .vs-title { color: var(--accent); }
+  .vs-qnx .vs-title { color: var(--green); }
+  .vs-sub { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--muted); margin-bottom: 14px; }
+  .vs-item {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.6;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .vs-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .vs-item strong { color: var(--text); font-weight: 500; }
+  .pro { color: var(--green); }
+  .con { color: var(--red); }
+
+  .states-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 4px;
+  }
+  .state-tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    padding: 4px 10px;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    color: var(--muted);
+  }
+
+  .layer-row {
+    display: flex;
+    gap: 12px;
+    align-items: stretch;
+    margin-bottom: 8px;
+  }
+  .layer-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 20px;
+    color: var(--border);
+    width: 30px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+  }
+  .layer-content {
+    flex: 1;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 14px 18px;
+  }
+  .layer-title { font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: 4px; }
+  .layer-desc { font-size: 12px; color: var(--muted); line-height: 1.55; }
+  .layer-desc strong { color: var(--text); font-weight: 500; }
+
+  .adapt-row {
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    gap: 12px;
+    align-items: start;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .adapt-row:last-child { border-bottom: none; }
+  .adapt-state { font-family: 'IBM Plex Mono', monospace; font-size: 12px; }
+  .adapt-action { font-size: 13px; color: var(--muted); line-height: 1.5; }
+  .adapt-action strong { color: var(--text); font-weight: 500; }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 20px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .footer-note {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  @media (max-width: 768px) {
+    header { padding: 18px 20px; }
+    .hero { padding: 40px 20px 28px; }
+    .main { grid-template-columns: 1fr; }
+    .sidebar { display: none; }
+    .content { padding: 24px 20px; }
+    .cards { grid-template-columns: 1fr; }
+    .cards.two { grid-template-columns: 1fr; }
+    .alg-row { grid-template-columns: 1fr; gap: 6px; }
+    .vs-grid { grid-template-columns: 1fr; }
+    footer { flex-direction: column; gap: 8px; text-align: center; }
+  }
 </style>
 </head>
 <body>
-<div class="container">
 
-<div class="header">
-  <h1><span>SCR</span> – Systemy Czasu Rzeczywistego</h1>
-  <button class="theme-toggle" onclick="toggleTheme()" aria-label="Zmien motyw">
-    <span class="icon-light">&#9728;&#65039;</span>
-    <span class="icon-dark">&#9790;&#65039;</span>
-  </button>
-</div>
+<header>
+  <span class="logo">SCR / 2026L — Podstawy i Algorytmika</span>
+  <span class="deadline">ZALICZENIE: 30.03.2026</span>
+</header>
 
-<div class="tabs">
-  <button class="tab active" onclick="show(0)">1. SCR – def.</button>
-  <button class="tab" onclick="show(1)">2. Szeregowanie</button>
-  <button class="tab" onclick="show(2)">3. Elastyczne</button>
-  <button class="tab" onclick="show(3)">4. IoT</button>
-  <button class="tab" onclick="show(4)">5. Wbudowane</button>
-  <button class="tab" onclick="show(5)">6. Kernel</button>
-</div>
-
-<!-- TEMAT 1 -->
-<div class="panel active" id="p0">
-  <div class="card">
-    <h3>Definicja SCR</h3>
-    <div class="def">System czasu rzeczywistego to system komputerowy, w ktorym poprawnosc dzialania zalezy nie tylko od poprawnosci wynikow, ale przede wszystkim od <b>czasu, w jakim te wyniki zostana dostarczone</b>. Wynik spozniony jest traktowany jako bledny.</div>
-    <p class="sub">Trzy elementy analizy:</p>
-    <ul>
-      <li><b>System komputerowy</b> – wykonuje obliczenia i steruje</li>
-      <li><b>Otoczenie (obiekt)</b> – generuje zdarzenia i przyjmuje sygnaly</li>
-      <li><b>Czas</b> – narzuca rygorystyczne ograniczenia</li>
-    </ul>
-  </div>
-  <div class="card">
-    <h3>Klasyfikacja czasowa (3 typy)</h3>
-    <div class="alg">
-      <div class="alg-t"><span class="badge br">Hard</span> Ostre ograniczenia</div>
-      <div class="alg-d">Przekroczenie terminu = awaria systemu, katastrofalne skutki. Zagrozenie dla ludzi lub sprzetu.<br><i>Przyklady: ABS, rozrusznik serca, sterowanie lotem</i></div>
-    </div>
-    <div class="alg">
-      <div class="alg-t"><span class="badge bw">Firm</span> Mocne ograniczenia</div>
-      <div class="alg-d">Przekroczenie terminu = wynik calkowicie nieprzydatny (zero korzysci), ale nie ma katastrofy fizycznej.<br><i>Przyklady: prognozowanie pogody do celow nawigacyjnych</i></div>
-    </div>
-    <div class="alg">
-      <div class="alg-t"><span class="badge bg">Soft</span> Miekkie ograniczenia</div>
-      <div class="alg-d">Przekroczenie terminu jest dopuszczalne, ale powoduje spadek jakosci. Im wieksze opoznienie, tym mniejsza wartosc wyniku (az do zera).<br><i>Przyklady: odtwarzanie wideo online, gry sieciowe</i></div>
-    </div>
-  </div>
-  <div class="card">
-    <h3>Cechy charakterystyczne SCR</h3>
-    <ul>
-      <li>Uzaleznienie pracy od <b>wymagan czasowych</b></li>
-      <li><b>Ciaglosc dzialania</b> – praca bez przerwy</li>
-      <li><b>Niezawodnosc</b></li>
-      <li><b>Zaleznosc od otoczenia</b></li>
-      <li><b>Wspolbieznosc</b> – zdarzenia pojawiaja sie jednoczesnie</li>
-      <li><b>Przewidywalnosc</b> – deterministyczna reakcja</li>
-      <li><b>Punktualnosc</b> – reakcja w scisle okreslonym czasie</li>
-      <li><b>Zapewnienie bezpiecznej pracy</b> w przypadku awarii (fail-safe)</li>
-    </ul>
+<div class="hero">
+  <div class="hero-tag">materiały do zaliczenia</div>
+  <h1>Systemy Czasu<br><span>Rzeczywistego</span></h1>
+  <p class="hero-sub">Opracowanie 6 tematów na zaliczenie.</p>
+  <div class="topics-grid">
+    <button class="topic-pill active" onclick="showPanel(0)">1. SCR – definicja</button>
+    <button class="topic-pill" onclick="showPanel(1)">2. Szeregowanie</button>
+    <button class="topic-pill" onclick="showPanel(2)">3. Elastyczne aplikacje</button>
+    <button class="topic-pill" onclick="showPanel(3)">4. Internet Rzeczy</button>
+    <button class="topic-pill" onclick="showPanel(4)">5. Systemy wbudowane</button>
+    <button class="topic-pill" onclick="showPanel(5)">6. Kernel – porównanie</button>
   </div>
 </div>
 
-<!-- TEMAT 2 -->
-<div class="panel" id="p1">
-  <div class="card">
-    <h3>Czym jest algorytm szeregowania?</h3>
-    <div class="def">Algorytm szeregowania <b>rozdziela czas procesora i dostep do zasobow</b> pomiedzy zadania, ktore moga o nie konkurowac. W SCR wazne jest nie tylko czy zadanie zostanie wykonane, ale <b>czy wykona sie w okreslonym czasie</b>.</div>
-    <p class="sub">Stany zadania: <span class="badge bi">Wykonywane</span><span class="badge bx">Gotowe</span><span class="badge bx">Oczekujace na czas</span><span class="badge bx">Oczekujace na zdarzenie</span><span class="badge bx">Przerwane</span><span class="badge bx">Uspione</span></p>
-  </div>
-  <div class="card">
-    <h3>Schematy kolejkowania</h3>
-    <div class="row2">
-      <div class="mini">
-        <div class="mini-t">Bez wywlaszczania (kooperacyjne)</div>
-        <div style="font-size:13px;color:var(--text-primary);line-height:1.55">Zadanie pracuje az samo odda procesor. Ryzykowne – jedno zadanie moze zablokowac caly system.</div>
+<div class="main">
+  <nav class="sidebar">
+    <div class="nav-label">Tematy</div>
+    <div class="nav-item active" onclick="showPanel(0)">
+      <span class="nav-num">01</span>
+      <span class="nav-text">System czasu rzeczywistego – def, klasyfikacja, kryteria</span>
+    </div>
+    <div class="nav-item" onclick="showPanel(1)">
+      <span class="nav-num">02</span>
+      <span class="nav-text">Klasyczne metody szeregowania zadań</span>
+    </div>
+    <div class="nav-item" onclick="showPanel(2)">
+      <span class="nav-num">03</span>
+      <span class="nav-text">Samo modyfikujące się zadania</span>
+    </div>
+    <div class="nav-item" onclick="showPanel(3)">
+      <span class="nav-num">04</span>
+      <span class="nav-text">Internet Rzeczy – def., struktura</span>
+    </div>
+    <div class="nav-item" onclick="showPanel(4)">
+      <span class="nav-num">05</span>
+      <span class="nav-text">Systemy wbudowane – cechy charakterystyczne</span>
+    </div>
+    <div class="nav-item" onclick="showPanel(5)">
+      <span class="nav-num">06</span>
+      <span class="nav-text">Kernel systemu, 2 przypadki – porównanie</span>
+    </div>
+  </nav>
+
+  <div class="content">
+
+    <!-- PANEL 1 -->
+    <div class="panel active" id="panel-0">
+      <div class="panel-header">
+        <div class="panel-num">TEMAT 01 / 06</div>
+        <div class="panel-title">System czasu rzeczywistego</div>
+        <div class="panel-question">System czasu rzeczywistego – def, klasyfikacja, kryteria czasowe</div>
       </div>
-      <div class="mini">
-        <div class="mini-t">Z wywlaszczaniem (preemptive)</div>
-        <div style="font-size:13px;color:var(--text-primary);line-height:1.55">OS moze w kazdej chwili przerwac zadanie. Gwarantuje natychmiastowa reakcje na zadania krytyczne.</div>
-      </div>
-    </div>
-  </div>
-  <div class="card">
-    <h3>Rodzaje algorytmow (6 do wykucia)</h3>
-    <div class="alg">
-      <div class="alg-t">FCFS / FIFO <span class="badge bx">niewywlaszczajacy</span></div>
-      <div class="alg-d">Kto pierwszy, ten lepszy. Proste, ale niebezpieczne – jeden dlugi proces blokuje wszystkich.</div>
-    </div>
-    <div class="alg">
-      <div class="alg-t">Round-Robin <span class="badge bw">wywlaszczajacy</span></div>
-      <div class="alg-d">Kazde zadanie dostaje kwant czasu (np. 10ms). Jesli nie skonczy – laduje na koncu kolejki. Sprawiedliwy podzial, brak glodzenia.</div>
-    </div>
-    <div class="alg">
-      <div class="alg-t">SJF – Shortest Job First <span class="badge bw">wywlaszczajacy</span></div>
-      <div class="alg-d">Procesor bierze najkrotsze zadanie. Minimalizuje sredni czas oczekiwania.</div>
-    </div>
-    <div class="alg">
-      <div class="alg-t">EDF – Earliest Deadline First <span class="badge bw">dynamiczny, wywlaszczajacy</span></div>
-      <div class="alg-d">Najpierw to zadanie, ktoremu zostalo <b>najmniej czasu do terminu</b>. Dynamicznie aktualizuje priorytety przy kazdym przerwaniu zegarowym.</div>
-    </div>
-    <div class="alg">
-      <div class="alg-t">RMS – Rate Monotonic Scheduling <span class="badge bi">statyczny, wywlaszczajacy</span></div>
-      <div class="alg-d">Dla zadan <b>periodycznych</b>. Im krotszy okres (czesciej sie uruchamia), tym wyzszy staly priorytet. Priorytety przypisywane <b>przed</b> uruchomieniem systemu.</div>
-    </div>
-    <div class="tip">Zapamietaj: EDF = dynamiczny (biezacy termin) | RMS = statyczny (okres = priorytet)</div>
-  </div>
-  <div class="card">
-    <h3>Zadania periodyczne vs aperiodyczne</h3>
-    <div class="row2">
-      <div class="mini">
-        <div class="mini-t">Periodyczne - algorytmy statyczne</div>
-        <div style="font-size:13px;color:var(--text-primary);line-height:1.55">Znamy z gory czas trwania i czestotliwosc. Kolejnosc ustalana przed uruchomieniem. - RMS</div>
-      </div>
-      <div class="mini">
-        <div class="mini-t">Aperiodyczne - algorytmy dynamiczne</div>
-        <div style="font-size:13px;color:var(--text-primary);line-height:1.55">Pojawiaja sie nieregularnie. Planowanie odbywa sie na biezaco w czasie dzialania systemu. - EDF</div>
-      </div>
-    </div>
-  </div>
-</div>
 
-<!-- TEMAT 3 -->
-<div class="panel" id="p2">
-  <div class="card">
-    <h3>Czym sa elastyczne aplikacje?</h3>
-    <div class="def">Elastyczne aplikacje skladaja sie z zadan o <b>samo-modyfikujacym sie przebiegu</b>, ktore wykorzystuja elastyczne (niedokladne) obliczenia. Cel: osiagniecie wyniku o jak <b>najlepszej jakosci</b> przy zachowaniu <b>ograniczen czasowych</b>.</div>
-    <p style="font-size:13.5px;color:var(--text-primary);margin-bottom:8px">Aplikacja moze sie <b>degradowac</b> w sytuacji niedoboru czasu – gdy brakuje zasobow, obniza funkcjonalnosc, byleby zmiescic sie w deadline'ie.</p>
-  </div>
-  <div class="card">
-    <h3>Jak dziala adaptacja?</h3>
-    <p style="font-size:13.5px;color:var(--text-primary);margin-bottom:10px">Czas wykonania jest kontrolowany na biezaco. Na okreslonych etapach porownuje sie <b>Tr (czas rzeczywisty)</b> z <b>Tp (czas planowany)</b>:</p>
-    <table>
-      <tr><th>Stan zadania</th><th>Akcja</th></tr>
-      <tr><td><b>Tr = Tp</b> (punktualne)</td><td>Brak modyfikacji</td></tr>
-      <tr><td><b>Tr &gt; Tp</b> (opoznione)</td><td>Wybierz wersje o <b>zredukowanej funkcjonalnosci</b> (mniej czasochlonna). Dla wielu opoznien – wymiana calego zadania.</td></tr>
-      <tr><td><b>Tr &lt; Tp</b> (przyspieszone)</td><td>Wybierz wersje <b>bardziej czasochlonna</b> (rozbudowana funkcjonalnosc)</td></tr>
-    </table>
-  </div>
-  <div class="card">
-    <h3>Przyklad: petla regulatora pradu</h3>
-    <ul>
-      <li>Normalnie: pomiar - wyznaczenie uchybu - 5x usrednienie - dokladne nastawy PI/PID - PWM</li>
-      <li>Przy braku czasu: <b>rezygnacja z usredniania</b> lub <b>zastapienie PID sterowaniem rozmytym FLC</b></li>
-      <li>Ekstremalny brak czasu: <b>powtorzenie poprzedniej wartosci sterowania</b></li>
-    </ul>
-  </div>
-</div>
-
-<!-- TEMAT 4 -->
-<div class="panel" id="p3">
-  <div class="card">
-    <h3>Definicja IoT</h3>
-    <div class="def">Internet Rzeczy to <b>globalny, rozproszony ekosystem czasu rzeczywistego</b>, w ktorym fizyczne obiekty (maszyny) komunikuja sie ze soba i z siecia globalna <b>bez ingerencji czlowieka</b>. System nie tylko zbiera dane, ale potrafi ciagle sie uczyc i automatycznie reagowac na zmiany w otoczeniu.</div>
-    <p style="font-size:12.5px;color:var(--text-secondary)">Termin stworzony w 1999 r. przez Kevina Ashtona. Narodziny IoT: przelom 2008/2009 – liczba urzadzen w sieci przekroczyla kilka miliardow.</p>
-  </div>
-  <div class="card">
-    <h3>Struktura IoT – 3 warstwy</h3>
-    <div class="alg">
-      <div class="alg-t"><span class="badge bi">Warstwa 1</span> Fizyczna / pomiarowa (Wejscie)</div>
-      <div class="alg-d"><b>Sensory (czujniki)</b> – zbieraja informacje bezposrednio z otoczenia (temperatura, ruch, GPS, wilgotnosc, wibracje...)</div>
-    </div>
-    <div class="alg">
-      <div class="alg-t"><span class="badge bw">Warstwa 2</span> Komunikacyjna (Przesyl)</div>
-      <div class="alg-d"><b>Srodek komunikacji</b> – protokoly sieciowe i sprzet: Wi-Fi, Bluetooth, 5G, NFC, Z-Wave, 6LoWPAN. Bezpieczne przesylanie danych.</div>
-    </div>
-    <div class="alg">
-      <div class="alg-t"><span class="badge bg">Warstwa 3</span> Obliczeniowa / sterujaca (Wyjscie)</div>
-      <div class="alg-d"><b>Chmura obliczeniowa</b> – odbiera sygnal, analizuje, podejmuje decyzje o reakcji.<br><b>Efektory (urzadzenia wykonawcze)</b> – wywoluja fizyczna reakcje (alarm, zawor, sygnalizacja).</div>
-    </div>
-  </div>
-  <div class="card">
-    <h3>3 warunki dzialania IoT</h3>
-    <ul>
-      <li>Urzadzenie z <b>sensorem</b> zbierajacym dane z otoczenia</li>
-      <li>Urzadzenie <b>odbierajace i przetwarzajace</b> sygnal (np. smartfon, komputer)</li>
-      <li><b>Srodek komunikacji</b> – sposob przesylania danych miedzy nimi</li>
-    </ul>
-  </div>
-</div>
-
-<!-- TEMAT 5 -->
-<div class="panel" id="p4">
-  <div class="card">
-    <h3>Definicja systemu wbudowanego</h3>
-    <div class="def">System wbudowany to specjalistyczny system komputerowy (polaczenie sprzetu i oprogramowania), ktory jest <b>calkowicie zintegrowany z maszyna, ktora steruje</b>. Nie jest to zwykly komputer osobisty – jest dedykowany do jednego zadania.</div>
-  </div>
-  <div class="card">
-    <h3>Cechy charakterystyczne (do wykucia)</h3>
-    <ul>
-      <li><b>Zaleznosc od otoczenia</b> – ciagle pobieranie i analiza danych z fizycznego srodowiska (czujniki)</li>
-      <li><b>Ciaglosc dzialania</b> – system pracuje bez przerwy</li>
-      <li><b>Wspolbieznosc</b> – jednoczesne przetwarzanie wielu zadan i reagowanie na wiele sygnalow</li>
-      <li><b>Przewidywalnosc</b> – dokladnie wiadomo jak system zareaguje i ile czasu mu to zajmie</li>
-      <li><b>Punktualnosc</b> – bezwzgledne dotrzymywanie deadline'ow</li>
-      <li><b>Uzaleznienie od wymagan czasowych</b> – obiekt dyktuje ile czasu system ma na reakcje</li>
-      <li><b>Niezawodnosc</b> – gwarancja bezblednego i stabilnego dzialania</li>
-      <li><b>Reagowalnosc</b> – natychmiastowa odpowiedz na nieprzewidziane zdarzenia</li>
-      <li><b>Fail-safe</b> – gdy cos sie zepsuje, system przechodzi w stan bezpieczny (zatrzymanie maszyny, odciecie zasilania)</li>
-    </ul>
-  </div>
-  <div class="card">
-    <h3>Cechy wyrozniajace na tle innych systemow</h3>
-    <ul>
-      <li>Stosowanie wielu komponentow sprzetowych, ukladow pomiarowych i wykonawczych</li>
-      <li>Wysoka jakosc oprogramowania i zabezpieczen</li>
-      <li><b>Dedykowany charakter</b> – zaprojektowany do konkretnego zadania</li>
-      <li>Silne zintegrowanie, niewielkie rozmiary, niski pobor energii</li>
-      <li>Odpornosc mechaniczna, praca w trudnych warunkach srodowiskowych</li>
-      <li>Ograniczone interfejsy (czesto brak GUI), dzialanie bezobslugowe</li>
-    </ul>
-  </div>
-</div>
-
-<!-- TEMAT 6 -->
-<div class="panel" id="p5">
-  <div class="card">
-    <h3>O co chodzi z kernelem?</h3>
-    <div class="def">Wybor jadra (kernela) to decyzja o priorytetach systemu: czy wazniejsza jest <b>czysta szybkosc</b>, czy <b>niezawodnosc i odpornosc na bledy</b>?</div>
-  </div>
-  <div class="card">
-    <h3>Porownanie 2 przypadkow</h3>
-    <div class="vs">
-      <div class="vs-col vs-rtems">
-        <div class="vs-t" style="color:var(--text-info)">RTEMS – architektura monolityczna</div>
-        <div class="vs-item">Jadro, sterowniki i aplikacja dzialaja w <b>jednej wspolnej przestrzeni adresowej</b> (Single Address Space)</div>
-        <div class="vs-item">Komunikacja miedzy modulami jest <b>natychmiastowa</b> (zero narzutu)</div>
-        <div class="vs-item">System jest <b>niezwykle szybki i lekki</b></div>
-        <div class="vs-item"><b>Brak izolacji</b> – blad w jednym fragmencie kodu moze nadpisac pamiec jadra i spowodowac awarie calego urzadzenia</div>
-        <div class="vs-item" style="margin-top:6px;font-size:11px;color:var(--text-secondary)">Darmowy, GPL. Uzywany m.in. w armii i kosmosie.</div>
+      <div class="block">
+        <div class="block-title">Definicja (IEEE)</div>
+        <div class="def-box">
+          System czasu rzeczywistego to system komputerowy, w którym poprawność działania zależy nie tylko od poprawności logicznej wyników, ale przede wszystkim od <strong>czasu, w jakim te wyniki zostaną dostarczone</strong>. Wynik spóźniony jest często traktowany jako wynik błędny.
+        </div>
       </div>
-      <div class="vs-col vs-qnx">
-        <div class="vs-t" style="color:var(--text-success)">QNX – architektura mikrojadra</div>
-        <div class="vs-item">Jadro ogranicza sie do absolutnej podstawy (planowanie zadan). Sterowniki i systemy plikow dzialaja jako <b>odizolowane procesy zewnetrzne</b></div>
-        <div class="vs-item"><b>Potezna niezawodnosc</b> – jesli sterownik ulegnie awarii, system sie nie zawiesza, jadro moze go zrestartowac</div>
-        <div class="vs-item"><b>Wolniejszy</b> – kazda wymiana danych wymaga przeslania komunikatu miedzy warstwami</div>
-        <div class="vs-item" style="margin-top:6px;font-size:11px;color:var(--text-secondary)">Klasa Unix. Stosowany w automatyce przemyslowej.</div>
+
+      <div class="block">
+        <div class="block-title">3 elementy analizy (kryteria)</div>
+        <div class="cards">
+          <div class="card">
+            <div class="card-tag tag-blue">element 1</div>
+            <div class="card-name">System komputerowy</div>
+            <div class="card-desc">Wykonuje obliczenia i realizuje sterowania</div>
+          </div>
+          <div class="card">
+            <div class="card-tag tag-teal">element 2</div>
+            <div class="card-name">Otoczenie (obiekt)</div>
+            <div class="card-desc">Generuje zdarzenia i przyjmuje sygnały z systemu</div>
+          </div>
+          <div class="card">
+            <div class="card-tag tag-red">element 3</div>
+            <div class="card-name">Czas</div>
+            <div class="card-desc">Narzuca rygorystyczne ograniczenia (deadlines)</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="block">
+        <div class="block-title">Klasyfikacja czasowa</div>
+        <div class="cards">
+          <div class="card">
+            <div class="card-tag tag-red">Hard Real-Time / Ostre</div>
+            <div class="card-name">Ostre ograniczenia</div>
+            <div class="card-desc">Przekroczenie terminu = <strong>awaria systemu</strong>, katastrofalne skutki, zagrożenie życia lub zniszczenie mienia.<br><br>Użyteczność odpowiedzi po tT = 0 (wykres prostokątny — wynik albo jest przed terminem, albo jest bezwartościowy).</div>
+            <div class="card-example">Przykłady: ABS, rozrusznik serca, sterowanie lotem</div>
+          </div>
+          <div class="card">
+            <div class="card-tag tag-yellow">Firm Real-Time / Mocne</div>
+            <div class="card-name">Mocne ograniczenia</div>
+            <div class="card-desc">Przekroczenie terminu = wynik <strong>całkowicie nieprzydatny</strong> (odrzucony), ale nie ma katastrofy fizycznej. Funkcja zysku spada do zera natychmiast po tT.</div>
+            <div class="card-example">Przykłady: systemy giełdowe, prognozowanie pogody dla nawigacji</div>
+          </div>
+          <div class="card">
+            <div class="card-tag tag-green">Soft Real-Time / Miękkie</div>
+            <div class="card-name">Miękkie ograniczenia</div>
+            <div class="card-desc">Przekroczenie terminu = <strong>spadek jakości</strong>. Im większe opóźnienie, tym mniejsza wartość wyniku (funkcja zysku opada stopniowo aż do zera).</div>
+            <div class="card-example">Przykłady: odtwarzanie wideo online, gry sieciowe</div>
+          </div>
+        </div>
+        <div class="info-box">Parametry funkcji zysku: t0 = chwila zlecenia zadania, tT = najpóźniejsza chwila zakończenia, z(t) = użyteczność odpowiedzi, u = maksymalna użyteczność</div>
+      </div>
+
+      <div class="block">
+        <div class="block-title">Cechy charakterystyczne SCR</div>
+        <ul class="list">
+          <li><strong>Uzależnienie od wymagań czasowych</strong> — rytm pracy obiektu dyktuje wymagania</li>
+          <li><strong>Ciągłość działania</strong> — praca bez przerwy, stany oczekiwania na zdarzenia</li>
+          <li><strong>Niezawodność</strong> — bezbłędne i stabilne działanie</li>
+          <li><strong>Zależność od otoczenia</strong> — ścisłe uzależnienie od zdarzeń zewnętrznych</li>
+          <li><strong>Współbieżność</strong> — zdarzenia w otoczeniu pojawiają się jednocześnie i losowo</li>
+          <li><strong>Przewidywalność</strong> — deterministyczna reakcja na zdarzenia</li>
+          <li><strong>Punktualność</strong> — reakcja w ściśle określonych momentach</li>
+          <li><strong>Zapewnienie bezpiecznej pracy w przypadku awarii</strong> — stan fail-safe</li>
+        </ul>
       </div>
     </div>
-  </div>
-  <div class="card">
-    <h3>Tabela porownawcza (szybka sciaga)</h3>
-    <table>
-      <tr><th>Cecha</th><th>RTEMS (monolityczny)</th><th>QNX (mikrojadro)</th></tr>
-      <tr><td>Przestrzen adresowa</td><td>Jedna wspolna</td><td>Odizolowane procesy</td></tr>
-      <tr><td>Szybkosc</td><td>Bardzo szybki</td><td>Wolniejszy</td></tr>
-      <tr><td>Niezawodnosc</td><td>Blad = crash systemu</td><td>Restart wadliwego modulu</td></tr>
-      <tr><td>Komunikacja</td><td>Natychmiastowa</td><td>Przez komunikaty (IPC)</td></tr>
-      <tr><td>Zastosowanie</td><td>Wojsko, kosmos</td><td>Automatyka przemyslowa</td></tr>
-    </table>
+
+    <!-- PANEL 2 -->
+    <div class="panel" id="panel-1">
+      <div class="panel-header">
+        <div class="panel-num">TEMAT 02 / 06</div>
+        <div class="panel-title">Klasyczne metody szeregowania zadań</div>
+        <div class="panel-question">Klasyczne metody szeregowania zadań</div>
+      </div>
+
+      <div class="block">
+        <div class="block-title">Czym jest algorytm szeregowania?</div>
+        <div class="def-box">
+          Algorytm szeregowania zadań rozdziela <strong>czas procesora i dostęp do zasobów</strong> pomiędzy zadania. W SCR kluczowe jest nie tylko czy zadanie zostanie wykonane, ale <strong>czy wykona się w określonym czasie</strong>. Poprawne szeregowanie = podstawa działania całego systemu czasu rzeczywistego.
+        </div>
+      </div>
+
+      <div class="block">
+        <div class="block-title">Stany zadania</div>
+        <div class="states-row">
+          <span class="state-tag">Wykonywane</span>
+          <span class="state-tag">Gotowe do wykonania</span>
+          <span class="state-tag">Oczekujące na czas</span>
+          <span class="state-tag">Oczekujące na zdarzenie</span>
+          <span class="state-tag">Przerwane / wywłaszczone</span>
+          <span class="state-tag">Uśpione</span>
+        </div>
+      </div>
+
+      <div class="block">
+        <div class="block-title">Schematy kolejkowania</div>
+        <div class="cards two">
+          <div class="card">
+            <div class="card-tag tag-red">Kooperacyjne (bez wywłaszczania)</div>
+            <div class="card-name">Non-preemptive</div>
+            <div class="card-desc">Zadanie pracuje aż <strong>samo dobrowolnie odda procesor</strong>. Bardzo ryzykowne — jedno długie zadanie może zablokować całą resztę i doprowadzić do przekroczenia deadline'ów.</div>
+          </div>
+          <div class="card">
+            <div class="card-tag tag-green">Z wywłaszczaniem (Preemptive)</div>
+            <div class="card-name">Preemptive</div>
+            <div class="card-desc">OS ma pełną kontrolę. Jeśli pojawi się zadanie o <strong>wyższym priorytecie</strong>, OS natychmiast przerywa bieżące zadanie. Gwarantuje reakcję na zdarzenia krytyczne.</div>
+          </div>
+        </div>
+        <div class="note-box">W systemach Hard Real-Time: przerwania (ISR) dla krytycznych zadań, polling tylko tam gdzie dane zmieniają się powoli (np. temperatura co 1s)</div>
+      </div>
+
+      <div class="block">
+        <div class="block-title">Podział ze względu na rodzaj zadań</div>
+        <div class="cards two">
+          <div class="card">
+            <div class="card-tag tag-blue">Periodyczne → statyczne</div>
+            <div class="card-name">Zadania periodyczne</div>
+            <div class="card-desc">Wiemy z góry: czas trwania, częstotliwość. Planowanie kolejności odbywa się <strong>przed uruchomieniem systemu</strong> (a priori). → RMS</div>
+          </div>
+          <div class="card">
+            <div class="card-tag tag-purple">Aperiodyczne → dynamiczne</div>
+            <div class="card-name">Zadania aperiodyczne</div>
+            <div class="card-desc">Pojawiają się nieregularnie. Planowanie <strong>na bieżąco</strong> w trakcie działania systemu. Trudniejsze do zaplanowania. → EDF</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="block">
+        <div class="block-title">Rodzaje algorytmów (6 szt.)</div>
+        <div class="alg-row">
+          <div>
+            <span class="alg-abbr">FCFS / FIFO</span>
+            <div class="alg-name">First Come, First Serve</div>
+          </div>
+          <div class="alg-desc">Kto pierwszy, ten lepszy. Zadania wykonywane dokładnie w kolejności przybycia. <strong>Brak wywłaszczania.</strong><br>Wada w SCR: jedno długie zadanie blokuje wszystkie krytyczne procesy.</div>
+          <span class="card-tag tag-gray alg-badge">niewywłaszczający</span>
+        </div>
+        <div class="alg-row">
+          <div>
+            <span class="alg-abbr">Round-Robin</span>
+            <div class="alg-name">Algorytm rotacyjny</div>
+          </div>
+          <div class="alg-desc">Każde zadanie dostaje <strong>kwant czasu</strong> (np. 10ms). Jeśli nie skończy — ląduje na końcu kolejki. Sprawiedliwy podział, brak głodzenia. Wszystkie zadania mają ten sam priorytet.</div>
+          <span class="card-tag tag-yellow alg-badge">wywłaszczający</span>
+        </div>
+        <div class="alg-row">
+          <div>
+            <span class="alg-abbr">SJF</span>
+            <div class="alg-name">Shortest Job First</div>
+          </div>
+          <div class="alg-desc">Procesor bierze zadanie z <strong>najkrótszym przewidywanym czasem</strong>. Minimalizuje średni czas oczekiwania.<br>Wada: długie zadania mogą być w nieskończoność spychane (zjawisko głodzenia).</div>
+          <span class="card-tag tag-yellow alg-badge">wywłaszczający</span>
+        </div>
+        <div class="alg-row">
+          <div>
+            <span class="alg-abbr">EDF</span>
+            <div class="alg-name">Earliest Deadline First</div>
+          </div>
+          <div class="alg-desc">Algorytm <strong>dynamiczny</strong> — system na bieżąco sprawdza, któremu zadaniu zostało najmniej czasu do deadline'u i nadaje mu najwyższy priorytet. Działa przy każdym przerwaniu zegarowym.</div>
+          <span class="card-tag tag-blue alg-badge">dynamiczny</span>
+        </div>
+        <div class="alg-row">
+          <div>
+            <span class="alg-abbr">RMS</span>
+            <div class="alg-name">Rate Monotonic Scheduling</div>
+          </div>
+          <div class="alg-desc">Algorytm <strong>statyczny</strong> dla zadań periodycznych. Złota zasada: <strong>im krótszy okres → wyższy priorytet</strong>. Priorytety przypisywane raz, przed uruchomieniem systemu. Używany powszechnie w przemyśle.</div>
+          <span class="card-tag tag-green alg-badge">statyczny</span>
+        </div>
+        <div class="info-box">Zapamiętaj: EDF = dynamiczny (deadline ma znaczenie) | RMS = statyczny (okres = priorytet, tylko periodyczne)</div>
+      </div>
+
+      <div class="block">
+        <div class="block-title">Szeregowanie kolejek (wieloprocesorowe)</div>
+        <ul class="list">
+          <li><strong>Wielopoziomowe planowanie kolejek</strong> — zadania na stałe przypisane do kolejek. Problem: zadanie z najniższej kolejki może nigdy nie dostać procesora (głodzenie)</li>
+          <li><strong>MLFQ – Kolejki ze sprzężeniem zwrotnym</strong> — zadania mogą zmieniać kolejki. Długie/ciężkie spadają na dół, długo czekające awansują wyżej. Elastyczne.</li>
+          <li><strong>Zcentralizowane</strong> — jeden planista rozdziela zadania na wszystkie procesory</li>
+          <li><strong>Zdecentralizowane</strong> — każdy procesor ma własnego planistę i kolejki (szybsze, ale trudniejsze do synchronizacji)</li>
+        </ul>
+      </div>
+
+      <div class="block">
+        <div class="block-title">Inwersja priorytetów (priority inversion)</div>
+        <div class="def-box">
+          Zadanie o <strong>niskim priorytecie</strong>, zajmując zasób dzielony, zmusza zadanie o <strong>wyższym priorytecie</strong> do oczekiwania. Rozwiązanie: <strong>dziedziczenie priorytetów</strong> — zadanie o niskim priorytecie tymczasowo przejmuje priorytet blokowanego zadania.
+        </div>
+      </div>
+    </div>
+
+    <!-- PANEL 3 -->
+    <div class="panel" id="panel-2">
+      <div class="panel-header">
+        <div class="panel-num">TEMAT 03 / 06</div>
+        <div class="panel-title">Samo modyfikujące się zadania</div>
+        <div class="panel-question">Samo modyfikujące się zadania (elastyczne aplikacje)</div>
+      </div>
+
+      <div class="block">
+        <div class="block-title">Definicja</div>
+        <div class="def-box">
+          Elastyczne aplikacje składają się z zadań o <strong>samo-modyfikującym się przebiegu</strong>, które wykorzystują elastyczne (niedokładne, rozmyte) obliczenia. Cel: osiągnięcie wyniku o jak <strong>najlepszej jakości</strong> przy zachowaniu <strong>ograniczeń czasowych</strong>. W czasie wykonania mogą balansować między jakością wyników a ilością czasu.
+        </div>
+      </div>
+
+      <div class="block">
+        <div class="block-title">Kluczowa zasada</div>
+        <div class="cards two">
+          <div class="card">
+            <div class="card-tag tag-blue">mechanizm adaptacji</div>
+            <div class="card-name">Ciągła kontrola czasu</div>
+            <div class="card-desc">Na określonych etapach wykonania porównuje się <strong>Tr (czas rzeczywisty)</strong> z <strong>Tp (czas planowany)</strong>. Wynik porównania definiuje stan zadania.</div>
+          </div>
+          <div class="card">
+            <div class="card-tag tag-teal">efekt</div>
+            <div class="card-name">Degradacja kontrolowana</div>
+            <div class="card-desc">Aplikacja może się <strong>degradować</strong> gdy brakuje czasu — obniża funkcjonalność, byleby dotrzymać deadline'u. Jakość nie musi być zerowa.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="block">
+        <div class="block-title">Trzy stany i akcje</div>
+        <div class="card" style="padding:0">
+          <div class="adapt-row" style="padding:12px 16px">
+            <div class="adapt-state" style="color:var(--green)">Tr &lt; Tp<br>przyspieszone</div>
+            <div class="adapt-action">Wybierz wersję <strong>bardziej czasochłonną</strong> — rozbudowana funkcjonalność, lepszy wynik</div>
+          </div>
+          <div class="adapt-row" style="padding:12px 16px">
+            <div class="adapt-state" style="color:var(--accent)">Tr = Tp<br>punktualne</div>
+            <div class="adapt-action"><strong>Brak modyfikacji</strong> — zadanie idzie zgodnie z planem</div>
+          </div>
+          <div class="adapt-row" style="padding:12px 16px">
+            <div class="adapt-state" style="color:var(--red)">Tr &gt; Tp<br>opóźnione</div>
+            <div class="adapt-action">Wybierz wersję o <strong>zredukowanej funkcjonalności</strong> (mniej czasochłonną). Dla wielu opóźnionych zadań — wymiana całych zadań na prostsze.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="block">
+        <div class="block-title">Przykład – pętla regulatora prądu</div>
+        <ul class="list">
+          <li><strong>Normalny przebieg:</strong> pomiar wartości zadanej → pomiar rzeczywistej → wyznaczenie uchybu → 5× powtórzenie i uśrednienie → dokładne nastawy PID → sygnał PWM</li>
+          <li><strong>Brak czasu (poziom 1):</strong> rezygnacja z pkt 4 (uśredniania) — szybszy wynik, mniejsza dokładność</li>
+          <li><strong>Brak czasu (poziom 2):</strong> zastąpienie PID sterowaniem rozmytym FLC — zamiast liczb, przedziały (mniej obliczeń)</li>
+          <li><strong>Brak czasu (poziom 3):</strong> rezygnacja z całego obliczenia — powtórzenie poprzedniej wartości sterowania</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- PANEL 4 -->
+    <div class="panel" id="panel-3">
+      <div class="panel-header">
+        <div class="panel-num">TEMAT 04 / 06</div>
+        <div class="panel-title">Internet Rzeczy – definicja i struktura</div>
+        <div class="panel-question">Internet Rzeczy – def., struktura</div>
+      </div>
+
+      <div class="block">
+        <div class="block-title">Definicja</div>
+        <div class="def-box">
+          Internet Rzeczy (IoT) to <strong>globalny, rozproszony ekosystem czasu rzeczywistego</strong>, w którym fizyczne obiekty (maszyny) komunikują się ze sobą i z siecią globalną <strong>bez ingerencji człowieka</strong>. System nie tylko zbiera dane, ale potrafi ciągle się uczyć i automatycznie reagować na zmiany w otoczeniu.
+        </div>
+        <div class="info-box">Termin stworzony w 1999 r. przez Kevina Ashtona. Narodziny IoT: przełom 2008/2009 — liczba urządzeń w sieci przekroczyła liczbę ludzi na Ziemi.</div>
+      </div>
+
+      <div class="block">
+        <div class="block-title">Struktura IoT – 3 warstwy (filary)</div>
+        <div class="layer-row">
+          <div class="layer-num">1</div>
+          <div class="layer-content">
+            <div class="layer-title"><span class="card-tag tag-blue" style="margin-bottom:0;margin-right:8px">Wejście</span> Warstwa fizyczna / pomiarowa</div>
+            <div class="layer-desc"><strong>Sensory (czujniki)</strong> — zbierają informacje bezpośrednio z otoczenia. Przykłady: czujniki temperatury, drgań, wilgotności, ruchu, GPS. Mikrokontrolery (np. ARM Cortex-M4), moduły STM32 Nucleo.</div>
+          </div>
+        </div>
+        <div class="layer-row">
+          <div class="layer-num">2</div>
+          <div class="layer-content">
+            <div class="layer-title"><span class="card-tag tag-yellow" style="margin-bottom:0;margin-right:8px">Przesył</span> Warstwa komunikacyjna</div>
+            <div class="layer-desc"><strong>Środek komunikacji</strong> — protokoły sieciowe i sprzęt: Wi-Fi, Bluetooth, 5G, NFC, Z-Wave. Dla inteligentnego miasta: <strong>6LoWPAN</strong> (IPv6 + niskoenergetyczne sieci bezprzewodowe — obsługuje miliony urządzeń). Bramki IoT koordynują setki węzłów.</div>
+          </div>
+        </div>
+        <div class="layer-row">
+          <div class="layer-num">3</div>
+          <div class="layer-content">
+            <div class="layer-title"><span class="card-tag tag-green" style="margin-bottom:0;margin-right:8px">Wyjście</span> Warstwa obliczeniowa / sterująca</div>
+            <div class="layer-desc"><strong>Chmura obliczeniowa</strong> (Microsoft Azure, Amazon AWS, IBM Watson) — odbiera sygnał, analizuje, podejmuje decyzję. <strong>Efektory (urządzenia wykonawcze)</strong> — wywołują fizyczną reakcję: włączenie alarmu, zamknięcie zaworu, sterowanie sygnalizacją świetlną.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="block">
+        <div class="block-title">3 warunki działania IoT</div>
+        <ul class="list">
+          <li>Urządzenie wyposażone w <strong>sensor</strong> zbierający dane z otoczenia</li>
+          <li>Urządzenie <strong>odbierające i przetwarzające</strong> sygnał (smartfon, komputer, chmura)</li>
+          <li><strong>Środek komunikacji</strong> — protokół przesyłający dane między nimi</li>
+        </ul>
+      </div>
+
+      <div class="block">
+        <div class="block-title">Obszary zastosowań</div>
+        <ul class="list">
+          <li><strong>Inteligentny budynek</strong> — oświetlenie, ogrzewanie, klimatyzacja, rolety (standard EIB/KNX)</li>
+          <li><strong>Inteligentne miasto</strong> — sygnalizacja świetlna, parkowanie, zarządzanie energią, monitoring mostu</li>
+          <li><strong>Przemysł</strong> — monitoring maszyn, auto-diagnostyka, kontrola procesów produkcyjnych</li>
+          <li><strong>Zdrowie</strong> — czujniki EKG, tętna, pulsoksymetry, zdalna diagnostyka</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- PANEL 5 -->
+    <div class="panel" id="panel-4">
+      <div class="panel-header">
+        <div class="panel-num">TEMAT 05 / 06</div>
+        <div class="panel-title">Systemy wbudowane – cechy charakterystyczne</div>
+        <div class="panel-question">Systemy wbudowane – cechy charakterystyczne</div>
+      </div>
+
+      <div class="block">
+        <div class="block-title">Definicja</div>
+        <div class="def-box">
+          System wbudowany to specjalistyczny system komputerowy (połączenie sprzętu i oprogramowania), który jest <strong>całkowicie zintegrowany z maszyną, którą steruje</strong>. Nie jest to zwykły komputer osobisty — jest <strong>dedykowany do jednego zadania</strong>. Złożoność systemów przemysłowych jest bardzo duża.
+        </div>
+      </div>
+
+      <div class="block">
+        <div class="block-title">Cechy wyróżniające na tle innych systemów</div>
+        <ul class="list">
+          <li>Stosowanie wielu <strong>komponentów sprzętowych</strong>, układów pomiarowych i wykonawczych</li>
+          <li><strong>Wysoka jakość oprogramowania</strong> i zabezpieczeń — intensywnie testowane</li>
+          <li><strong>Dedykowany charakter</strong> — zaprojektowany do konkretnej aplikacji przemysłowej</li>
+        </ul>
+      </div>
+
+      <div class="block">
+        <div class="block-title">Cechy charakterystyczne (do wykucia — wszystkie 9)</div>
+        <ul class="list">
+          <li><strong>Zależność od otoczenia</strong> — praca systemu opiera się na ciągłym pobieraniu i analizie danych z fizycznego środowiska (czujniki)</li>
+          <li><strong>Ciągłość działania</strong> — system pracuje bez przerwy, w nieskończonej pętli, przez cały czas funkcjonowania urządzenia</li>
+          <li><strong>Współbieżność</strong> — zdolność do jednoczesnego przetwarzania wielu zadań i reagowania na wiele sygnałów naraz</li>
+          <li><strong>Przewidywalność</strong> — dokładnie wiadomo jak system zareaguje na dane zdarzenie i ile czasu mu to zajmie</li>
+          <li><strong>Punktualność</strong> — bezwzględne dotrzymywanie deadline'ów, dostarczanie wyników przed upływem terminu</li>
+          <li><strong>Uzależnienie od wymagań czasowych</strong> — to sam obiekt (np. pędzący samochód, reaktor) dyktuje systemowi ile ma czasu na reakcję</li>
+          <li><strong>Niezawodność</strong> — gwarancja bezbłędnego i stabilnego działania systemu</li>
+          <li><strong>Reagowalność</strong> — zdolność do natychmiastowej odpowiedzi na nieprzewidziane zdarzenia (np. wciśnięcie przycisku "Stop")</li>
+          <li><strong>Fail-safe (bezpieczna awaria)</strong> — jeśli coś się zepsuje, system przechodzi w stan bezpieczny: zatrzymanie maszyny, odcięcie zasilania, nie zagraża ludziom</li>
+        </ul>
+      </div>
+
+      <div class="block">
+        <div class="block-title">Cechy sprzętowe systemu wbudowanego</div>
+        <div class="cards two">
+          <div class="card">
+            <div class="card-tag tag-gray">fizyczne</div>
+            <ul class="list" style="margin-top:4px">
+              <li>Silne zintegrowanie, <strong>niewielkie rozmiary</strong></li>
+              <li><strong>Niski pobór energii</strong> — baterie na lata</li>
+              <li>Odporność mechaniczna</li>
+              <li>Praca w trudnych warunkach środowiskowych (−40°C do +120°C)</li>
+            </ul>
+          </div>
+          <div class="card">
+            <div class="card-tag tag-gray">interfejs / obsługa</div>
+            <ul class="list" style="margin-top:4px">
+              <li>Ograniczone interfejsy — często <strong>brak GUI</strong></li>
+              <li><strong>Bezobsługowy</strong> — działanie bez dozoru</li>
+              <li>Dopasowanie rozbudowy do pełnionej funkcji</li>
+              <li>Intensywnie przetestowane oprogramowanie</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="block">
+        <div class="block-title">Przykłady zastosowań</div>
+        <div class="states-row">
+          <span class="state-tag">telefony komórkowe</span>
+          <span class="state-tag">ABS / airbag</span>
+          <span class="state-tag">rozrusznik serca</span>
+          <span class="state-tag">sterowanie lotem</span>
+          <span class="state-tag">roboty przemysłowe</span>
+          <span class="state-tag">systemy nawigacji GPS</span>
+          <span class="state-tag">diagnostyka medyczna</span>
+          <span class="state-tag">inteligentny budynek</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- PANEL 6 -->
+    <div class="panel" id="panel-5">
+      <div class="panel-header">
+        <div class="panel-num">TEMAT 06 / 06</div>
+        <div class="panel-title">Kernel systemu – 2 przypadki</div>
+        <div class="panel-question">Kernel systemu, 2 przypadki – porównanie</div>
+      </div>
+
+      <div class="block">
+        <div class="block-title">Kluczowe pytanie</div>
+        <div class="def-box">
+          Wybór jądra (kernela) to decyzja o priorytetach systemu: czy ważniejsza jest <strong>czysta szybkość</strong>, czy <strong>niezawodność i odporność na błędy</strong>? Dwa główne podejścia: architektura monolityczna (RTEMS) vs mikrojądro (QNX).
+        </div>
+      </div>
+
+      <div class="block">
+        <div class="block-title">Porównanie przypadków</div>
+        <div class="vs-grid">
+          <div class="vs-col rtems">
+            <div class="vs-title">RTEMS</div>
+            <div class="vs-sub">architektura monolityczna / współdzielona</div>
+            <div class="vs-item">Jądro, sterowniki i aplikacja działają w <strong>jednej wspólnej przestrzeni adresowej</strong> (Single Address Space)</div>
+            <div class="vs-item"><span class="pro">✓</span> Komunikacja między modułami jest <strong>natychmiastowa</strong> (zero narzutu czasowego)</div>
+            <div class="vs-item"><span class="pro">✓</span> System <strong>niezwykle szybki i lekki</strong></div>
+            <div class="vs-item"><span class="con">✗</span> <strong>Brak izolacji</strong> — błąd w dowolnym fragmencie kodu może nadpisać pamięć jądra → krytyczna awaria całego urządzenia</div>
+            <div class="vs-item" style="color:var(--muted);font-size:11px">Darmowy (GPL). Użycie: wojsko USA, kosmos, medycyna. FreeRTOS to uproszczona wersja: kernel = 3 pliki C, ~4–9 kB ROM.</div>
+          </div>
+          <div class="vs-col qnx">
+            <div class="vs-title">QNX</div>
+            <div class="vs-sub">architektura mikrojądra (Neutrino)</div>
+            <div class="vs-item">Jądro ogranicza się do absolutnego minimum (planowanie zadań ~<strong>8 kB</strong>). Sterowniki i systemy plików = <strong>odizolowane procesy zewnętrzne</strong></div>
+            <div class="vs-item"><span class="pro">✓</span> Potężna <strong>niezawodność</strong> — awaria sterownika nie zawiesza systemu, jądro może go zrestartować</div>
+            <div class="vs-item"><span class="pro">✓</span> Pełna izolacja między modułami</div>
+            <div class="vs-item"><span class="con">✗</span> <strong>Wolniejszy</strong> — każda wymiana danych wymaga przesłania komunikatu (IPC) między odseparowanymi warstwami</div>
+            <div class="vs-item" style="color:var(--muted);font-size:11px">Klasa Unix. QUNIX → QNX (lata 80.). Używany w automatyce przemysłowej. Jądro UNIX dla porównania: &gt;700 kB.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="block">
+        <div class="block-title">Tabela porównawcza</div>
+        <table class="compare-table">
+          <tr>
+            <th>Cecha</th>
+            <th>RTEMS (monolityczny)</th>
+            <th>QNX (mikrojądro)</th>
+          </tr>
+          <tr>
+            <td>Przestrzeń adresowa</td>
+            <td>Jedna wspólna (Single Address Space)</td>
+            <td>Odizolowane procesy zewnętrzne</td>
+          </tr>
+          <tr>
+            <td>Rozmiar jądra</td>
+            <td>Zmienne (duże)</td>
+            <td>~8 kB (Neutrino)</td>
+          </tr>
+          <tr>
+            <td>Szybkość komunikacji</td>
+            <td style="color:var(--green)">✓ Natychmiastowa</td>
+            <td style="color:var(--red)">✗ Przez komunikaty (IPC)</td>
+          </tr>
+          <tr>
+            <td>Niezawodność</td>
+            <td style="color:var(--red)">✗ Błąd = crash całego systemu</td>
+            <td style="color:var(--green)">✓ Restart wadliwego modułu</td>
+          </tr>
+          <tr>
+            <td>Izolacja modułów</td>
+            <td style="color:var(--red)">✗ Brak</td>
+            <td style="color:var(--green)">✓ Pełna</td>
+          </tr>
+          <tr>
+            <td>Typowe zastosowanie</td>
+            <td>Wojsko, kosmos, real-time krytyczny</td>
+            <td>Automatyka przemysłowa, automotive</td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="block">
+        <div class="block-title">Algorytmy szeregowania w QNX (bonus)</div>
+        <ul class="list">
+          <li><strong>FIFO</strong> — zadanie kontynuuje aż samo odda sterowanie lub zostanie wywłaszczone</li>
+          <li><strong>Round-Robin</strong> — kwant czasu 50 ms, po wyczerpaniu → wywłaszczenie</li>
+          <li><strong>Adaptacyjny</strong> — gdy zadanie zużyje cały kwant bez blokowania, jego priorytet jest tymczasowo dekrementowany (zapobiega głodzeniu zadań interaktywnych)</li>
+        </ul>
+      </div>
+    </div>
+
   </div>
 </div>
 
-</div>
+<footer>
+  <span class="footer-note">Podstawy i Algorytmika SCR — dr inż. Ryszard Łagoda — PW 2026L</span>
+  <span class="footer-note">zaliczenie: 30.03.2026 · godz. 12:15 · GM 011</span>
+</footer>
 
 <script>
-function show(i) {
+function showPanel(i) {
   document.querySelectorAll('.panel').forEach((p, j) => p.classList.toggle('active', j === i));
-  document.querySelectorAll('.tab').forEach((t, j) => t.classList.toggle('active', j === i));
+  document.querySelectorAll('.nav-item').forEach((n, j) => n.classList.toggle('active', j === i));
+  document.querySelectorAll('.topic-pill').forEach((t, j) => t.classList.toggle('active', j === i));
 }
-
-function toggleTheme() {
-  const html = document.documentElement;
-  const current = html.getAttribute('data-theme');
-  const next = current === 'dark' ? 'light' : 'dark';
-  html.setAttribute('data-theme', next);
-  localStorage.setItem('theme', next);
-}
-
-// Restore saved theme
-const saved = localStorage.getItem('theme');
-if (saved) document.documentElement.setAttribute('data-theme', saved);
 </script>
 </body>
 </html>
