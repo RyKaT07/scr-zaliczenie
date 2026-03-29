@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="pl" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SCR – Systemy Czasu Rzeczywistego</title>
+<style>
+:root {
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+[data-theme="light"] {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8f9fa;
+  --bg-tertiary: #f0f1f3;
+  --text-primary: #1a1a2e;
+  --text-secondary: #5a5a7a;
+  --border-secondary: #d0d5dd;
+  --border-tertiary: #e4e7ec;
+  --border-info: #528bff;
+  --bg-info: #eef4ff;
+  --text-info: #3366cc;
+  --bg-success: #edfcf2;
+  --text-success: #1a7f37;
+  --bg-danger: #fef3f2;
+  --text-danger: #d1242f;
+  --bg-warning: #fff8e6;
+  --text-warning: #9a6700;
+  --tab-hover: #e8ecf0;
+}
+
+[data-theme="dark"] {
+  --bg-primary: #0d1117;
+  --bg-secondary: #161b22;
+  --bg-tertiary: #1c2129;
+  --text-primary: #e6edf3;
+  --text-secondary: #8b949e;
+  --border-secondary: #30363d;
+  --border-tertiary: #21262d;
+  --border-info: #58a6ff;
+  --bg-info: #121d2f;
+  --text-info: #58a6ff;
+  --bg-success: #0d2818;
+  --text-success: #3fb950;
+  --bg-danger: #2d1215;
+  --text-danger: #f85149;
+  --bg-warning: #2a1f05;
+  --text-warning: #d29922;
+  --tab-hover: #1c2129;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0 }
+body {
+  font-family: var(--font-sans);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background .25s, color .25s;
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 20px 16px 40px;
+}
+
+/* Header */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  gap: 12px;
+}
+.header h1 {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.header h1 span {
+  color: var(--text-info);
+}
+
+/* Theme toggle */
+.theme-toggle {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-secondary);
+  border-radius: 50%;
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 18px;
+  transition: background .2s, border-color .2s;
+  flex-shrink: 0;
+}
+.theme-toggle:hover {
+  border-color: var(--text-info);
+}
+[data-theme="dark"] .icon-light { display: inline }
+[data-theme="dark"] .icon-dark { display: none }
+[data-theme="light"] .icon-light { display: none }
+[data-theme="light"] .icon-dark { display: inline }
+
+/* Tabs */
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 18px;
+}
+.tab {
+  padding: 8px 14px;
+  border-radius: 20px;
+  border: 1.5px solid var(--border-secondary);
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all .15s;
+  white-space: nowrap;
+  font-family: var(--font-sans);
+}
+.tab:hover {
+  background: var(--tab-hover);
+}
+.tab.active {
+  background: var(--bg-info);
+  border-color: var(--border-info);
+  color: var(--text-info);
+}
+
+/* Panels & Cards */
+.panel { display: none }
+.panel.active { display: block }
+.card {
+  border: 1px solid var(--border-tertiary);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 12px;
+  background: var(--bg-secondary);
+  transition: background .25s, border-color .25s;
+}
+.card h3 {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border-tertiary);
+}
+
+/* Definition box */
+.def {
+  background: var(--bg-tertiary);
+  border-left: 3px solid var(--border-info);
+  padding: 12px 14px;
+  border-radius: 0 8px 8px 0;
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+}
+.def b { font-weight: 600 }
+
+/* Lists */
+ul { padding-left: 18px; color: var(--text-primary) }
+li { margin-bottom: 7px; font-size: 13.5px; line-height: 1.6 }
+li b { font-weight: 600 }
+
+/* Grid */
+.row2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 10px;
+}
+.mini {
+  border: 1px solid var(--border-tertiary);
+  border-radius: 8px;
+  padding: 12px;
+  background: var(--bg-tertiary);
+  transition: background .25s;
+}
+.mini-t {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+}
+
+/* Badges */
+.badge {
+  display: inline-block;
+  padding: 2px 9px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  margin-right: 4px;
+  margin-bottom: 4px;
+}
+.bi { background: var(--bg-info); color: var(--text-info) }
+.bg { background: var(--bg-success); color: var(--text-success) }
+.br { background: var(--bg-danger); color: var(--text-danger) }
+.bw { background: var(--bg-warning); color: var(--text-warning) }
+.bx { background: var(--bg-tertiary); color: var(--text-secondary) }
+
+/* Table */
+table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 8px }
+th {
+  background: var(--bg-tertiary);
+  padding: 8px 10px;
+  text-align: left;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+td {
+  padding: 8px 10px;
+  border-top: 1px solid var(--border-tertiary);
+  color: var(--text-primary);
+  vertical-align: top;
+}
+
+/* Algorithm blocks */
+.alg {
+  border: 1px solid var(--border-tertiary);
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 8px;
+  background: var(--bg-tertiary);
+  transition: background .25s;
+}
+.alg-t { font-size: 13.5px; font-weight: 600; color: var(--text-primary); margin-bottom: 5px }
+.alg-d { font-size: 13px; color: var(--text-secondary); line-height: 1.55 }
+
+/* Tip */
+.tip {
+  background: var(--bg-warning);
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 13px;
+  color: var(--text-warning);
+  margin-top: 10px;
+}
+
+/* VS comparison */
+.vs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 10px;
+}
+.vs-col { border-radius: 10px; padding: 14px }
+.vs-rtems { background: var(--bg-info) }
+.vs-qnx { background: var(--bg-success) }
+.vs-t { font-size: 14px; font-weight: 600; margin-bottom: 8px }
+.vs-item { font-size: 13px; line-height: 1.6; margin-bottom: 5px; color: var(--text-primary) }
+
+.sub { font-size: 12.5px; color: var(--text-secondary); margin-bottom: 8px }
+
+/* ===== MOBILE ===== */
+@media (max-width: 600px) {
+  .container { padding: 14px 10px 30px }
+  .header h1 { font-size: 17px }
+  .tabs { gap: 5px }
+  .tab { padding: 7px 11px; font-size: 12px }
+  .card { padding: 13px }
+  .row2 { grid-template-columns: 1fr }
+  .vs { grid-template-columns: 1fr }
+  table { font-size: 12px }
+  th, td { padding: 6px 7px }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="header">
+  <h1><span>SCR</span> – Systemy Czasu Rzeczywistego</h1>
+  <button class="theme-toggle" onclick="toggleTheme()" aria-label="Zmien motyw">
+    <span class="icon-light">&#9728;&#65039;</span>
+    <span class="icon-dark">&#9790;&#65039;</span>
+  </button>
+</div>
+
+<div class="tabs">
+  <button class="tab active" onclick="show(0)">1. SCR – def.</button>
+  <button class="tab" onclick="show(1)">2. Szeregowanie</button>
+  <button class="tab" onclick="show(2)">3. Elastyczne</button>
+  <button class="tab" onclick="show(3)">4. IoT</button>
+  <button class="tab" onclick="show(4)">5. Wbudowane</button>
+  <button class="tab" onclick="show(5)">6. Kernel</button>
+</div>
+
+<!-- TEMAT 1 -->
+<div class="panel active" id="p0">
+  <div class="card">
+    <h3>Definicja SCR</h3>
+    <div class="def">System czasu rzeczywistego to system komputerowy, w ktorym poprawnosc dzialania zalezy nie tylko od poprawnosci wynikow, ale przede wszystkim od <b>czasu, w jakim te wyniki zostana dostarczone</b>. Wynik spozniony jest traktowany jako bledny.</div>
+    <p class="sub">Trzy elementy analizy:</p>
+    <ul>
+      <li><b>System komputerowy</b> – wykonuje obliczenia i steruje</li>
+      <li><b>Otoczenie (obiekt)</b> – generuje zdarzenia i przyjmuje sygnaly</li>
+      <li><b>Czas</b> – narzuca rygorystyczne ograniczenia</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>Klasyfikacja czasowa (3 typy)</h3>
+    <div class="alg">
+      <div class="alg-t"><span class="badge br">Hard</span> Ostre ograniczenia</div>
+      <div class="alg-d">Przekroczenie terminu = awaria systemu, katastrofalne skutki. Zagrozenie dla ludzi lub sprzetu.<br><i>Przyklady: ABS, rozrusznik serca, sterowanie lotem</i></div>
+    </div>
+    <div class="alg">
+      <div class="alg-t"><span class="badge bw">Firm</span> Mocne ograniczenia</div>
+      <div class="alg-d">Przekroczenie terminu = wynik calkowicie nieprzydatny (zero korzysci), ale nie ma katastrofy fizycznej.<br><i>Przyklady: prognozowanie pogody do celow nawigacyjnych</i></div>
+    </div>
+    <div class="alg">
+      <div class="alg-t"><span class="badge bg">Soft</span> Miekkie ograniczenia</div>
+      <div class="alg-d">Przekroczenie terminu jest dopuszczalne, ale powoduje spadek jakosci. Im wieksze opoznienie, tym mniejsza wartosc wyniku (az do zera).<br><i>Przyklady: odtwarzanie wideo online, gry sieciowe</i></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>Cechy charakterystyczne SCR</h3>
+    <ul>
+      <li>Uzaleznienie pracy od <b>wymagan czasowych</b></li>
+      <li><b>Ciaglosc dzialania</b> – praca bez przerwy</li>
+      <li><b>Niezawodnosc</b></li>
+      <li><b>Zaleznosc od otoczenia</b></li>
+      <li><b>Wspolbieznosc</b> – zdarzenia pojawiaja sie jednoczesnie</li>
+      <li><b>Przewidywalnosc</b> – deterministyczna reakcja</li>
+      <li><b>Punktualnosc</b> – reakcja w scisle okreslonym czasie</li>
+      <li><b>Zapewnienie bezpiecznej pracy</b> w przypadku awarii (fail-safe)</li>
+    </ul>
+  </div>
+</div>
+
+<!-- TEMAT 2 -->
+<div class="panel" id="p1">
+  <div class="card">
+    <h3>Czym jest algorytm szeregowania?</h3>
+    <div class="def">Algorytm szeregowania <b>rozdziela czas procesora i dostep do zasobow</b> pomiedzy zadania, ktore moga o nie konkurowac. W SCR wazne jest nie tylko czy zadanie zostanie wykonane, ale <b>czy wykona sie w okreslonym czasie</b>.</div>
+    <p class="sub">Stany zadania: <span class="badge bi">Wykonywane</span><span class="badge bx">Gotowe</span><span class="badge bx">Oczekujace na czas</span><span class="badge bx">Oczekujace na zdarzenie</span><span class="badge bx">Przerwane</span><span class="badge bx">Uspione</span></p>
+  </div>
+  <div class="card">
+    <h3>Schematy kolejkowania</h3>
+    <div class="row2">
+      <div class="mini">
+        <div class="mini-t">Bez wywlaszczania (kooperacyjne)</div>
+        <div style="font-size:13px;color:var(--text-primary);line-height:1.55">Zadanie pracuje az samo odda procesor. Ryzykowne – jedno zadanie moze zablokowac caly system.</div>
+      </div>
+      <div class="mini">
+        <div class="mini-t">Z wywlaszczaniem (preemptive)</div>
+        <div style="font-size:13px;color:var(--text-primary);line-height:1.55">OS moze w kazdej chwili przerwac zadanie. Gwarantuje natychmiastowa reakcje na zadania krytyczne.</div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>Rodzaje algorytmow (6 do wykucia)</h3>
+    <div class="alg">
+      <div class="alg-t">FCFS / FIFO <span class="badge bx">niewywlaszczajacy</span></div>
+      <div class="alg-d">Kto pierwszy, ten lepszy. Proste, ale niebezpieczne – jeden dlugi proces blokuje wszystkich.</div>
+    </div>
+    <div class="alg">
+      <div class="alg-t">Round-Robin <span class="badge bw">wywlaszczajacy</span></div>
+      <div class="alg-d">Kazde zadanie dostaje kwant czasu (np. 10ms). Jesli nie skonczy – laduje na koncu kolejki. Sprawiedliwy podzial, brak glodzenia.</div>
+    </div>
+    <div class="alg">
+      <div class="alg-t">SJF – Shortest Job First <span class="badge bw">wywlaszczajacy</span></div>
+      <div class="alg-d">Procesor bierze najkrotsze zadanie. Minimalizuje sredni czas oczekiwania.</div>
+    </div>
+    <div class="alg">
+      <div class="alg-t">EDF – Earliest Deadline First <span class="badge bw">dynamiczny, wywlaszczajacy</span></div>
+      <div class="alg-d">Najpierw to zadanie, ktoremu zostalo <b>najmniej czasu do terminu</b>. Dynamicznie aktualizuje priorytety przy kazdym przerwaniu zegarowym.</div>
+    </div>
+    <div class="alg">
+      <div class="alg-t">RMS – Rate Monotonic Scheduling <span class="badge bi">statyczny, wywlaszczajacy</span></div>
+      <div class="alg-d">Dla zadan <b>periodycznych</b>. Im krotszy okres (czesciej sie uruchamia), tym wyzszy staly priorytet. Priorytety przypisywane <b>przed</b> uruchomieniem systemu.</div>
+    </div>
+    <div class="tip">Zapamietaj: EDF = dynamiczny (biezacy termin) | RMS = statyczny (okres = priorytet)</div>
+  </div>
+  <div class="card">
+    <h3>Zadania periodyczne vs aperiodyczne</h3>
+    <div class="row2">
+      <div class="mini">
+        <div class="mini-t">Periodyczne - algorytmy statyczne</div>
+        <div style="font-size:13px;color:var(--text-primary);line-height:1.55">Znamy z gory czas trwania i czestotliwosc. Kolejnosc ustalana przed uruchomieniem. - RMS</div>
+      </div>
+      <div class="mini">
+        <div class="mini-t">Aperiodyczne - algorytmy dynamiczne</div>
+        <div style="font-size:13px;color:var(--text-primary);line-height:1.55">Pojawiaja sie nieregularnie. Planowanie odbywa sie na biezaco w czasie dzialania systemu. - EDF</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TEMAT 3 -->
+<div class="panel" id="p2">
+  <div class="card">
+    <h3>Czym sa elastyczne aplikacje?</h3>
+    <div class="def">Elastyczne aplikacje skladaja sie z zadan o <b>samo-modyfikujacym sie przebiegu</b>, ktore wykorzystuja elastyczne (niedokladne) obliczenia. Cel: osiagniecie wyniku o jak <b>najlepszej jakosci</b> przy zachowaniu <b>ograniczen czasowych</b>.</div>
+    <p style="font-size:13.5px;color:var(--text-primary);margin-bottom:8px">Aplikacja moze sie <b>degradowac</b> w sytuacji niedoboru czasu – gdy brakuje zasobow, obniza funkcjonalnosc, byleby zmiescic sie w deadline'ie.</p>
+  </div>
+  <div class="card">
+    <h3>Jak dziala adaptacja?</h3>
+    <p style="font-size:13.5px;color:var(--text-primary);margin-bottom:10px">Czas wykonania jest kontrolowany na biezaco. Na okreslonych etapach porownuje sie <b>Tr (czas rzeczywisty)</b> z <b>Tp (czas planowany)</b>:</p>
+    <table>
+      <tr><th>Stan zadania</th><th>Akcja</th></tr>
+      <tr><td><b>Tr = Tp</b> (punktualne)</td><td>Brak modyfikacji</td></tr>
+      <tr><td><b>Tr &gt; Tp</b> (opoznione)</td><td>Wybierz wersje o <b>zredukowanej funkcjonalnosci</b> (mniej czasochlonna). Dla wielu opoznien – wymiana calego zadania.</td></tr>
+      <tr><td><b>Tr &lt; Tp</b> (przyspieszone)</td><td>Wybierz wersje <b>bardziej czasochlonna</b> (rozbudowana funkcjonalnosc)</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h3>Przyklad: petla regulatora pradu</h3>
+    <ul>
+      <li>Normalnie: pomiar - wyznaczenie uchybu - 5x usrednienie - dokladne nastawy PI/PID - PWM</li>
+      <li>Przy braku czasu: <b>rezygnacja z usredniania</b> lub <b>zastapienie PID sterowaniem rozmytym FLC</b></li>
+      <li>Ekstremalny brak czasu: <b>powtorzenie poprzedniej wartosci sterowania</b></li>
+    </ul>
+  </div>
+</div>
+
+<!-- TEMAT 4 -->
+<div class="panel" id="p3">
+  <div class="card">
+    <h3>Definicja IoT</h3>
+    <div class="def">Internet Rzeczy to <b>globalny, rozproszony ekosystem czasu rzeczywistego</b>, w ktorym fizyczne obiekty (maszyny) komunikuja sie ze soba i z siecia globalna <b>bez ingerencji czlowieka</b>. System nie tylko zbiera dane, ale potrafi ciagle sie uczyc i automatycznie reagowac na zmiany w otoczeniu.</div>
+    <p style="font-size:12.5px;color:var(--text-secondary)">Termin stworzony w 1999 r. przez Kevina Ashtona. Narodziny IoT: przelom 2008/2009 – liczba urzadzen w sieci przekroczyla kilka miliardow.</p>
+  </div>
+  <div class="card">
+    <h3>Struktura IoT – 3 warstwy</h3>
+    <div class="alg">
+      <div class="alg-t"><span class="badge bi">Warstwa 1</span> Fizyczna / pomiarowa (Wejscie)</div>
+      <div class="alg-d"><b>Sensory (czujniki)</b> – zbieraja informacje bezposrednio z otoczenia (temperatura, ruch, GPS, wilgotnosc, wibracje...)</div>
+    </div>
+    <div class="alg">
+      <div class="alg-t"><span class="badge bw">Warstwa 2</span> Komunikacyjna (Przesyl)</div>
+      <div class="alg-d"><b>Srodek komunikacji</b> – protokoly sieciowe i sprzet: Wi-Fi, Bluetooth, 5G, NFC, Z-Wave, 6LoWPAN. Bezpieczne przesylanie danych.</div>
+    </div>
+    <div class="alg">
+      <div class="alg-t"><span class="badge bg">Warstwa 3</span> Obliczeniowa / sterujaca (Wyjscie)</div>
+      <div class="alg-d"><b>Chmura obliczeniowa</b> – odbiera sygnal, analizuje, podejmuje decyzje o reakcji.<br><b>Efektory (urzadzenia wykonawcze)</b> – wywoluja fizyczna reakcje (alarm, zawor, sygnalizacja).</div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>3 warunki dzialania IoT</h3>
+    <ul>
+      <li>Urzadzenie z <b>sensorem</b> zbierajacym dane z otoczenia</li>
+      <li>Urzadzenie <b>odbierajace i przetwarzajace</b> sygnal (np. smartfon, komputer)</li>
+      <li><b>Srodek komunikacji</b> – sposob przesylania danych miedzy nimi</li>
+    </ul>
+  </div>
+</div>
+
+<!-- TEMAT 5 -->
+<div class="panel" id="p4">
+  <div class="card">
+    <h3>Definicja systemu wbudowanego</h3>
+    <div class="def">System wbudowany to specjalistyczny system komputerowy (polaczenie sprzetu i oprogramowania), ktory jest <b>calkowicie zintegrowany z maszyna, ktora steruje</b>. Nie jest to zwykly komputer osobisty – jest dedykowany do jednego zadania.</div>
+  </div>
+  <div class="card">
+    <h3>Cechy charakterystyczne (do wykucia)</h3>
+    <ul>
+      <li><b>Zaleznosc od otoczenia</b> – ciagle pobieranie i analiza danych z fizycznego srodowiska (czujniki)</li>
+      <li><b>Ciaglosc dzialania</b> – system pracuje bez przerwy</li>
+      <li><b>Wspolbieznosc</b> – jednoczesne przetwarzanie wielu zadan i reagowanie na wiele sygnalow</li>
+      <li><b>Przewidywalnosc</b> – dokladnie wiadomo jak system zareaguje i ile czasu mu to zajmie</li>
+      <li><b>Punktualnosc</b> – bezwzgledne dotrzymywanie deadline'ow</li>
+      <li><b>Uzaleznienie od wymagan czasowych</b> – obiekt dyktuje ile czasu system ma na reakcje</li>
+      <li><b>Niezawodnosc</b> – gwarancja bezblednego i stabilnego dzialania</li>
+      <li><b>Reagowalnosc</b> – natychmiastowa odpowiedz na nieprzewidziane zdarzenia</li>
+      <li><b>Fail-safe</b> – gdy cos sie zepsuje, system przechodzi w stan bezpieczny (zatrzymanie maszyny, odciecie zasilania)</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>Cechy wyrozniajace na tle innych systemow</h3>
+    <ul>
+      <li>Stosowanie wielu komponentow sprzetowych, ukladow pomiarowych i wykonawczych</li>
+      <li>Wysoka jakosc oprogramowania i zabezpieczen</li>
+      <li><b>Dedykowany charakter</b> – zaprojektowany do konkretnego zadania</li>
+      <li>Silne zintegrowanie, niewielkie rozmiary, niski pobor energii</li>
+      <li>Odpornosc mechaniczna, praca w trudnych warunkach srodowiskowych</li>
+      <li>Ograniczone interfejsy (czesto brak GUI), dzialanie bezobslugowe</li>
+    </ul>
+  </div>
+</div>
+
+<!-- TEMAT 6 -->
+<div class="panel" id="p5">
+  <div class="card">
+    <h3>O co chodzi z kernelem?</h3>
+    <div class="def">Wybor jadra (kernela) to decyzja o priorytetach systemu: czy wazniejsza jest <b>czysta szybkosc</b>, czy <b>niezawodnosc i odpornosc na bledy</b>?</div>
+  </div>
+  <div class="card">
+    <h3>Porownanie 2 przypadkow</h3>
+    <div class="vs">
+      <div class="vs-col vs-rtems">
+        <div class="vs-t" style="color:var(--text-info)">RTEMS – architektura monolityczna</div>
+        <div class="vs-item">Jadro, sterowniki i aplikacja dzialaja w <b>jednej wspolnej przestrzeni adresowej</b> (Single Address Space)</div>
+        <div class="vs-item">Komunikacja miedzy modulami jest <b>natychmiastowa</b> (zero narzutu)</div>
+        <div class="vs-item">System jest <b>niezwykle szybki i lekki</b></div>
+        <div class="vs-item"><b>Brak izolacji</b> – blad w jednym fragmencie kodu moze nadpisac pamiec jadra i spowodowac awarie calego urzadzenia</div>
+        <div class="vs-item" style="margin-top:6px;font-size:11px;color:var(--text-secondary)">Darmowy, GPL. Uzywany m.in. w armii i kosmosie.</div>
+      </div>
+      <div class="vs-col vs-qnx">
+        <div class="vs-t" style="color:var(--text-success)">QNX – architektura mikrojadra</div>
+        <div class="vs-item">Jadro ogranicza sie do absolutnej podstawy (planowanie zadan). Sterowniki i systemy plikow dzialaja jako <b>odizolowane procesy zewnetrzne</b></div>
+        <div class="vs-item"><b>Potezna niezawodnosc</b> – jesli sterownik ulegnie awarii, system sie nie zawiesza, jadro moze go zrestartowac</div>
+        <div class="vs-item"><b>Wolniejszy</b> – kazda wymiana danych wymaga przeslania komunikatu miedzy warstwami</div>
+        <div class="vs-item" style="margin-top:6px;font-size:11px;color:var(--text-secondary)">Klasa Unix. Stosowany w automatyce przemyslowej.</div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>Tabela porownawcza (szybka sciaga)</h3>
+    <table>
+      <tr><th>Cecha</th><th>RTEMS (monolityczny)</th><th>QNX (mikrojadro)</th></tr>
+      <tr><td>Przestrzen adresowa</td><td>Jedna wspolna</td><td>Odizolowane procesy</td></tr>
+      <tr><td>Szybkosc</td><td>Bardzo szybki</td><td>Wolniejszy</td></tr>
+      <tr><td>Niezawodnosc</td><td>Blad = crash systemu</td><td>Restart wadliwego modulu</td></tr>
+      <tr><td>Komunikacja</td><td>Natychmiastowa</td><td>Przez komunikaty (IPC)</td></tr>
+      <tr><td>Zastosowanie</td><td>Wojsko, kosmos</td><td>Automatyka przemyslowa</td></tr>
+    </table>
+  </div>
+</div>
+
+</div>
+
+<script>
+function show(i) {
+  document.querySelectorAll('.panel').forEach((p, j) => p.classList.toggle('active', j === i));
+  document.querySelectorAll('.tab').forEach((t, j) => t.classList.toggle('active', j === i));
+}
+
+function toggleTheme() {
+  const html = document.documentElement;
+  const current = html.getAttribute('data-theme');
+  const next = current === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+  localStorage.setItem('theme', next);
+}
+
+// Restore saved theme
+const saved = localStorage.getItem('theme');
+if (saved) document.documentElement.setAttribute('data-theme', saved);
+</script>
+</body>
+</html>
