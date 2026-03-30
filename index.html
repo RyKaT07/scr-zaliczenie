@@ -6,7 +6,7 @@
 <title>Podstawy i Algorytmika SCR – Zaliczenie 30.03</title>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root {
+  [data-theme="dark"] {
     --bg: #0e0f11;
     --bg2: #16181c;
     --bg3: #1e2026;
@@ -20,6 +20,20 @@
     --yellow: #f59e0b;
     --teal: #14b8a6;
   }
+  [data-theme="light"] {
+    --bg: #ffffff;
+    --bg2: #f5f6f8;
+    --bg3: #eceef1;
+    --border: #d5d8de;
+    --text: #1a1a2e;
+    --muted: #5a5d6a;
+    --accent: #3b7de8;
+    --accent2: #6d28d9;
+    --green: #16a34a;
+    --red: #dc2626;
+    --yellow: #ca8a04;
+    --teal: #0d9488;
+  }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -28,6 +42,7 @@
     background: var(--bg);
     color: var(--text);
     min-height: 100vh;
+    transition: background .25s, color .25s;
   }
 
   /* HEADER */
@@ -470,6 +485,27 @@
     color: var(--muted);
   }
 
+  /* Theme toggle */
+  .theme-toggle {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 16px;
+    transition: border-color .2s;
+    flex-shrink: 0;
+  }
+  .theme-toggle:hover { border-color: var(--accent); }
+  [data-theme="dark"] .icon-sun { display: inline }
+  [data-theme="dark"] .icon-moon { display: none }
+  [data-theme="light"] .icon-sun { display: none }
+  [data-theme="light"] .icon-moon { display: inline }
+
   @media (max-width: 768px) {
     header { padding: 18px 20px; }
     .hero { padding: 40px 20px 28px; }
@@ -484,11 +520,17 @@
   }
 </style>
 </head>
-<body>
+<body data-theme="dark">
 
 <header>
   <span class="logo">SCR / 2026L — Podstawy i Algorytmika</span>
-  <span class="deadline">ZALICZENIE: 30.03.2026 — dziś!</span>
+  <div style="display:flex;align-items:center;gap:12px">
+    <span class="deadline">ZALICZENIE: 30.03.2026 — dziś!</span>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Zmień motyw">
+      <span class="icon-sun">☀️</span>
+      <span class="icon-moon">🌙</span>
+    </button>
+  </div>
 </header>
 
 <div class="hero">
@@ -1043,6 +1085,17 @@ function showPanel(i) {
   document.querySelectorAll('.nav-item').forEach((n, j) => n.classList.toggle('active', j === i));
   document.querySelectorAll('.topic-pill').forEach((t, j) => t.classList.toggle('active', j === i));
 }
+
+function toggleTheme() {
+  const body = document.body;
+  const current = body.getAttribute('data-theme');
+  const next = current === 'dark' ? 'light' : 'dark';
+  body.setAttribute('data-theme', next);
+  localStorage.setItem('scr-theme', next);
+}
+
+const saved = localStorage.getItem('scr-theme');
+if (saved) document.body.setAttribute('data-theme', saved);
 </script>
 </body>
 </html>
