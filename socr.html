@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SOCR – Systemy Operacyjne Czasu Rzeczywistego – Zaliczenie 31.03</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  [data-theme="dark"] {
+    --bg: #0e0f11;
+    --bg2: #16181c;
+    --bg3: #1e2026;
+    --border: #2a2d35;
+    --text: #e8eaf0;
+    --muted: #6b7080;
+    --accent: #14b8a6;
+    --accent2: #7c3aed;
+    --green: #22c55e;
+    --red: #ef4444;
+    --yellow: #f59e0b;
+    --blue: #4f8ef7;
+  }
+  [data-theme="light"] {
+    --bg: #ffffff;
+    --bg2: #f5f6f8;
+    --bg3: #eceef1;
+    --border: #d5d8de;
+    --text: #1a1a2e;
+    --muted: #5a5d6a;
+    --accent: #0d9488;
+    --accent2: #6d28d9;
+    --green: #16a34a;
+    --red: #dc2626;
+    --yellow: #ca8a04;
+    --blue: #3b7de8;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'IBM Plex Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; transition: background .25s, color .25s; }
+
+  header {
+    border-bottom: 1px solid var(--border);
+    padding: 28px 40px;
+    display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; background: var(--bg); z-index: 100;
+  }
+  .logo { font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: var(--accent); letter-spacing: 0.05em; }
+  .deadline { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--red);
+    background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.25);
+    padding: 5px 12px; border-radius: 4px; letter-spacing: 0.05em; }
+
+  .hero { padding: 60px 40px 40px; border-bottom: 1px solid var(--border); }
+  .hero-tag { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--accent);
+    letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 16px; }
+  h1 { font-size: clamp(28px, 5vw, 48px); font-weight: 300; line-height: 1.2; margin-bottom: 20px; letter-spacing: -0.02em; }
+  h1 span { color: var(--accent); font-weight: 600; }
+  .hero-sub { font-size: 15px; color: var(--muted); max-width: 560px; line-height: 1.6; }
+  .topics-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 28px; }
+  .topic-pill { font-family: 'IBM Plex Mono', monospace; font-size: 11px; padding: 5px 12px;
+    border: 1px solid var(--border); border-radius: 2px; color: var(--muted); cursor: pointer;
+    transition: all 0.15s; background: transparent; }
+  .topic-pill:hover, .topic-pill.active { border-color: var(--accent); color: var(--accent); background: rgba(20,184,166,0.08); }
+
+  .main { display: grid; grid-template-columns: 220px 1fr; min-height: calc(100vh - 180px); }
+
+  .sidebar { border-right: 1px solid var(--border); padding: 32px 0;
+    position: sticky; top: 73px; height: calc(100vh - 73px); overflow-y: auto; }
+  .nav-label { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--muted);
+    letter-spacing: 0.12em; text-transform: uppercase; padding: 0 24px; margin-bottom: 12px; }
+  .nav-item { display: flex; align-items: flex-start; gap: 12px; padding: 10px 24px;
+    cursor: pointer; transition: background 0.12s; border-left: 2px solid transparent; }
+  .nav-item:hover { background: var(--bg2); }
+  .nav-item.active { background: var(--bg2); border-left-color: var(--accent); }
+  .nav-num { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--accent); margin-top: 1px; flex-shrink: 0; }
+  .nav-text { font-size: 12px; line-height: 1.4; color: var(--muted); }
+  .nav-item.active .nav-text { color: var(--text); }
+
+  .content { padding: 40px 48px; max-width: 860px; }
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  .panel-header { margin-bottom: 32px; padding-bottom: 24px; border-bottom: 1px solid var(--border); }
+  .panel-num { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--accent); letter-spacing: 0.1em; margin-bottom: 10px; }
+  .panel-title { font-size: 26px; font-weight: 300; letter-spacing: -0.02em; margin-bottom: 8px; }
+  .panel-question { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--muted);
+    background: var(--bg2); border: 1px solid var(--border); padding: 10px 16px; border-radius: 4px; margin-top: 12px; }
+  .panel-question::before { content: 'temat zaliczenia: '; color: var(--yellow); }
+
+  .block { margin-bottom: 24px; }
+  .block-title { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--muted);
+    letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 12px; }
+
+  .def-box { background: var(--bg2); border: 1px solid var(--border); border-left: 3px solid var(--accent);
+    padding: 16px 20px; border-radius: 0 6px 6px 0; font-size: 14px; line-height: 1.7; color: var(--text); }
+  .def-box strong { color: var(--accent); font-weight: 500; }
+
+  .cards { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+  .cards.two { grid-template-columns: 1fr 1fr; }
+  .cards.one { grid-template-columns: 1fr; }
+
+  .card { background: var(--bg2); border: 1px solid var(--border); border-radius: 6px; padding: 16px; }
+  .card-tag { display: inline-block; font-family: 'IBM Plex Mono', monospace; font-size: 10px;
+    letter-spacing: 0.08em; padding: 3px 8px; border-radius: 2px; margin-bottom: 10px; font-weight: 500; }
+  .tag-teal { background: rgba(20,184,166,0.15); color: #14b8a6; }
+  .tag-red { background: rgba(239,68,68,0.15); color: #ef4444; }
+  .tag-yellow { background: rgba(245,158,11,0.15); color: #f59e0b; }
+  .tag-green { background: rgba(34,197,94,0.15); color: #22c55e; }
+  .tag-blue { background: rgba(79,142,247,0.15); color: #4f8ef7; }
+  .tag-gray { background: rgba(107,112,128,0.15); color: #9ca3af; }
+  .tag-purple { background: rgba(124,58,237,0.15); color: #a78bfa; }
+
+  .card-name { font-size: 14px; font-weight: 500; color: var(--text); margin-bottom: 6px; }
+  .card-desc { font-size: 12px; color: var(--muted); line-height: 1.6; }
+  .card-desc strong { color: var(--text); font-weight: 500; }
+
+  ul.list { padding-left: 0; list-style: none; }
+  ul.list li { padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 13px;
+    line-height: 1.6; color: var(--muted); display: flex; gap: 10px; align-items: flex-start; }
+  ul.list li:last-child { border-bottom: none; }
+  ul.list li::before { content: '—'; color: var(--border); flex-shrink: 0; margin-top: 1px; }
+  ul.list li strong { color: var(--text); font-weight: 500; }
+
+  .compare-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .compare-table th { text-align: left; padding: 10px 16px; font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px; color: var(--muted); letter-spacing: 0.08em; background: var(--bg2); border-bottom: 1px solid var(--border); }
+  .compare-table td { padding: 11px 16px; border-bottom: 1px solid var(--border); color: var(--muted); line-height: 1.5; vertical-align: top; }
+  .compare-table td:first-child { color: var(--text); font-weight: 500; }
+  .compare-table tr:last-child td { border-bottom: none; }
+  .compare-table tr:hover td { background: var(--bg2); }
+
+  .note-box { background: rgba(245,158,11,0.07); border: 1px solid rgba(245,158,11,0.2);
+    border-radius: 6px; padding: 12px 16px; font-size: 12px; color: #f59e0b; line-height: 1.6; margin-top: 10px; }
+  .note-box::before { content: '⚠ '; }
+  .info-box { background: rgba(20,184,166,0.07); border: 1px solid rgba(20,184,166,0.2);
+    border-radius: 6px; padding: 12px 16px; font-size: 12px; color: var(--accent); line-height: 1.6; margin-top: 10px; }
+
+  .vs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 4px; }
+  .vs-col { background: var(--bg2); border: 1px solid var(--border); border-radius: 6px; padding: 20px; }
+  .vs-col.mono { border-top: 2px solid var(--blue); }
+  .vs-col.micro { border-top: 2px solid var(--accent); }
+  .vs-col.hybrid { border-top: 2px solid var(--yellow); }
+  .vs-title { font-size: 15px; font-weight: 500; margin-bottom: 4px; }
+  .vs-col.mono .vs-title { color: var(--blue); }
+  .vs-col.micro .vs-title { color: var(--accent); }
+  .vs-col.hybrid .vs-title { color: var(--yellow); }
+  .vs-sub { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--muted); margin-bottom: 14px; }
+  .vs-item { font-size: 12px; color: var(--muted); line-height: 1.6; padding: 6px 0; border-bottom: 1px solid var(--border); }
+  .vs-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .vs-item strong { color: var(--text); font-weight: 500; }
+  .pro { color: var(--green); }
+  .con { color: var(--red); }
+
+  .sys-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 6px; padding: 16px; margin-bottom: 10px; }
+  .sys-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+  .sys-name { font-size: 15px; font-weight: 500; color: var(--text); }
+  .sys-maker { font-size: 12px; color: var(--muted); }
+  .sys-body { font-size: 13px; color: var(--muted); line-height: 1.6; }
+  .sys-body strong { color: var(--text); font-weight: 500; }
+
+  .states-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+  .state-tag { font-family: 'IBM Plex Mono', monospace; font-size: 11px; padding: 4px 10px;
+    border: 1px solid var(--border); border-radius: 2px; color: var(--muted); }
+
+  .arch-row { display: flex; gap: 12px; align-items: stretch; margin-bottom: 8px; }
+  .arch-num { font-family: 'IBM Plex Mono', monospace; font-size: 20px; color: var(--border);
+    width: 30px; flex-shrink: 0; display: flex; align-items: center; }
+  .arch-content { flex: 1; background: var(--bg2); border: 1px solid var(--border); border-radius: 6px; padding: 14px 18px; }
+  .arch-title { font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: 4px; }
+  .arch-desc { font-size: 12px; color: var(--muted); line-height: 1.55; }
+  .arch-desc strong { color: var(--text); font-weight: 500; }
+
+  footer { border-top: 1px solid var(--border); padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; }
+  .footer-note { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--muted); }
+
+  .theme-toggle {
+    background: var(--bg2); border: 1px solid var(--border); border-radius: 50%;
+    width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;
+    cursor: pointer; font-size: 16px; transition: border-color .2s; flex-shrink: 0;
+  }
+  .theme-toggle:hover { border-color: var(--accent); }
+  [data-theme="dark"] .icon-sun { display: inline }
+  [data-theme="dark"] .icon-moon { display: none }
+  [data-theme="light"] .icon-sun { display: none }
+  [data-theme="light"] .icon-moon { display: inline }
+
+  @media (max-width: 768px) {
+    header { padding: 18px 20px; }
+    .hero { padding: 40px 20px 28px; }
+    .main { grid-template-columns: 1fr; }
+    .sidebar { display: none; }
+    .content { padding: 24px 20px; }
+    .cards { grid-template-columns: 1fr; }
+    .cards.two { grid-template-columns: 1fr; }
+    .vs-grid { grid-template-columns: 1fr; }
+    footer { flex-direction: column; gap: 8px; text-align: center; }
+  }
+</style>
+</head>
+<body data-theme="dark">
+
+<header>
+  <a href="index.html" class="logo" style="text-decoration:none">SOCR / 2026L — Systemy Operacyjne Czasu Rzeczywistego</a>
+  <div style="display:flex;align-items:center;gap:12px">
+    <span class="deadline">ZALICZENIE: 31.03.2026 · 16:15</span>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Zmień motyw">
+      <span class="icon-sun">☀️</span>
+      <span class="icon-moon">🌙</span>
+    </button>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="hero-tag">materiały do zaliczenia</div>
+  <h1>Systemy Operacyjne<br><span>Czasu Rzeczywistego</span></h1>
+  <p class="hero-sub">Dostaniesz 2 z 3 pytań. Wszystkie trzy są poniżej + bonus DSP z notatek. Skup się na architekturze jądra i QNX — to filary tego przedmiotu.</p>
+  <div class="topics-grid">
+    <button class="topic-pill active" onclick="showPanel(0)">1. Mikrojądra – cechy i priorytety</button>
+    <button class="topic-pill" onclick="showPanel(1)">2. Porównanie jąder</button>
+    <button class="topic-pill" onclick="showPanel(2)">3. Konkretne systemy SOCR</button>
+    <button class="topic-pill" onclick="showPanel(5)">4. DSP – procesory sygnałowe</button>
+  </div>
+</div>
+
+<div class="main">
+  <nav class="sidebar">
+    <div class="nav-label">Pytania</div>
+    <div class="nav-item active" onclick="showPanel(0)">
+      <span class="nav-num">01</span>
+      <span class="nav-text">Mikrojądra – cechy, priorytety, wady</span>
+    </div>
+    <div class="nav-item" onclick="showPanel(1)">
+      <span class="nav-num">02</span>
+      <span class="nav-text">Porównanie jąder – monolityczne vs mikrojądro</span>
+    </div>
+    <div class="nav-item" onclick="showPanel(2)">
+      <span class="nav-num">03</span>
+      <span class="nav-text">Konkretne systemy SOCR – QNX, VxWorks, OS-9</span>
+    </div>
+    <div class="nav-item" onclick="showPanel(5)">
+      <span class="nav-num">04</span>
+      <span class="nav-text">DSP – procesory sygnałowe</span>
+    </div>
+    <div class="nav-label" style="margin-top:24px">Dodatkowe</div>
+    <div class="nav-item" onclick="showPanel(3)">
+      <span class="nav-num">+</span>
+      <span class="nav-text">Klasyfikacja SOCR</span>
+    </div>
+    <div class="nav-item" onclick="showPanel(4)">
+      <span class="nav-num">+</span>
+      <span class="nav-text">Algorytmy szeregowania QNX</span>
+    </div>
+  </nav>
+
+  <div class="content">
+
+    <!-- PANEL 1: Mikrojądra -->
+    <div class="panel active" id="panel-0">
+      <div class="panel-header">
+        <div class="panel-num">PYTANIE 01 / 03</div>
+        <div class="panel-title">Mikrojądra – cechy, priorytety, wady</div>
+        <div class="panel-question">Mikrojądra procesów – cechy charakterystyczne, priorytety, negatywne aspekty</div>
+      </div>
+
+      <div class="block">
+        <div class="block-title">Czym jest jądro (kernel)?</div>
+        <div class="def-box">
+          Jądro to <strong>oprogramowanie tworzące warstwę między sprzętem a systemem operacyjnym</strong>. Jest pierwszym programem ładowanym przy starcie. Zarządza zasobami pamięci, wszystkimi procesami/zadaniami, dostępem do zasobów oraz procesorem.
+        </div>
+      </div>
+
+      <div class="block">
+        <div class="block-title">Mikrojądro – definicja i zasada działania</div>
+        <div class="def-box">
+          Mikrojądro to minimalistyczne jądro, które <strong>ogranicza się do absolutnego minimum</strong>: planowanie zadań, komunikacja między procesami (IPC), obsługa przerwań, zarządzanie pamięcią. Wszystkie pozostałe usługi (sterowniki, system plików, TCP/IP) działają jako <strong>odizolowane procesy w przestrzeni użytkownika</strong>.
+        </div>
+        <div class="info-box">Mikrojądro QNX Neutrino: ~10 kB. Jądro monolityczne Linux: >700 kB. Proporcja ~70:1.</div>
+      </div>
+
+      <div class="block">
+        <div class="block-title">Co robi mikrojądro? (tylko 4 funkcje)</div>
+        <div class="cards two">
+          <div class="card">
+            <div class="card-tag tag-teal">funkcja 1</div>
+            <div class="card-name">Szeregowanie zadań</div>
+            <div class="card-desc">Decyduje, który proces/wątek dostaje procesor i kiedy. Zarządza kolejkami priorytetów.</div>
+          </div>
+          <div class="card">
+            <div class="card-tag tag-teal">funkcja 2</div>
+            <div class="card-name">Komunikacja IPC</div>
+            <div class="card-desc">Mechanizm przekazywania komunikatów między odizolowanymi procesami. Podstawa całej architektury.</div>
+          </div>
+          <div class="card">
+            <div class="card-tag tag-teal">funkcja 3</div>
+            <div class="card-name">Obsługa przerwań</div>
+            <div class="card-desc">Przechwytuje przerwania sprzętowe i kieruje je do odpowiednich procesów obsługujących.</div>
+          </div>
+          <div class="card">
+            <div class="card-tag tag-teal">funkcja 4</div>
+            <div class="card-name">Zarządzanie pamięcią</div>
+            <div class="card-desc">Chroni przestrzenie adresowe procesów przez MMU. Każdy moduł = własna chroniona przestrzeń.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="block">
+        <div class="block-title">Priorytety w mikrojądrze (na przykładzie QNX)</div>
+        <div class="card">
+          <div class="card-desc">
+            Mikrojądro QNX udostępnia <strong>32 poziomy priorytetów</strong> (0–31), gdzie 31 = najwyższy.<br>
+            Dla programów użytkownika dostępne są wartości 0–19. Poziomy 20–31 zarezerwowane dla systemu.<br><br>
+            Procesy na tym samym poziomie priorytetu szeregowane są wg jednego z trzech algorytmów:
+          </div>
+        </div>
+        <div class="cards" style="margin-top:8px">
+          <div class="card">
+            <div class="card-tag tag-blue">FIFO</div>
+            <div class="card-name">First In, First Out</div>
+            <div class="card-desc">Najdłużej czekający gotowy proces dostaje procesor. Wykonuje się aż do zakończenia, zawieszenia lub wywłaszczenia przez wyższy priorytet.</div>
+          </div>
+          <div class="card">
+            <div class="card-tag tag-yellow">Round-Robin (karuzelowy)</div>
+            <div class="card-name">Kwant czasu = 50 ms</div>
+            <div class="card-desc">Procesy kolejno dostają kwant czasu. Po wyczerpaniu → wywłaszczenie, następny w kolejce. Sprawiedliwy podział.</div>
+          </div>
+          <div class="card">
+            <div class="card-tag tag-purple">Adaptacyjny</div>
+            <div class="card-name">Adaptive Scheduling</div>
+            <div class="card-desc">Algorytm znany z UNIX-a. Jeśli zadanie zużyje cały kwant bez blokowania, jego priorytet jest <strong>tymczasowo dekrementowany</strong>. Po wejściu w stan blokowania — priorytet przywrócony. Zapobiega głodzeniu zadań interaktywnych.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="block">
+        <div class="block-title">Zalety mikrojądra</div>
+        <ul class="list">
+          <li><strong>Niezawodność</strong> — awaria sterownika nie zawiesza całego systemu; jądro może automatycznie zrestartować wadliwy moduł</li>
+          <li><strong>Pełna izolacja</strong> — każdy komponent w własnej chronionej przestrzeni adresowej (MMU)</li>
+          <li><strong>Bezpieczeństwo</strong> — błąd w jednym module nie wpływa na resztę systemu</li>
+          <li><strong>Rozszerzalność</strong> — dodawanie/usuwanie usług bez rekompilacji całego jądra</li>
+          <li><strong>Przenaszalność</strong> — łatwiejsze przenoszenie na różne platformy sprzętowe</li>
+          <li><strong>Możliwość szybkiej rekonfiguracji</strong> — modułowa budowa</li>
+        </ul>
+      </div>
+
+      <div class="block">
+        <div class="block-title">Wady mikrojądra (negatywne aspekty)</div>
+        <ul class="list">
+          <li><strong>Wolniejsze wykonanie</strong> — każda wymiana danych między modułami wymaga przesłania komunikatu (IPC) + kopii danych między przestrzeniami adresowymi + zmiany kontekstu procesora</li>
+          <li><strong>Narzut komunikacyjny</strong> — wysłaniu komunikatu towarzyszy kopiowanie danych i zmiana kontekstu procesora (context switch)</li>
+          <li><strong>Słabsza wydajność pakietowa</strong> — protokoły sieciowe (TCP/IP) działają poza jądrem → mniejsza przepustowość niż w monolitycznym (dotyczy np. routerów)</li>
+          <li><strong>Klasa zastosowań limitowana</strong> — systemy wymagające ekstremalnej przepustowości sieciowej (firewalle, routery) mogą działać wolniej</li>
+        </ul>
+        <div class="note-box">Dlaczego QNX nie nadaje się do wszystkiego? Architektura mikrojądra powoduje utratę wydajności przez przekazywanie komunikatów. Dla routerów i firewalli stosuje się raczej systemy monolityczne.</div>
+      </div>
+    </div>
+
+    <!-- PANEL 2: Porównanie jąder -->
+    <div class="panel" id="panel-1">
+      <div class="panel-header">
+        <div class="panel-num">PYTANIE 02 / 03</div>
+        <div class="panel-title">Porównanie typów jąder</div>
+        <div class="panel-question">Porównanie jąder – monolityczne vs mikrojądro – różnice, zalety, wady</div>
+      </div>
+
+      <div class="block">
+        <div class="block-title">Trzy modele jądra systemu operacyjnego</div>
+        <div class="vs-grid" style="grid-template-columns:1fr 1fr 1fr">
+          <div class="vs-col mono">
+            <div class="vs-title">Monolityczne</div>
+            <div class="vs-sub">np. Linux, Unix, RTEMS</div>
+            <div class="vs-item">Jądro, sterowniki, aplikacje — <strong>jedna wspólna przestrzeń adresowa</strong>. Moduły komunikują się bezpośrednio przez wywołania funkcji.</div>
+            <div class="vs-item"><span class="pro">✓</span> Najwyższa wydajność obliczeniowa — brak przełączania kontekstu między modułami</div>
+            <div class="vs-item"><span class="con">✗</span> Błąd dowolnego komponentu → <strong>Kernel Panic</strong> = całkowite unieruchomienie systemu</div>
+            <div class="vs-item"><span class="con">✗</span> Nowa funkcja = rekompilacja całego jądra</div>
+          </div>
+          <div class="vs-col micro">
+            <div class="vs-title">Mikrojądro</div>
+            <div class="vs-sub">np. QNX Neutrino, Mach</div>
+            <div class="vs-item">Jądro minimalne (~10 kB). Sterowniki = <strong>odizolowane procesy w przestrzeni użytkownika</strong></div>
+            <div class="vs-item"><span class="pro">✓</span> Błąd sterownika → restart tylko tego procesu, system działa dalej</div>
+            <div class="vs-item"><span class="pro">✓</span> Idealne dla RTOS — gwarancja niezawodności</div>
+            <div class="vs-item"><span class="con">✗</span> Wolniejsze — narzut IPC (kopiowanie danych + zmiana kontekstu przy każdej operacji)</div>
+          </div>
+          <div class="vs-col hybrid">
+            <div class="vs-title">Hybrydowe</div>
+            <div class="vs-sub">np. Windows NT/10/11, macOS, RT-Linux</div>
+            <div class="vs-item">Mikrojądro jako baza + krytyczne czasowo usługi (grafika, sieć) ładowane do przestrzeni jądra</div>
+            <div class="vs-item"><span class="pro">✓</span> Łączy stabilność mikrojądra z wydajnością monolitycznego</div>
+            <div class="vs-item"><span class="con">✗</span> Skomplikowana budowa. Usługa w jądrze → ryzyko awarii całego systemu</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="block">
+        <div class="block-title">Szczegółowe porównanie – 7 wymiarów</div>
+        <table class="compare-table">
+          <tr>
+            <th>Cecha</th>
+            <th>Monolityczne</th>
+            <th>Mikrojądro</th>
+          </tr>
+          <tr>
+            <td>Przestrzeń adresowa</td>
+            <td>Jedna wspólna — jądro + sterowniki + aplikacje razem</td>
+            <td>Oddzielna dla każdego komponentu — chroniona przez MMU</td>
+          </tr>
+          <tr>
+            <td>Szybkość</td>
+            <td style="color:var(--green)">✓ Szybsze — wszystko w jednej przestrzeni, zero kopiowania</td>
+            <td style="color:var(--red)">✗ Wolniejsze — każda operacja = komunikat między przestrzeniami</td>
+          </tr>
+          <tr>
+            <td>Stabilność</td>
+            <td style="color:var(--red)">✗ Błąd w sterowniku = crash całego systemu</td>
+            <td style="color:var(--green)">✓ Błąd w sterowniku izolowany — system działa dalej, jądro może zrestartować moduł</td>
+          </tr>
+          <tr>
+            <td>Komunikacja IPC</td>
+            <td>Sygnały i gniazda (sockets)</td>
+            <td>Kolejki komunikatów (message passing)</td>
+          </tr>
+          <tr>
+            <td>Rozszerzalność</td>
+            <td style="color:var(--red)">✗ Nowa funkcja = rekompilacja całego jądra</td>
+            <td style="color:var(--green)">✓ Nowa usługa = nowy izolowany proces, bez rekompilacji jądra</td>
+          </tr>
+          <tr>
+            <td>Debugowanie</td>
+            <td style="color:var(--red)">✗ Trudne — awaria w przestrzeni jądra może uszkodzić debugger</td>
+            <td style="color:var(--green)">✓ Łatwiejsze — komponenty odseparowane</td>
+          </tr>
+          <tr>
+            <td>Bezpieczeństwo</td>
+            <td style="color:var(--red)">✗ Cały kod w jądrze → większe ryzyko awarii</td>
+            <td style="color:var(--green)">✓ Podział na strefy — błąd jednej usługi nie kompromituje innych</td>
+          </tr>
+          <tr>
+            <td>Rozmiar jądra</td>
+            <td>Duże (Linux: kilkadziesiąt MB)</td>
+            <td>Małe (QNX Neutrino: ~10 kB)</td>
+          </tr>
+          <tr>
+            <td>Przykłady systemów</td>
+            <td>Linux, Unix, RTEMS, VxWorks (częściowo)</td>
+            <td>QNX, Mach, L4, MINIX</td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="block">
+        <div class="block-title">Architektura z ochroną pamięci – 3 poziomy</div>
+        <div class="arch-row">
+          <div class="arch-num">1</div>
+          <div class="arch-content" style="border-left:2px solid var(--red)">
+            <div class="arch-title">Architektura słabych SCR – brak ochrony pamięci</div>
+            <div class="arch-desc">Sterowniki, protokoły i aplikacje w <strong>jednej niechronionej przestrzeni jądra</strong>. Błąd dowolnego elementu → crash całości. Stosowane w prostych, dedykowanych systemach wbudowanych.</div>
+          </div>
+        </div>
+        <div class="arch-row">
+          <div class="arch-num">2</div>
+          <div class="arch-content" style="border-left:2px solid var(--yellow)">
+            <div class="arch-title">Architektura monolityczna – ograniczona ochrona</div>
+            <div class="arch-desc">Wydzielona przestrzeń użytkownika dla aplikacji. Ale <strong>sterowniki nadal w przestrzeni jądra</strong>. Błąd sterownika → crash jądra → crash całego systemu. Błąd aplikacji → tylko aplikacja pada, system działa.</div>
+          </div>
+        </div>
+        <div class="arch-row">
+          <div class="arch-num">3</div>
+          <div class="arch-content" style="border-left:2px solid var(--accent)">
+            <div class="arch-title">Architektura mikrojądra (QNX) – zaawansowana ochrona</div>
+            <div class="arch-desc">Każdy komponent (sterowniki, TCP/IP, system plików) w <strong>własnej chronionej przestrzeni adresowej</strong>. Błąd sterownika → system wydziedzicza proces, zwalnia pamięć, reszta działa normalnie. Jądro może automatycznie zrestartować wadliwy moduł.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="block">
+        <div class="block-title">Podsumowanie – kiedy co stosować?</div>
+        <div class="cards two">
+          <div class="card">
+            <div class="card-tag tag-blue">Monolityczne → użyj gdy:</div>
+            <div class="card-desc">Potrzebujesz <strong>maksymalnej wydajności</strong> i przepustowości. Systemy gdzie szybkość ważniejsza niż odporność na awarie. Routery, firewalle, serwery sieciowe, systemy hardRT gdzie liczy się każda mikrosekunda.</div>
+          </div>
+          <div class="card">
+            <div class="card-tag tag-teal">Mikrojądro → użyj gdy:</div>
+            <div class="card-desc">Potrzebujesz <strong>niezawodności i bezpieczeństwa</strong>. Systemy krytyczne gdzie awaria jest niedopuszczalna. Automatyka przemysłowa, medycyna, lotnictwo, automotive (ABS, airbag).</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PANEL 3: Konkretne systemy -->
+    <div class="panel" id="panel-2">
+      <div class="panel-header">
+        <div class="panel-num">PYTANIE 03 / 03</div>
+        <div class="panel-title">Konkretne systemy SOCR</div>
+        <div class="panel-question">Konkretne systemy SOCR – QNX, VxWorks, OS-9, RT-Linux, iRMX – opis i porównanie</div>
+      </div>
+
+      <div class="block">
+        <div class="block-title">Duże systemy SOCR (3 najważniejsze)</div>
+
+        <div class="sys-card" style="border-top:2px solid var(--accent)">
+          <div class="sys-header">
+            <div>
+              <div class="sys-name">QNX Neutrino</div>
+              <div class="sys-maker">QNX Software Systems Ltd (Kanada) · od 1980 · Hard RTOS</div>
+            </div>
+            <span class="card-tag tag-teal" style="margin-bottom:0">mikrojądro</span>
+          </div>
+          <div class="sys-body">
+            <strong>Architektura:</strong> 32-bitowe mikrojądro Neutrino (~10 kB). Jądro odpowiada tylko za 3 rzeczy: planowanie wątków, obsługę przerwań, komunikację IPC. Sterowniki, TCP/IP, system plików = odizolowane procesy w przestrzeni użytkownika.<br><br>
+            <strong>Niezawodność:</strong> Awaria sterownika karty sieciowej nie powoduje „Blue Screena" ani Kernel Panic. Ubijany jest tylko ten jeden proces — system może go natychmiast zrestartować w tle. Reszta systemu działa normalnie.<br><br>
+            <strong>Komunikacja (IPC / Message Passing):</strong> ponieważ moduły są odizolowane, komunikują się przez szybkie, synchroniczne wysyłanie i odbieranie pakietów danych (komunikatów). To podstawa całej architektury.<br><br>
+            <strong>Zgodność z POSIX (ważne!):</strong> QNX jest w 100% zgodny z normami POSIX. Dla programisty QNX <strong>wygląda i zachowuje się jak standardowy Linux/UNIX</strong>. Umożliwia łatwe przenoszenie programów C/C++ na platformę czasu rzeczywistego.<br><br>
+            <strong>Priorytety:</strong> 32 poziomy (0–31). Algorytmy: FIFO, Round-Robin (50ms), Adaptacyjny.<br><br>
+            <strong>Zastosowania (konkretne przykłady!):</strong><br>
+            • Systemy pokładowe samochodów: <strong>Audi, BMW, Porsche</strong> (multimedialne i sterujące)<br>
+            • Robotyka medyczna: <strong>chirurgiczne ramiona robotyczne</strong><br>
+            • Automatyka przemysłowa: ABB, WAT, MERA<br>
+            • Sterowanie ruchem kolejowym<br><br>
+            <strong>Wada:</strong> słabsza wydajność pakietowa — TCP/IP poza jądrem. Narzut IPC przy każdej operacji (kopiowanie danych + zmiana kontekstu).
+          </div>
+        </div>
+
+        <div class="sys-card" style="border-top:2px solid var(--blue)">
+          <div class="sys-header">
+            <div>
+              <div class="sys-name">VxWorks</div>
+              <div class="sys-maker">Wind River Systems · od 1987</div>
+            </div>
+            <span class="card-tag tag-blue" style="margin-bottom:0">monolityczne</span>
+          </div>
+          <div class="sys-body">
+            <strong>Pozycja rynkowa:</strong> >50% rynku aplikacji wbudowanych. Używany w ponad <strong>350 miliardach urządzeń</strong> na świecie.<br><br>
+            <strong>Cechy kluczowe:</strong><br>
+            • Nieograniczona liczba zadań, szybkie deterministyczne przełączanie<br>
+            • <strong>256 poziomów priorytetów</strong><br>
+            • Algorytm z wywłaszczaniem oparty na priorytetach + Round-Robin<br>
+            • Dziedziczenie priorytetów (priority inheritance) — rozwiązanie inwersji priorytetów<br>
+            • Semafory: binarne, całkowite, wzajemnego wykluczania<br><br>
+            <strong>Szybkość (CPU MPC8260 @ 50 MHz):</strong> przełączanie kontekstu ~11 μs, reakcja na przerwanie ~98 μs<br><br>
+            <strong>Zastosowania:</strong> rakiety wojskowe, centrale telefoniczne, sprzęt medyczny, NASA (Mars Pathfinder), ABS, bankomaty, sterowniki przemysłowe.
+          </div>
+        </div>
+
+        <div class="sys-card" style="border-top:2px solid var(--yellow)">
+          <div class="sys-header">
+            <div>
+              <div class="sys-name">OS-9</div>
+              <div class="sys-maker">Microware · modułowy system wielozadaniowy</div>
+            </div>
+            <span class="card-tag tag-yellow" style="margin-bottom:0">modułowy</span>
+          </div>
+          <div class="sys-body">
+            <strong>Kluczowa cecha:</strong> <strong>architektura modułowa pamięci</strong> — wszystkie programy w formie modułów. Moduły są position-independent (mogą być ładowane do dowolnego miejsca w pamięci) → ROM-owalność.<br><br>
+            <strong>Moduł składa się z:</strong> NAGŁÓWKA (nazwa, rozmiar, typ, język, wymagania pamięciowe) + CIAŁA + CRC (suma kontrolna 3 bajty).<br><br>
+            <strong>Szeregowanie:</strong> Round-Robin z możliwością zmiany na czysto priorytetowy. Mechanizm kolejkowania: prosta karuzela, próg priorytetu, wywłaszczanie priorytetowe, tryb pojedynczego procesu.<br><br>
+            <strong>Pamięć:</strong> przydzielana dynamicznie przez jądro. Brak pamięci wirtualnej. Adresy bazowe + pośrednie adresowanie.<br><br>
+            <strong>Zastosowania:</strong> telekomunikacja, przemysł. Zgodność z UNIX na poziomie C. Praca bezdyskowa (z ROM).
+          </div>
+        </div>
+      </div>
+
+      <div class="block">
+        <div class="block-title">Inne systemy SOCR (mniejsze / historyczne)</div>
+        <div class="cards two">
+          <div class="card">
+            <div class="card-tag tag-gray">RT-Linux</div>
+            <div class="card-name">System hybrydowy</div>
+            <div class="card-desc">Małe <strong>jądro czasu rzeczywistego</strong> + nad nim jądro Linux. Zadania CR komunikują się z procesami Linux przez kolejki FIFO. Problem: monolityczna architektura → słaba skalowalność. Duże wymagania pamięciowe.<br>Zastosowania: NASA, sterowanie robotami, eksperymenty medyczne.</div>
+          </div>
+          <div class="card">
+            <div class="card-tag tag-gray">iRMX (Intel)</div>
+            <div class="card-name">Intel Real-Time Multitasking Executive</div>
+            <div class="card-desc">Rodzina systemów dla procesorów Intel 8/16-bit. <strong>7 modułów jądra</strong>, ok. 18 kB pamięci. Wersje: iRMX-80 (8-bit), iRMX-86 (16-bit, duże systemy), iRMX-88 (16-bit, mniejsze konfiguracje). Szeregowanie z wywłaszczaniem.</div>
+          </div>
+          <div class="card">
+            <div class="card-tag tag-gray">MicroC/OS-II (Micrium)</div>
+            <div class="card-name">Prosty system wbudowany</div>
+            <div class="card-desc">Bardzo mały: <strong>8–14 kB kodu, od 500B RAM</strong>. Do 256 procesów. Certyfikaty DO-178B Level A (lotnictwo, medycyna, instalacje nuklearne). Procesory 8–32 bit.</div>
+          </div>
+          <div class="card">
+            <div class="card-tag tag-gray">Windows CE (Microsoft)</div>
+            <div class="card-name">32-bit, wielozadaniowy, Hard RT</div>
+            <div class="card-desc">Jądro działa w <strong>1 MB pamięci</strong>. 256 poziomów priorytetów. Dziedziczenie priorytetów. Podstawowa jednostka = wątek. Przenośny między platformami sprzętowymi.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="block">
+        <div class="block-title">Tabela porównawcza 4 systemów (wyniki ocen)</div>
+        <table class="compare-table">
+          <tr>
+            <th>Kryterium</th>
+            <th>QNX Neutrino 6.2</th>
+            <th>WinCE .NET</th>
+            <th>VxWorks AE 1.1</th>
+            <th>RedHat Linux</th>
+          </tr>
+          <tr><td>Wydajność</td><td>7</td><td>5</td><td>2</td><td>9</td></tr>
+          <tr><td>Instalacja i konfiguracja</td><td>8</td><td>5</td><td>4</td><td>3</td></tr>
+          <tr><td>Architektura (RTOS)</td><td style="color:var(--green)">9</td><td>7</td><td>7</td><td>3</td></tr>
+          <tr><td>Narzędzia</td><td>8</td><td>8</td><td>8</td><td>8</td></tr>
+          <tr><td>Dokumentacja i wsparcie</td><td>5</td><td>4</td><td>2</td><td>7</td></tr>
+          <tr><td><strong>Średni wynik</strong></td><td style="color:var(--green)"><strong>8.0</strong></td><td>6.4</td><td>4.4</td><td>6.9</td></tr>
+        </table>
+        <div class="info-box">Źródło: Dedicated Systems Experts, sierpień 2002. QNX wygrywa głównie dzięki architekturze RTOS i odporności na awarie.</div>
+      </div>
+    </div>
+
+    <!-- PANEL 4: Klasyfikacja SOCR (bonus) -->
+    <div class="panel" id="panel-3">
+      <div class="panel-header">
+        <div class="panel-num">DODATKOWE</div>
+        <div class="panel-title">Klasyfikacja systemów operacyjnych CR</div>
+      </div>
+
+      <div class="block">
+        <div class="block-title">Podział ze względu na sposób działania</div>
+        <div class="cards two">
+          <div class="card">
+            <div class="card-tag tag-blue">Sterowane czasem</div>
+            <div class="card-name">Time-driven</div>
+            <div class="card-desc">Działają w rytm <strong>przerwania zegarowego</strong>. Aplikacje inicjowane w określonych momentach. Nie podatne na przeciążenia zdarzeniami zewnętrznymi. Minimalna wariancja czasu odpowiedzi.<br><br><strong>Zastosowanie:</strong> przemysł samochodowy i kolejowy. Podstawa systemów Hard Real-Time.</div>
+          </div>
+          <div class="card">
+            <div class="card-tag tag-teal">Sterowane zdarzeniami</div>
+            <div class="card-name">Event-driven</div>
+            <div class="card-desc">Odbierają informacje o zdarzeniach asynchronicznie przez <strong>przerwania sprzętowe</strong>. Większa wariancja czasu odpowiedzi. Podatne na przeciążenia przy zbyt dużej liczbie aplikacji.<br><br><strong>Zaleta:</strong> wygodne tworzenie aplikacji (podobne do systemów ogólnych).</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="block">
+        <div class="block-title">Podział ze względu na sposób tworzenia aplikacji</div>
+        <div class="cards two">
+          <div class="card">
+            <div class="card-tag tag-gray">Systemy skrośne</div>
+            <div class="card-name">Cross-development</div>
+            <div class="card-desc">Służą wyłącznie do uruchamiania i symulacji. Brak interaktywnej pracy z systemem.</div>
+          </div>
+          <div class="card">
+            <div class="card-tag tag-gray">Systemy samodzielne</div>
+            <div class="card-name">Self-hosted</div>
+            <div class="card-desc">Platforma do tworzenia aplikacji + narzędzia i środowisko pracy. Pełna samodzielność.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="block">
+        <div class="block-title">Architektura partycji – ochrona czasu procesora</div>
+        <div class="def-box">
+          W systemach CR ochronie podlega czas procesora. Realizuje się ją przez <strong>podział systemu na partycje wykonawcze</strong>. Czas przydzielony każdej partycji jest stały i niezależny od liczby zadań w jej obrębie. Błąd w jednej partycji nie zakłóca innych.
+        </div>
+      </div>
+    </div>
+
+    <!-- PANEL 5: Algorytmy QNX (bonus) -->
+    <div class="panel" id="panel-4">
+      <div class="panel-header">
+        <div class="panel-num">DODATKOWE</div>
+        <div class="panel-title">Algorytmy szeregowania w QNX</div>
+      </div>
+
+      <div class="block">
+        <div class="block-title">Szczegóły mikrojądra QNX Neutrino</div>
+        <div class="def-box">
+          Egzekutor jądra udostępnia <strong>32 poziomy priorytetów</strong> (0 = najniższy, 31 = najwyższy). Dla programów użytkownika: 0–19. Procesy na tym samym poziomie szeregowane jednym z trzech algorytmów.
+        </div>
+      </div>
+
+      <div class="block">
+        <div class="block-title">Trzy algorytmy szeregowania QNX</div>
+        <div class="cards">
+          <div class="card">
+            <div class="card-tag tag-blue">FIFO</div>
+            <div class="card-desc">Najdłużej czekający gotowy proces dostaje CPU. Wykonuje się aż do: zakończenia, zawieszenia, lub wywłaszczenia przez proces o wyższym priorytecie.</div>
+          </div>
+          <div class="card">
+            <div class="card-tag tag-yellow">Round-Robin (karuzelowy)</div>
+            <div class="card-desc">Kwant czasu = <strong>50 ms</strong>. Po wyczerpaniu kwantu → wywłaszczenie, następny proces w kolejce. Jeśli nie zakończy się lub nie zawiesi wcześniej — wywłaszczenie.</div>
+          </div>
+          <div class="card">
+            <div class="card-tag tag-purple">Adaptacyjny</div>
+            <div class="card-desc">Jak Round-Robin, ale jeśli proces wykorzysta cały kwant bez blokowania → jego priorytet tymczasowo dekrementowany. Gdy przejdzie w stan "blokowane" → priorytet natychmiast przywrócony. Chroni zadania interaktywne.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="block">
+        <div class="block-title">Cechy mikrojądra QNX</div>
+        <ul class="list">
+          <li><strong>Wielozadaniowość</strong> — wiele procesów jednocześnie, kernel zarządza przełączaniem</li>
+          <li><strong>Wielowątkowość</strong> — proces może tworzyć podrzędne wątki wykonywane równolegle</li>
+          <li><strong>Wywłaszczalność</strong> — system może odebrać czas procesora dowolnemu procesowi</li>
+          <li><strong>Skalowalność</strong> — zmiana wydajności sprzętu nie wpływa na poprawność działania</li>
+          <li><strong>Komunikacja IPC</strong> — przez przekazywanie komunikatów (message passing)</li>
+        </ul>
+      </div>
+
+      <div class="block">
+        <div class="block-title">Środowisko QNX Momentics (narzędzia)</div>
+        <div class="states-row">
+          <span class="state-tag">C/C++ Code Development</span>
+          <span class="state-tag">C/C++ Debugger</span>
+          <span class="state-tag">System Builder</span>
+          <span class="state-tag">Target System Information</span>
+          <span class="state-tag">Memory Analysis</span>
+          <span class="state-tag">SAT — System Analysis Toolkit</span>
+        </div>
+        <div class="info-box" style="margin-top:10px">QNX Momentics = pełne IDE oparte na platformie Eclipse. Dostępne wersje: NC (darmowa, niekomercyjna), SE (standard), PE (profesjonalna).</div>
+      </div>
+    </div>
+
+    <!-- PANEL 6: DSP -->
+    <div class="panel" id="panel-5">
+      <div class="panel-header">
+        <div class="panel-num">PYTANIE 04 / 04</div>
+        <div class="panel-title">Procesory sygnałowe – DSP</div>
+        <div class="panel-question">Właściwości procesorów sygnałowych – zastosowanie, własności, architektura</div>
+      </div>
+
+      <div class="block">
+        <div class="block-title">Czym jest DSP?</div>
+        <div class="def-box">
+          Procesor sygnałowy (DSP – Digital Signal Processor) to układ stworzony do <strong>błyskawicznego przetwarzania ciągłych strumieni danych w czasie rzeczywistym</strong>. Jego architektura mocno różni się od klasycznych mikroprocesorów ogólnego przeznaczenia – każdy element sprzętowy służy temu, by nie tracić ani jednego cyklu zegara.
+        </div>
+      </div>
+
+      <div class="block">
+        <div class="block-title">Kluczowe cechy architektoniczne (4 filary)</div>
+        <div class="cards two">
+          <div class="card">
+            <div class="card-tag tag-teal">Architektura Harwardzka</div>
+            <div class="card-name">Rozdzielone szyny i pamięci</div>
+            <div class="card-desc">Fizycznie <strong>oddzielna pamięć i szyna dla danych oraz dla programu (instrukcji)</strong>. Pozwala na jednoczesne pobranie instrukcji i danych w jednym cyklu zegara.<br><br>Eliminuje <strong>"wąskie gardło" architektury von Neumanna</strong> (gdzie dane i instrukcje walczą o jedną szynę). Umożliwia pracę równoległą.</div>
+          </div>
+          <div class="card">
+            <div class="card-tag tag-blue">MAC w jednym cyklu</div>
+            <div class="card-name">Multiply-Accumulate</div>
+            <div class="card-desc">Równoległe mnożenie z akumulacją w <strong>jednym cyklu zegara</strong>:<br><br><code style="background:var(--bg3);padding:4px 8px;border-radius:4px;font-family:'IBM Plex Mono',monospace;font-size:12px">A = A + (x * y)</code><br><br>Eliminuje opóźnienia i zapewnia maksymalną prędkość obliczeń. Kluczowe dla FFT, filtrów cyfrowych, korelacji.</div>
+          </div>
+          <div class="card">
+            <div class="card-tag tag-yellow">AGU</div>
+            <div class="card-name">Address Generation Unit</div>
+            <div class="card-desc">Niezależny układ sprzętowy, który <strong>w tle automatycznie wylicza adresy pamięci</strong>. Obsługuje:<br>• adresowanie kołowe (circular)<br>• odwracanie bitów dla FFT (bit-reverse)<br><br>Odciąża główny procesor — nie musi sam liczyć adresów.</div>
+          </div>
+          <div class="card">
+            <div class="card-tag tag-purple">Sprzętowe pętle</div>
+            <div class="card-name">Hardware Loops</div>
+            <div class="card-desc">Mechanizm pozwalający <strong>powtarzać instrukcje z maksymalną prędkością</strong>, bez marnowania ani jednego cyklu zegara na sprawdzanie warunku końca pętli i skoki.<br><br>W zwykłym CPU: koniec pętli = cmp + branch = dodatkowe cykle. Tu: zero narzutu.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="block">
+        <div class="block-title">Organizacja pamięci w DSP</div>
+        <ul class="list">
+          <li><strong>Pamięć podręczna (cache)</strong> — do wewnętrznego użytku procesora, najszybsza</li>
+          <li><strong>Pamięć wewnętrzna RAM</strong> — w samym procesorze, do użytku programisty (program i dane)</li>
+          <li><strong>Pamięć zewnętrzna</strong> — osobna "kość" pamięci typu DDR, większa ale wolniejsza</li>
+          <li><strong>Pamięć ROM</strong> — stały program, np. firmware</li>
+        </ul>
+        <div class="info-box">Techniki przyspieszania: praca potokowa, równoległa, SIMD, VLIW, pamięć podręczna, praca wieloprocesorowa.</div>
+      </div>
+
+      <div class="block">
+        <div class="block-title">Podział procesorów DSP</div>
+        <div class="cards" style="grid-template-columns:1fr 1fr 1fr">
+          <div class="card">
+            <div class="card-tag tag-gray">Precyzja</div>
+            <div class="card-desc">• <strong>Stałoprzecinkowe</strong> — tańsze, prostsze, dla aplikacji gdzie nie potrzeba pełnej precyzji<br>• <strong>Zmiennoprzecinkowe</strong> — wyższa precyzja, dużo droższe</div>
+          </div>
+          <div class="card">
+            <div class="card-tag tag-gray">Szerokość słowa</div>
+            <div class="card-desc">• <strong>16-bit</strong> — np. TMS320C32-2xx (Texas Instruments)<br>• <strong>32-bit</strong> — np. TMS320C320-6xx (TI), ADSP21xxx (Analog Devices)<br>• <strong>64-bit</strong> — zaawansowane systemy</div>
+          </div>
+          <div class="card">
+            <div class="card-tag tag-gray">Producenci</div>
+            <div class="card-desc">• <strong>Texas Instruments</strong> — TMS320 (dominuje rynek)<br>• <strong>Analog Devices</strong> — ADSP<br>• <strong>Motorola</strong> — DSP56xx, MSC81xx</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="block">
+        <div class="block-title">Zastosowania DSP</div>
+        <div class="cards two">
+          <div class="card">
+            <div class="card-tag tag-blue">Telekomunikacja i multimedia</div>
+            <div class="card-desc">• Cyfrowa telefonia komórkowa<br>• Komunikacja satelitarna<br>• Sprzęt nawigacyjny (GPS)<br>• Modemy<br>• Systemy wideokonferencyjne<br>• Cyfrowe kamery<br>• Obróbka i przetwarzanie dźwięku</div>
+          </div>
+          <div class="card">
+            <div class="card-tag tag-teal">Przemysł i medycyna</div>
+            <div class="card-desc">• Sonary i radary<br>• Sterowanie napędami (wektorowe metody sterowania)<br>• Ultradźwiękowe systemy diagnostyki medycznej<br>• Implementacja złożonych algorytmów sterowania<br>• Elektronika przemysłowa<br>• Teoria estymacji</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="block">
+        <div class="block-title">DSP vs klasyczny mikroprocesor – kluczowe różnice</div>
+        <table class="compare-table">
+          <tr>
+            <th>Cecha</th>
+            <th>Klasyczny CPU (von Neumann)</th>
+            <th>DSP (Harvard)</th>
+          </tr>
+          <tr><td>Architektura pamięci</td><td>Jedna przestrzeń — dane i program razem</td><td>Oddzielna pamięć dla danych i programu</td></tr>
+          <tr><td>Pobranie instrukcji</td><td>Dane i instrukcje kolejno — "wąskie gardło"</td><td style="color:var(--green)">Równoległe w jednym cyklu</td></tr>
+          <tr><td>Mnożenie</td><td>Wiele cykli, osobna instrukcja</td><td style="color:var(--green)">MAC w jednym cyklu: A = A + (x*y)</td></tr>
+          <tr><td>Adresowanie</td><td>CPU oblicza adresy (traci cykle)</td><td style="color:var(--green)">AGU robi to w tle równolegle</td></tr>
+          <tr><td>Pętle</td><td>Cmp + branch = dodatkowe cykle</td><td style="color:var(--green)">Sprzętowe pętle = zero narzutu</td></tr>
+          <tr><td>Zastosowanie</td><td>Ogólne — aplikacje, OS, gry</td><td>Strumieniowe przetwarzanie sygnałów w czasie rzeczywistym</td></tr>
+        </table>
+      </div>
+
+      <div class="note-box">Karta DSP1102 (używana w laboratorium): procesor TMS320C31, 128K×32bit RAM, wejścia/wyjścia analogowe i cyfrowe, enkoder, generator PWM (0.01Hz–1MHz), przetworniki A/D 12 i 16 bit (zakres ±10V).</div>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  <span class="footer-note">SOCR — PW 2026L</span>
+  <span class="footer-note">zaliczenie: 31.03.2026 · godz. 16:15</span>
+</footer>
+
+<script>
+function showPanel(i) {
+  document.querySelectorAll('.panel').forEach((p, j) => p.classList.toggle('active', j === i));
+  document.querySelectorAll('.nav-item').forEach((n, j) => n.classList.toggle('active', j === i));
+  document.querySelectorAll('.topic-pill').forEach((t, j) => t.classList.toggle('active', j === i));
+}
+
+function toggleTheme() {
+  const body = document.body;
+  const next = body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  body.setAttribute('data-theme', next);
+  localStorage.setItem('scr-theme', next);
+}
+const saved = localStorage.getItem('scr-theme');
+if (saved) document.body.setAttribute('data-theme', saved);
+</script>
+</body>
+</html>
