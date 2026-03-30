@@ -211,12 +211,17 @@
 <div class="hero">
   <div class="hero-tag">materiały do zaliczenia</div>
   <h1>Systemy Operacyjne<br><span>Czasu Rzeczywistego</span></h1>
-  <p class="hero-sub">Dostaniesz 2 z 3 pytań. Wszystkie trzy są poniżej + bonus DSP z notatek. Skup się na architekturze jądra i QNX — to filary tego przedmiotu.</p>
+  <p class="hero-sub">Dostaniesz 2 z 3 pytań. Wszystkie trzy są poniżej. Skup się na architekturze jądra i QNX — to filary tego przedmiotu.</p>
   <div class="topics-grid">
     <button class="topic-pill active" onclick="showPanel(0)">1. Mikrojądra – cechy i priorytety</button>
     <button class="topic-pill" onclick="showPanel(1)">2. Porównanie jąder</button>
     <button class="topic-pill" onclick="showPanel(2)">3. Konkretne systemy SOCR</button>
-    <button class="topic-pill" onclick="showPanel(5)">+ DSP – procesory sygnałowe</button>
+  </div>
+  <p style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-top:20px;margin-bottom:8px">Dodatkowe — dla ciekawskich</p>
+  <div class="topics-grid">
+    <button class="topic-pill" onclick="showPanel(3)" style="opacity:0.6">+ Klasyfikacja SOCR</button>
+    <button class="topic-pill" onclick="showPanel(4)" style="opacity:0.6">+ Algorytmy QNX</button>
+    <button class="topic-pill" onclick="showPanel(5)" style="opacity:0.6">+ DSP – procesory sygnałowe</button>
   </div>
 </div>
 
@@ -235,11 +240,7 @@
       <span class="nav-num">03</span>
       <span class="nav-text">Konkretne systemy SOCR – QNX, VxWorks, OS-9</span>
     </div>
-    <div class="nav-item" onclick="showPanel(5)">
-      <span class="nav-num">+</span>
-      <span class="nav-text">DSP – procesory sygnałowe</span>
-    </div>
-    <div class="nav-label" style="margin-top:24px">Dodatkowe</div>
+    <div class="nav-label" style="margin-top:24px">Dodatkowe — dla ciekawskich</div>
     <div class="nav-item" onclick="showPanel(3)">
       <span class="nav-num">+</span>
       <span class="nav-text">Klasyfikacja SOCR</span>
@@ -247,6 +248,10 @@
     <div class="nav-item" onclick="showPanel(4)">
       <span class="nav-num">+</span>
       <span class="nav-text">Algorytmy szeregowania QNX</span>
+    </div>
+    <div class="nav-item" onclick="showPanel(5)">
+      <span class="nav-num">+</span>
+      <span class="nav-text">DSP – procesory sygnałowe</span>
     </div>
   </nav>
 
