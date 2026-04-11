@@ -100,7 +100,7 @@
 
   .cards {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
     gap: 16px;
   }
 
@@ -124,6 +124,10 @@
   .card-scr:hover { border-color: var(--accent); }
   .card-socr { border-top: 3px solid var(--teal); }
   .card-socr:hover { border-color: var(--teal); }
+  .card-mikro { border-top: 3px solid #7c6aff; }
+  .card-mikro:hover { border-color: #7c6aff; }
+  .card-mikro .card-label { color: #7c6aff; }
+  .card-mikro .card-deadline { color: #7c6aff; background: rgba(124,106,255,0.1); border: 1px solid rgba(124,106,255,0.25); }
 
   .card-label {
     font-family: 'IBM Plex Mono', monospace;
@@ -216,6 +220,13 @@
       <div class="card-title">Systemy Operacyjne Czasu Rzeczywistego</div>
       <div class="card-info">Mikrojądra, porównanie jąder, QNX, DSP — 3 pytania + bonus</div>
       <span class="card-deadline">31.03.2026</span>
+      <div class="card-arrow">Otwórz →</div>
+    </a>
+    <a href="mikroprocesory.html" class="card card-mikro">
+      <div class="card-label">Mikroprocesory</div>
+      <div class="card-title">Mikroprocesory</div>
+      <div class="card-info">RISC vs CISC, pipelining, przerwania, adresowanie</div>
+      <span class="card-deadline">Kolos</span>
       <div class="card-arrow">Otwórz →</div>
     </a>
   </div>

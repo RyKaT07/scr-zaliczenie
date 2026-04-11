@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mikroprocesory — Kolos</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;800&display=swap');
+
+  :root {
+    --bg: #0a0a0f;
+    --surface: #111118;
+    --surface2: #18181f;
+    --border: #2a2a38;
+    --accent: #7c6aff;
+    --accent2: #ff6a6a;
+    --accent3: #6aff9e;
+    --accent4: #ffb86a;
+    --text: #e8e8f0;
+    --muted: #6b6b80;
+    --mono: 'JetBrains Mono', monospace;
+    --sans: 'Syne', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    min-height: 100vh;
+    line-height: 1.6;
+  }
+
+  /* HEADER */
+  header {
+    padding: 2rem 2rem 0;
+    border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(10,10,15,0.92);
+    backdrop-filter: blur(12px);
+  }
+  .header-top {
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem;
+  }
+  .title-block h1 {
+    font-size: 1.6rem; font-weight: 800; letter-spacing: -0.02em;
+    color: var(--text);
+  }
+  .title-block h1 span { color: var(--accent); }
+  .badge {
+    display: inline-flex; align-items: center; gap: .4rem;
+    background: var(--accent2); color: #fff;
+    font-family: var(--mono); font-size: .72rem; font-weight: 600;
+    padding: .25rem .7rem; border-radius: 99px;
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.6} }
+
+  /* TABS */
+  nav {
+    display: flex; gap: 0; overflow-x: auto;
+    scrollbar-width: none;
+  }
+  nav::-webkit-scrollbar { display: none; }
+  .tab {
+    padding: .7rem 1.3rem;
+    font-family: var(--mono); font-size: .8rem; font-weight: 600;
+    color: var(--muted); cursor: pointer;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap; transition: all .2s;
+    background: none; border-top: none; border-left: none; border-right: none;
+  }
+  .tab:hover { color: var(--text); }
+  .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  /* MAIN */
+  main { padding: 2rem; max-width: 1100px; margin: 0 auto; }
+
+  .section { display: none; animation: fadeIn .3s ease; }
+  .section.active { display: block; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:none} }
+
+  /* CARDS */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.2rem;
+  }
+  .card-title {
+    font-family: var(--mono); font-size: .75rem; font-weight: 700;
+    color: var(--accent); text-transform: uppercase; letter-spacing: .1em;
+    margin-bottom: .8rem;
+  }
+
+  h2 {
+    font-size: 1.3rem; font-weight: 800; margin-bottom: 1.2rem;
+    color: var(--text); letter-spacing: -.01em;
+  }
+  h2 span { color: var(--accent4); }
+
+  h3 { font-size: 1rem; font-weight: 600; margin: 1rem 0 .5rem; color: var(--accent3); }
+
+  p { color: #b8b8cc; margin-bottom: .6rem; font-size: .95rem; }
+  ul { padding-left: 1.2rem; color: #b8b8cc; font-size: .95rem; }
+  li { margin-bottom: .35rem; }
+  li strong { color: var(--text); }
+
+  /* TWO-COL */
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  @media(max-width:700px){ .grid2{ grid-template-columns:1fr; } }
+
+  /* TABLE */
+  table { width: 100%; border-collapse: collapse; font-size: .88rem; }
+  th {
+    background: var(--surface2); color: var(--accent);
+    font-family: var(--mono); font-size: .75rem; text-transform: uppercase; letter-spacing: .08em;
+    padding: .6rem .8rem; text-align: left; border-bottom: 1px solid var(--border);
+  }
+  td { padding: .55rem .8rem; border-bottom: 1px solid var(--border); color: #b8b8cc; }
+  tr:hover td { background: var(--surface2); color: var(--text); }
+  td:first-child { font-family: var(--mono); font-weight: 600; color: var(--accent4); }
+
+  /* CODE */
+  code {
+    font-family: var(--mono);
+    background: var(--surface2); color: var(--accent3);
+    padding: .1em .4em; border-radius: 4px; font-size: .85em;
+  }
+  pre {
+    font-family: var(--mono); font-size: .82rem;
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 8px; padding: 1rem; overflow-x: auto;
+    color: var(--accent3); line-height: 1.7;
+    margin: .6rem 0;
+  }
+
+  /* COMPARE BOX */
+  .compare {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1px;
+    background: var(--border); border-radius: 10px; overflow: hidden;
+  }
+  .compare-col { background: var(--surface); padding: 1.2rem; }
+  .compare-col h3 { margin-top: 0; }
+  .compare-col.risc h3 { color: var(--accent3); }
+  .compare-col.cisc h3 { color: var(--accent2); }
+
+  /* EQUATION */
+  .eq {
+    font-family: var(--mono); font-size: 1.05rem;
+    background: var(--surface2); border-left: 3px solid var(--accent);
+    padding: .8rem 1.2rem; border-radius: 0 8px 8px 0; margin: 1rem 0;
+    color: var(--accent4);
+  }
+
+  /* FLASHCARDS */
+  .flashcard-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px,1fr)); gap: 1rem; }
+  .flashcard {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    cursor: pointer;
+    perspective: 600px;
+    height: 160px;
+    transition: border-color .2s;
+  }
+  .flashcard:hover { border-color: var(--accent); }
+  .flashcard-inner {
+    position: relative; width: 100%; height: 100%;
+    transform-style: preserve-3d;
+    transition: transform .5s ease;
+  }
+  .flashcard.flipped .flashcard-inner { transform: rotateY(180deg); }
+  .fc-front, .fc-back {
+    position: absolute; inset: 0;
+    backface-visibility: hidden;
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 1.2rem; border-radius: 12px;
+  }
+  .fc-front { background: var(--surface); }
+  .fc-back { background: var(--surface2); transform: rotateY(180deg); }
+  .fc-q {
+    font-family: var(--mono); font-size: .75rem; color: var(--muted);
+    text-transform: uppercase; letter-spacing: .08em; margin-bottom: .5rem;
+  }
+  .fc-text { font-size: .95rem; font-weight: 600; color: var(--text); }
+  .fc-ans { font-size: .85rem; color: #b8b8cc; line-height: 1.5; }
+  .fc-hint { font-size: .72rem; color: var(--muted); margin-top: .5rem; }
+
+  /* PIPELINE VIZ */
+  .pipeline {
+    display: grid;
+    font-family: var(--mono); font-size: .75rem;
+    gap: 2px; margin: 1rem 0;
+  }
+  .pl-row { display: flex; align-items: center; gap: 2px; }
+  .pl-label { width: 80px; color: var(--muted); font-size: .72rem; flex-shrink: 0; }
+  .pl-cell {
+    padding: .3rem .5rem; border-radius: 4px; min-width: 44px; text-align: center;
+    font-weight: 600; font-size: .7rem;
+  }
+  .pl-fe { background: #2a1a4a; color: #a78bfa; }
+  .pl-de { background: #1a2a3a; color: #60a5fa; }
+  .pl-rd { background: #1a3a2a; color: #34d399; }
+  .pl-pr { background: #3a2a1a; color: #fb923c; }
+  .pl-wr { background: #3a1a2a; color: #f472b6; }
+  .pl-empty { background: transparent; }
+
+  /* BADGE CHIPS */
+  .chip {
+    display: inline-block;
+    padding: .2rem .6rem; border-radius: 99px;
+    font-family: var(--mono); font-size: .72rem; font-weight: 600;
+    margin: .15rem;
+  }
+  .chip-m { background: #1a2a4a; color: #60a5fa; }
+  .chip-r { background: #1a3a1a; color: #34d399; }
+  .chip-a { background: #3a1a1a; color: #f87171; }
+  .chip-o { background: #3a2a1a; color: #fb923c; }
+
+  /* EXAM TOPICS */
+  .exam-item {
+    display: flex; gap: 1rem; align-items: flex-start;
+    padding: .8rem 1rem; border-radius: 8px;
+    border: 1px solid var(--border); margin-bottom: .6rem;
+    background: var(--surface);
+    transition: border-color .2s, background .2s;
+    cursor: pointer;
+  }
+  .exam-item:hover { border-color: var(--accent); background: var(--surface2); }
+  .exam-num {
+    font-family: var(--mono); font-size: .8rem; font-weight: 700;
+    color: var(--accent); background: rgba(124,106,255,.15);
+    padding: .2rem .5rem; border-radius: 6px; flex-shrink: 0;
+  }
+  .exam-desc { font-size: .9rem; color: var(--text); }
+  .exam-sub { font-size: .8rem; color: var(--muted); margin-top: .2rem; }
+
+  /* PROGRESS */
+  .progress-bar {
+    width: 100%; height: 4px; background: var(--border);
+    border-radius: 99px; margin-bottom: 1.5rem; overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent3));
+    border-radius: 99px; transition: width .4s ease;
+  }
+
+  .flip-hint {
+    text-align: center; font-family: var(--mono); font-size: .72rem;
+    color: var(--muted); margin-bottom: 1rem;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-top">
+    <div class="title-block">
+      <h1>Mikro<span>procesory</span> — Kolos</h1>
+    </div>
+    <div class="badge">⚡ Poniedziałek 13.04</div>
+  </div>
+  <nav>
+    <button class="tab active" onclick="show('start')">📋 Tematy</button>
+    <button class="tab" onclick="show('basics')">🖥️ Podstawy</button>
+    <button class="tab" onclick="show('cisc')">⚖️ CISC vs RISC</button>
+    <button class="tab" onclick="show('arm')">🦾 ARM</button>
+    <button class="tab" onclick="show('versions')">📈 Wersje</button>
+    <button class="tab" onclick="show('tools')">🔧 Narzędzia</button>
+    <button class="tab" onclick="show('flash')">🃏 Fiszki</button>
+  </nav>
+</header>
+
+<main>
+
+<!-- TEMATY Z KOLOSA -->
+<div id="start" class="section active">
+  <h2>🎯 Tematy z <span>poprzedniego kolosa</span></h2>
+  <p style="margin-bottom:1.2rem">To zdjęcia z egzaminu sprzed ~2 lat. Mocno pokrywa się z aktualnym materiałem.</p>
+
+  <div class="exam-item" onclick="show('tools')">
+    <div class="exam-num">Nr 3</div>
+    <div>
+      <div class="exam-desc">Przechwytywanie danych z magistrali (ICE)</div>
+      <div class="exam-sub">Proces 6-krokowy, typy linii magistrali → zakładka Narzędzia</div>
+    </div>
+  </div>
+  <div class="exam-item" onclick="show('tools')">
+    <div class="exam-num">Nr 4</div>
+    <div>
+      <div class="exam-desc">Zdalne ładowanie kodu wykonywalnego</div>
+      <div class="exam-sub">Format INTELA, organizacja pamięci, sygnał PSEN → zakładka Narzędzia</div>
+    </div>
+  </div>
+  <div class="exam-item" onclick="show('tools')">
+    <div class="exam-num">Nr 4b</div>
+    <div>
+      <div class="exam-desc">Interfejs JTAG — TAP controller, sygnały</div>
+      <div class="exam-sub">TMS, TDI, TDO, TCK, RTCK, nSRST, nTRST → zakładka Narzędzia</div>
+    </div>
+  </div>
+  <div class="exam-item" onclick="show('cisc')">
+    <div class="exam-num">Nr 5</div>
+    <div>
+      <div class="exam-desc">Porównanie procesorów CISC i RISC</div>
+      <div class="exam-sub">Schemat blokowy, równanie czasu, tabela porównawcza → zakładka CISC vs RISC</div>
+    </div>
+  </div>
+  <div class="exam-item" onclick="show('arm')">
+    <div class="exam-num">Nr 6</div>
+    <div>
+      <div class="exam-desc">Lista cech architektury ARM</div>
+      <div class="exam-sub">RISC, load/store, rejestry, potok, wykonanie warunkowe → zakładka ARM</div>
+    </div>
+  </div>
+  <div class="exam-item" onclick="show('versions')">
+    <div class="exam-num">Nr 7</div>
+    <div>
+      <div class="exam-desc">Thumb i Thumb-2 — lista ulepszeń</div>
+      <div class="exam-sub">IT instruction, CBZ, 32-bit opcodes → zakładka Wersje</div>
+    </div>
+  </div>
+  <div class="exam-item" onclick="show('versions')">
+    <div class="exam-num">Nr 8</div>
+    <div>
+      <div class="exam-desc">Rodziny procesorów ARM i ich zastosowania</div>
+      <div class="exam-sub">Cortex-M/R/A, Neoverse, SecurCore, Ethos → zakładka Wersje</div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:1.5rem; border-color: var(--accent4);">
+    <div class="card-title">💡 Strategia powtórki</div>
+    <ul>
+      <li>Zacznij od <strong>CISC vs RISC</strong> — to pojawia się wszędzie jako fundament</li>
+      <li>Naucz się <strong>6 cech ARM</strong> na pamięć (load/store, 16 rej., 32-bit instr., potok, warunkowe, 1 cykl)</li>
+      <li>Zapamiętaj <strong>tabelkę rodzin Cortex</strong> (M/R/A + Neoverse/SecurCore/Ethos)</li>
+      <li>Wersje ARMv4→v8: każda ma 1-2 kluczowe nowości (Thumb, DSP, Thumb-2, SIMD, 64-bit)</li>
+      <li>ICE i JTAG — rozumiej co robią sygnały, nie zakuwaj na pamięć</li>
+    </ul>
+  </div>
+</div>
+
+<!-- PODSTAWY -->
+<div id="basics" class="section">
+  <h2>🖥️ <span>Podstawy</span> mikrokomputera</h2>
+
+  <div class="card">
+    <div class="card-title">Schemat blokowy mikrokomputera</div>
+    <div class="grid2">
+      <ul>
+        <li><strong>CPU</strong> — central processing unit</li>
+        <li><strong>NC</strong> — koprocesor numeryczny</li>
+        <li><strong>ROM</strong> — pamięć programu (read only)</li>
+        <li><strong>RAM</strong> — pamięć danych (random access)</li>
+        <li><strong>I/O</strong> — układy wejścia/wyjścia</li>
+      </ul>
+      <ul>
+        <li><strong>PIC</strong> — priority interrupt controller</li>
+        <li><strong>DMAC</strong> — direct memory access controller</li>
+        <li><strong>MMU</strong> — memory management unit</li>
+        <li><strong>ICE</strong> — in-circuit emulator</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Magistrala (bus) — 3 szyny</div>
+    <table>
+      <tr><th>Szyna</th><th>Funkcja</th></tr>
+      <tr><td>Danych (data bus)</td><td>Przesyła dane między komponentami</td></tr>
+      <tr><td>Adresowa (address bus)</td><td>Wskazuje miejsce docelowe danych</td></tr>
+      <tr><td>Sterująca (control bus)</td><td>Zarządza przepływem, sygnały non-memory</td></tr>
+    </table>
+    <h3 style="margin-top:1rem">Szerokość szyny adresowej → rozmiar pamięci</h3>
+    <table>
+      <tr><th>Bity</th><th>Adresowana pamięć</th></tr>
+      <tr><td>16</td><td>64 KB</td></tr>
+      <tr><td>20</td><td>1 MB</td></tr>
+      <tr><td>24</td><td>16 MB</td></tr>
+      <tr><td>32</td><td>4 GB</td></tr>
+      <tr><td>64</td><td>16 EB</td></tr>
+    </table>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <div class="card-title">Architektura Harvarda</div>
+      <p><strong>Oddzielne</strong> przestrzenie adresowe dla pamięci programu i danych.</p>
+      <ul>
+        <li>✅ Jednoczesny dostęp do obu pamięci</li>
+        <li>❌ Różne instrukcje dla każdej z pamięci</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title">Architektura von Neumanna</div>
+      <p><strong>Wspólna</strong> przestrzeń adresowa dla programu i danych.</p>
+      <ul>
+        <li>✅ Te same instrukcje dla obu pamięci</li>
+        <li>❌ Niejednoczesny dostęp (bottleneck)</li>
+      </ul>
+      <p style="margin-top:.6rem; font-size:.8rem; color:var(--muted)">ARM używa von Neumanna (wspólna magistrala 32-bit)</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Fazy wykonania instrukcji (cykle maszynowe)</div>
+    <ul>
+      <li><code>FE</code> — fetch: pobranie kodu operacji</li>
+      <li><code>DE</code> — decode: dekodowanie kodu operacji</li>
+      <li><code>RD</code> — read: odczyt danych</li>
+      <li><code>PR</code> — process: przetwarzanie danych</li>
+      <li><code>WR</code> — write: zapis danych</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Przetwarzanie potokowe (pipeline) vs szeregowe</div>
+    <p><strong>Szeregowe:</strong> każda instrukcja przechodzi wszystkie 5 faz zanim zacznie się kolejna.</p>
+    <p><strong>Potokowe:</strong> 5 instrukcji przetwarzanych jednocześnie (jedna per faza) → ~5× wydajność.</p>
+
+    <div class="pipeline" style="margin-top:1rem">
+      <div class="pl-row">
+        <div class="pl-label">Instr. 1</div>
+        <div class="pl-cell pl-fe">FE</div>
+        <div class="pl-cell pl-de">DE</div>
+        <div class="pl-cell pl-rd">RD</div>
+        <div class="pl-cell pl-pr">PR</div>
+        <div class="pl-cell pl-wr">WR</div>
+      </div>
+      <div class="pl-row">
+        <div class="pl-label">Instr. 2</div>
+        <div class="pl-cell pl-empty"></div>
+        <div class="pl-cell pl-fe">FE</div>
+        <div class="pl-cell pl-de">DE</div>
+        <div class="pl-cell pl-rd">RD</div>
+        <div class="pl-cell pl-pr">PR</div>
+        <div class="pl-cell pl-wr">WR</div>
+      </div>
+      <div class="pl-row">
+        <div class="pl-label">Instr. 3</div>
+        <div class="pl-cell pl-empty"></div>
+        <div class="pl-cell pl-empty"></div>
+        <div class="pl-cell pl-fe">FE</div>
+        <div class="pl-cell pl-de">DE</div>
+        <div class="pl-cell pl-rd">RD</div>
+        <div class="pl-cell pl-pr">PR</div>
+        <div class="pl-cell pl-wr">WR</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CISC vs RISC -->
+<div id="cisc" class="section">
+  <h2>⚖️ CISC <span>vs</span> RISC</h2>
+
+  <div class="eq">czas/program = (czas/cykl) × (cykle/instrukcja) × (instrukcje/program)</div>
+  <p>RISC zmniejsza <strong>cykle/instrukcję</strong>. CISC zmniejsza <strong>instrukcje/program</strong>.</p>
+
+  <div class="compare" style="margin: 1.2rem 0;">
+    <div class="compare-col cisc">
+      <h3>CISC</h3>
+      <p style="font-size:.8rem;color:var(--muted);margin-bottom:.6rem">Complex Instruction Set Computing</p>
+      <ul>
+        <li>ALU ← pamięć lub rejestry</li>
+        <li>Wiele trybów adresowania</li>
+        <li>reg1 = reg1 <em>op</em> reg2</li>
+        <li>Przetwarzanie <strong>szeregowe</strong></li>
+        <li>Mało rejestrów</li>
+        <li>Dużo instrukcji</li>
+        <li>Złożona budowa</li>
+        <li>Większy pobór mocy</li>
+        <li>Większy koszt</li>
+        <li>Mniejsza szybkość</li>
+      </ul>
+    </div>
+    <div class="compare-col risc">
+      <h3>RISC</h3>
+      <p style="font-size:.8rem;color:var(--muted);margin-bottom:.6rem">Reduced Instruction Set Computing</p>
+      <ul>
+        <li>ALU ← tylko rejestry</li>
+        <li>Mało trybów adresowania</li>
+        <li>reg3 = reg1 <em>op</em> reg2</li>
+        <li>Przetwarzanie <strong>potokowe</strong></li>
+        <li>Dużo rejestrów</li>
+        <li>Mało instrukcji</li>
+        <li>Prosta budowa</li>
+        <li>Mniejszy pobór mocy</li>
+        <li>Mniejszy koszt</li>
+        <li>Większa szybkość</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Benchmark — ARM/MIPS vs x86</div>
+    <table>
+      <tr><th>Cecha</th><th>ARM/MIPS (RISC)</th><th>Intel x86 (CISC)</th></tr>
+      <tr><td>Szybkość (CoreMark/MHz)</td><td>~2.88</td><td>~3.19 (+4–8%)</td></tr>
+      <tr><td>Pobór mocy (mW/MHz)</td><td>~0.4 (40–50% mniej)</td><td>~0.56</td></tr>
+      <tr><td>Powierzchnia krzemu</td><td>~1.4 mm² (3–4× mniej)</td><td>~6 mm²</td></tr>
+    </table>
+    <p style="margin-top:.8rem;font-size:.85rem;color:var(--muted)">x86 wyższy pobór mocy wynika z wewnętrznego przekodowania instrukcji CISC → RISC micro-ops.</p>
+  </div>
+</div>
+
+<!-- ARM -->
+<div id="arm" class="section">
+  <h2>🦾 Architektura <span>ARM</span></h2>
+
+  <div class="card" style="border-color:var(--accent)">
+    <div class="card-title">⭐ 6 podstawowych cech ARM (likely pytanie na kolosie)</div>
+    <ol style="padding-left:1.2rem;color:#b8b8cc;font-size:.95rem">
+      <li style="margin-bottom:.5rem"><strong>Load/store</strong> — jedyne instrukcje komunikujące rejestry z pamięcią (LDR/STR). ALU operuje tylko na rejestrach.</li>
+      <li style="margin-bottom:.5rem"><strong>Wyrównanie pamięci</strong> — słowo na adresie ×4, półsłowo ×2, bajt dowolnie.</li>
+      <li style="margin-bottom:.5rem"><strong>16 rejestrów 32-bitowych</strong> (R0–R15), jednolity zestaw.</li>
+      <li style="margin-bottom:.5rem"><strong>Stała długość instrukcji = 32 bity</strong> → ułatwia dekodowanie i potok, kosztem gęstości kodu.</li>
+      <li style="margin-bottom:.5rem"><strong>Większość instrukcji wykonuje się w 1 cyklu maszynowym.</strong></li>
+      <li style="margin-bottom:.5rem"><strong>Przetwarzanie potokowe</strong> — ARM7: 3-stopniowy (FE/DE/EX), ARM9: 5-stopniowy.</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Kompensacja ograniczeń RISC w ARM</div>
+    <ul>
+      <li><strong>Warunkowe wykonanie instrukcji</strong> — redukuje skoki (brak kary za branch prediction)</li>
+      <li><strong>Flagi CPSR aktualizowane tylko gdy potrzeba</strong> — sufiks S: <code>ADDS R2,R1,R0</code></li>
+      <li><strong>Barrel shifter 32-bit</strong> — wbudowany przesuwnik, dostępny dla większości instrukcji</li>
+      <li><strong>Rozbudowane tryby adresowania indeksowego</strong></li>
+      <li><strong>Link register R14/LR</strong> — szybkie wywołania funkcji</li>
+      <li><strong>Podsystem przerwań 2-poziomowy</strong> z przełączanymi zestawami rejestrów</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Rejestry ARM</div>
+    <table>
+      <tr><th>Rejestr</th><th>Nazwa</th><th>Funkcja</th></tr>
+      <tr><td>R0–R12</td><td>GPR</td><td>Ogólnego przeznaczenia</td></tr>
+      <tr><td>R13</td><td>SP</td><td>Stack Pointer — wskaźnik stosu</td></tr>
+      <tr><td>R14</td><td>LR</td><td>Link Register — adres powrotu (BL/BLX)</td></tr>
+      <tr><td>R15</td><td>PC</td><td>Program Counter — następna instrukcja</td></tr>
+      <tr><td>CPSR</td><td>—</td><td>Current PSR — flagi N,Z,C,V + tryb pracy</td></tr>
+      <tr><td>SPSR</td><td>—</td><td>Saved PSR — zapisuje CPSR przy wyjątku</td></tr>
+    </table>
+    <p style="margin-top:.8rem;font-size:.85rem;color:var(--muted)">Łącznie 37 rejestrów 32-bitowych (31 GPR + 6 statusowych), częściowo bankowalnych wg trybu.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Tryby pracy procesora</div>
+    <table>
+      <tr><th>Tryb</th><th>Opis</th><th>Wejście</th></tr>
+      <tr><td>User</td><td>Normalny program</td><td>—</td></tr>
+      <tr><td>System</td><td>Uprzywilejowane OS</td><td>Modyfikacja CPSR</td></tr>
+      <tr><td>FIQ</td><td>Szybkie przerwanie (bankowal. R8–R14)</td><td>Sygnał FIQ</td></tr>
+      <tr><td>IRQ</td><td>Ogólne przerwanie</td><td>Sygnał IRQ</td></tr>
+      <tr><td>SVC</td><td>Tryb nadzorcy OS</td><td>Instrukcja SWI</td></tr>
+      <tr><td>ABT</td><td>Błąd pamięci (Abort)</td><td>Błąd prefetch/data</td></tr>
+      <tr><td>UND</td><td>Niezdefiniowana instrukcja</td><td>Brak instrukcji</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Wektory wyjątków (tabela priorytetów)</div>
+    <table>
+      <tr><th>Wyjątek</th><th>Priorytet</th><th>Adres wektora</th></tr>
+      <tr><td>Reset</td><td>1 (najwyższy)</td><td>0x00000000</td></tr>
+      <tr><td>Data Abort</td><td>2</td><td>0x00000010</td></tr>
+      <tr><td>FIQ</td><td>3</td><td>0x0000001C</td></tr>
+      <tr><td>IRQ</td><td>4</td><td>0x00000018</td></tr>
+      <tr><td>Prefetch Abort</td><td>5</td><td>0x0000000C</td></tr>
+      <tr><td>Undefined</td><td>6 (najniższy)</td><td>0x00000004</td></tr>
+      <tr><td>SWI</td><td>6 (najniższy)</td><td>0x00000008</td></tr>
+    </table>
+    <h3>Kroki wejścia w wyjątek:</h3>
+    <ol style="padding-left:1.2rem;color:#b8b8cc;font-size:.9rem">
+      <li>PC → LR (R14)</li>
+      <li>CPSR → SPSR nowego trybu</li>
+      <li>Ustaw bity trybu w CPSR</li>
+      <li>Wyłącz przerwania niższego priorytetu</li>
+      <li>Załaduj wektor wyjątku do PC</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Kluczowe instrukcje ARM (mnemoniK)</div>
+    <div class="grid2">
+      <div>
+        <h3>Arytmetyczne</h3>
+        <code>ADD ADC SUB SBC RSB RSC CMP CMN</code>
+        <h3>Logiczne</h3>
+        <code>AND BIC OR EOR TST TEQ</code>
+        <h3>Mnożenia</h3>
+        <code>MUL MLA UMULL SMULL UMLAL SMLAL</code>
+      </div>
+      <div>
+        <h3>Skoki</h3>
+        <code>B BL BX</code>
+        <p style="font-size:.82rem;color:var(--muted)">BL zapisuje adres powrotu w LR; BX przełącza ARM↔Thumb</p>
+        <h3>Przesłania</h3>
+        <code>MOV MVN LDR STR LDM STM SWP</code>
+        <h3>System</h3>
+        <code>MRS MSR SWI MRC MCR LDC STC CDP</code>
+      </div>
+    </div>
+    <h3>Wykonanie warunkowe — sufiks 2-literowy:</h3>
+    <p>
+      <code>EQ</code> Z=1 &nbsp; <code>NE</code> Z=0 &nbsp; <code>MI</code> N=1 &nbsp; <code>PL</code> N=0 &nbsp;
+      <code>GE</code> N=V &nbsp; <code>LT</code> N≠V &nbsp; <code>GT</code> Z=0,N=V &nbsp; <code>LE</code> Z=1 or N≠V
+    </p>
+    <pre>ADDEQ R2,R1,R0   ; R2 = R1+R0 tylko gdy Z=1
+STRGT R0,[R1]    ; zapisz do pamięci tylko gdy GT</pre>
+  </div>
+</div>
+
+<!-- WERSJE -->
+<div id="versions" class="section">
+  <h2>📈 Wersje <span>architektury ARM</span></h2>
+
+  <div class="card">
+    <div class="card-title">Ewolucja ARMv4 → v8</div>
+    <table>
+      <tr><th>Wersja</th><th>Kluczowe nowości</th></tr>
+      <tr><td>ARMv4</td><td>Baseline: 32-bit, mnożenie, JTAG (ext. D), ICE (ext. I), AMBA</td></tr>
+      <tr><td>ARMv4T</td><td>+ <strong>Thumb</strong> (16-bit): 65% rozmiaru kodu ARM, 160% wydajności na 16-bit pamięci</td></tr>
+      <tr><td>ARMv5</td><td>+ lepsza kooperacja ARM/Thumb, <strong>DSP</strong> (32×16, 16×16 w 1 takcie), <strong>VFPv2</strong> (IEEE 754), Jazelle (8× Java)</td></tr>
+      <tr><td>ARMv6</td><td>+ wyrównany dostęp do pamięci, <strong>SIMD</strong> multimedia (4× kodeki), <strong>Thumb-2</strong>, TrustZone</td></tr>
+      <tr><td>ARMv7</td><td>+ rodzina <strong>Cortex</strong> (3 profile: M/R/A), wszyscy używają Thumb-2, <strong>VFPv3</strong>, <strong>NEON</strong> (400%+ DSP)</td></tr>
+      <tr><td>ARMv8-A</td><td>+ <strong>AArch64</strong> (64-bit), 31 GPR × 64-bit, 32 rej. wektorowych 128-bit, nowy A64 ISA</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Thumb-2 — główne ulepszenia (z kolosa!)</div>
+    <ul>
+      <li><strong>32-bitowe instrukcje dodane do zestawu Thumb</strong> dla:
+        <ul style="margin-top:.3rem">
+          <li>obsługi wyjątków w stanie Thumb</li>
+          <li>dostępu do koprocesorów</li>
+          <li>instrukcji DSP i multimediów</li>
+          <li>wydajności gdy 16-bit instrukcja jest bottleneckiem</li>
+        </ul>
+      </li>
+      <li><strong>Instrukcja IT (If-Then)</strong> — 16-bit, warunkowe wykonanie bloku 1–4 instrukcji Thumb</li>
+      <li><strong>CBZ/CBNZ</strong> — 16-bit Compare and Branch on Zero/NonZero, zastępuje 2 instrukcje jedną</li>
+    </ul>
+    <p style="margin-top:.8rem">Wynik: <strong>31% mniej pamięci</strong> niż ARM, <strong>38% więcej wydajności</strong> niż Thumb</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Rodziny procesorów ARM — tabela (z kolosa!)</div>
+    <table>
+      <tr><th>Rodzina</th><th>Profil</th><th>Zastosowanie</th></tr>
+      <tr><td><span class="chip chip-m">Cortex-M</span></td><td>M</td><td>Najbardziej energooszczędne urządzenia wbudowane (MCU, IoT)</td></tr>
+      <tr><td><span class="chip chip-r">Cortex-R</span></td><td>R</td><td>Niezawodna wydajność dla misji krytycznych (automotive, real-time)</td></tr>
+      <tr><td><span class="chip chip-a">Cortex-A</span></td><td>A</td><td>Najwyższa wydajność przy optymalnej mocy (Linux, Android)</td></tr>
+      <tr><td><span class="chip chip-o">Neoverse</span></td><td>—</td><td>Skalowalność dla infrastruktury (chmura → edge)</td></tr>
+      <tr><td><span class="chip chip-o">SecurCore</span></td><td>—</td><td>Silne rozwiązania bezpieczeństwa fizycznego (smart cards)</td></tr>
+      <tr><td><span class="chip chip-o">Ethos</span></td><td>—</td><td>Najwyższa wydajność ML inference</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Cortex-M — przegląd podtypów</div>
+    <table>
+      <tr><th>Model</th><th>Archit.</th><th>Charakterystyka</th></tr>
+      <tr><td>M0 / M0+</td><td>ARMv6-M</td><td>Najmniejszy, ultra-low power, IoT, sensory</td></tr>
+      <tr><td>M1</td><td>ARMv6-M</td><td>Dla FPGA</td></tr>
+      <tr><td>M3</td><td>ARMv7-M</td><td>Low latency IRQ, automotive/industrial</td></tr>
+      <tr><td>M4 (F)</td><td>ARMv7E-M</td><td>DSP + opcjonalne FPU — sygnały cyfrowe</td></tr>
+      <tr><td>M7</td><td>ARMv7E-M</td><td>Najwyższa wydajność Cortex-M, SIMD</td></tr>
+      <tr><td>M23</td><td>ARMv8-M</td><td>Najmniejszy z TrustZone, IoT z bezpieczeństwem</td></tr>
+      <tr><td>M33</td><td>ARMv8-M</td><td>Real-time + TrustZone + DSP</td></tr>
+      <tr><td>M55</td><td>ARMv8.1-M</td><td>Najlepszy AI/ML, technologia Helium</td></tr>
+    </table>
+    <p style="margin-top:.8rem;font-size:.85rem;color:var(--muted)">Wszystkie Cortex-M kompatybilne w górę — ponowne użycie oprogramowania między generacjami.</p>
+  </div>
+</div>
+
+<!-- NARZĘDZIA DEWELOPERSKIE -->
+<div id="tools" class="section">
+  <h2>🔧 Narzędzia <span>deweloperskie</span></h2>
+
+  <div class="card" style="border-color:var(--accent2)">
+    <div class="card-title">ICE — Przechwytywanie danych z magistrali (Pytanie Nr 3)</div>
+    <p>ICE (In-Circuit Emulator) podłącza się do magistrali mikrokomputera przez złącze i interfejs, umożliwiając precyzyjne monitorowanie, analizowanie i modyfikowanie przepływu danych.</p>
+    <h3>6-krokowy proces:</h3>
+    <ol style="padding-left:1.2rem;color:#b8b8cc;font-size:.9rem;line-height:1.8">
+      <li><strong>Podłączenie</strong> — fizyczne podłączenie emulatora do magistrali przez złącze i interfejs</li>
+      <li><strong>Przechwytywanie danych</strong> — emulator monitoruje sygnały; linia danych = dane, adresowa = adres docelowy/źródłowy, kontrolna = operacje</li>
+      <li><strong>Analiza danych</strong> — sprawdzenie poprawności, diagnoza błędów, monitorowanie transferów</li>
+      <li><strong>Modyfikowanie danych</strong> — emulator może wstrzykiwać zmiany w danych lub na adresach/sygnałach kontrolnych</li>
+      <li><strong>Sterowanie przerwaniami</strong> — emulator zarządza sygnałami przenoszeń, symuluje zdarzenia</li>
+      <li><strong>Rejestrowanie danych</strong> — zapisuje wartości danych, adresy i sygnały kontrolne do późniejszej analizy</li>
+    </ol>
+  </div>
+
+  <div class="card" style="border-color:var(--accent4)">
+    <div class="card-title">JTAG — Interfejs debugowania (Pytanie Nr 4b)</div>
+    <p>Standard IEEE 1149.1 — interfejs do komunikacji z emulatorem wewnątrz-układowym.</p>
+    <div class="grid2">
+      <div>
+        <h3>Sygnały TAP controller:</h3>
+        <ul>
+          <li><code>TMS</code> — Test Mode Select (wybór trybu)</li>
+          <li><code>TDI</code> — Test Data Input</li>
+          <li><code>TDO</code> — Test Data Output</li>
+          <li><code>TCK</code> — Test Clock (sygnał zegarowy)</li>
+          <li><code>RTCK</code> — Return TCK (zwrotny zegar)</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Sygnały reset:</h3>
+        <ul>
+          <li><code>nSRST</code> — System Reset (aktywny niski)</li>
+          <li><code>nTRST</code> — Test Reset (aktywny niski)</li>
+        </ul>
+        <h3>Bloki wewnątrz procesora:</h3>
+        <ul>
+          <li><code>EmbeddedICE</code> — kontroler debugowania</li>
+          <li><code>DBGRQ</code> — debug request</li>
+          <li><code>DBGACK</code> — debug acknowledge</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Zdalne ładowanie kodu wykonywalnego (Pytanie Nr 4)</div>
+    <div class="grid2">
+      <div>
+        <p>Kod przesyłany z PC do mikrokomputera przez interfejs I/O. Program zdalnego ładowania (w ROM) zapisuje odebrany kod do RAM.</p>
+        <h3>Format INTELA (Intel HEX):</h3>
+        <p>Każdy rekord danych zawiera:</p>
+        <ul style="font-size:.85rem">
+          <li>2 znaki — długość danych</li>
+          <li>4 znaki — load address</li>
+          <li>2 znaki — typ danych</li>
+          <li>N znaków — dane</li>
+          <li>2 znaki — checksum</li>
+        </ul>
+        <p style="margin-top:.5rem">Ostatnia linia (EOF): <code>:00000001FF</code></p>
+      </div>
+      <div>
+        <h3>Organizacja pamięci:</h3>
+        <table style="font-size:.82rem">
+          <tr><th>Adres</th><th>CODE</th><th>XDATA</th></tr>
+          <tr><td>0x0000–0x0FFF</td><td>ROM (PSEN)</td><td>RAM</td></tr>
+          <tr><td>0x1000–0xFFFF</td><td>RAM</td><td>RAM</td></tr>
+        </table>
+        <p style="margin-top:.6rem;font-size:.82rem;color:var(--muted)"><code>PSEN</code> = Program Store Enable — sygnał odczytu z zewnętrznej pamięci programu (ROM).</p>
+        <p style="font-size:.82rem;color:var(--muted)">Program załadowany przez I/O (np. port RS-232) trafia do RAM (0x1000+) i tam jest wykonywany.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Łańcuch tworzenia oprogramowania</div>
+    <table>
+      <tr><th>Narzędzie</th><th>Opis</th></tr>
+      <tr><td>Asembler</td><td>Tłumaczy kod asemblera → kod obiektowy</td></tr>
+      <tr><td>Kompilator</td><td>Tłumaczy C → kod obiektowy</td></tr>
+      <tr><td>Konsolidator (linker)</td><td>Łączy pliki obiektowe → executable</td></tr>
+      <tr><td>Bibliotekarz</td><td>Zarządza bibliotekami kodu obiektowego</td></tr>
+      <tr><td>Symulator</td><td>Emuluje procesor na PC</td></tr>
+      <tr><td>Debugger</td><td>Usuwanie błędów z programu</td></tr>
+      <tr><td>IDE</td><td>Zintegrowane środowisko programistyczne</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- FISZKI -->
+<div id="flash" class="section">
+  <h2>🃏 <span>Fiszki</span></h2>
+  <p class="flip-hint">Kliknij kartę żeby zobaczyć odpowiedź</p>
+
+  <div class="progress-bar">
+    <div class="progress-fill" id="progressFill" style="width:0%"></div>
+  </div>
+  <p style="text-align:center;font-family:var(--mono);font-size:.78rem;color:var(--muted);margin-bottom:1.2rem" id="progressText">0 / 14 kart odkrytych</p>
+
+  <div class="flashcard-grid" id="flashcards">
+
+    <div class="flashcard" onclick="flip(this)">
+      <div class="flashcard-inner">
+        <div class="fc-front"><div class="fc-q">Pytanie</div><div class="fc-text">Co to jest Load/Store Architecture w ARM?</div><div class="fc-hint">Kliknij aby zobaczyć</div></div>
+        <div class="fc-back"><div class="fc-q">Odpowiedź</div><div class="fc-ans">Tylko instrukcje LDR i STR mogą komunikować się między rejestrami a pamięcią. ALU operuje wyłącznie na rejestrach — nie ma instrukcji, które jednocześnie czytają pamięć i wykonują operację.</div></div>
+      </div>
+    </div>
+
+    <div class="flashcard" onclick="flip(this)">
+      <div class="flashcard-inner">
+        <div class="fc-front"><div class="fc-q">Pytanie</div><div class="fc-text">Ile rejestrów ma ARM i jakie są specjalne?</div><div class="fc-hint">Kliknij aby zobaczyć</div></div>
+        <div class="fc-back"><div class="fc-q">Odpowiedź</div><div class="fc-ans">16 rejestrów 32-bitowych (R0–R15). Specjalne: R13=SP (wskaźnik stosu), R14=LR (adres powrotu), R15=PC (licznik rozkazów). Łącznie 37 fizycznych (bankowalność per tryb).</div></div>
+      </div>
+    </div>
+
+    <div class="flashcard" onclick="flip(this)">
+      <div class="flashcard-inner">
+        <div class="fc-front"><div class="fc-q">Pytanie</div><div class="fc-text">Co dodała architektura ARMv4T?</div><div class="fc-hint">Kliknij aby zobaczyć</div></div>
+        <div class="fc-back"><div class="fc-q">Odpowiedź</div><div class="fc-ans">Zestaw instrukcji Thumb (16-bitowy). Kod Thumb ≈ 65% rozmiaru kodu ARM, 160% wydajności vs ARM na 16-bitowej pamięci.</div></div>
+      </div>
+    </div>
+
+    <div class="flashcard" onclick="flip(this)">
+      <div class="flashcard-inner">
+        <div class="fc-front"><div class="fc-q">Pytanie</div><div class="fc-text">Czym różni się Harvard od von Neumanna?</div><div class="fc-hint">Kliknij aby zobaczyć</div></div>
+        <div class="fc-back"><div class="fc-q">Odpowiedź</div><div class="fc-ans">Harvard: oddzielne przestrzenie adresowe dla programu i danych → jednoczesny dostęp, różne instrukcje. Von Neumann: wspólna przestrzeń → te same instrukcje, brak jednoczesnego dostępu. ARM używa von Neumanna.</div></div>
+      </div>
+    </div>
+
+    <div class="flashcard" onclick="flip(this)">
+      <div class="flashcard-inner">
+        <div class="fc-front"><div class="fc-q">Pytanie</div><div class="fc-text">Jakie są główne ulepszenia Thumb-2 vs Thumb?</div><div class="fc-hint">Kliknij aby zobaczyć</div></div>
+        <div class="fc-back"><div class="fc-q">Odpowiedź</div><div class="fc-ans">1. Dodane 32-bit instrukcje (DSP, wyjątki, koprocesory, wydajność). 2. Instrukcja IT (If-Then): warunkowe wykonanie 1–4 instrukcji. 3. CBZ/CBNZ: porównanie z zerem i skok w 1 instrukcji.</div></div>
+      </div>
+    </div>
+
+    <div class="flashcard" onclick="flip(this)">
+      <div class="flashcard-inner">
+        <div class="fc-front"><div class="fc-q">Pytanie</div><div class="fc-text">Wypisz 6 rodzin procesorów ARM z zastosowaniami</div><div class="fc-hint">Kliknij aby zobaczyć</div></div>
+        <div class="fc-back"><div class="fc-q">Odpowiedź</div><div class="fc-ans">Cortex-M: MCU/IoT. Cortex-R: systemy czasu rzeczywistego. Cortex-A: OS/aplikacje. Neoverse: infrastruktura chmura/edge. SecurCore: bezpieczeństwo fizyczne. Ethos: ML inference.</div></div>
+      </div>
+    </div>
+
+    <div class="flashcard" onclick="flip(this)">
+      <div class="flashcard-inner">
+        <div class="fc-front"><div class="fc-q">Pytanie</div><div class="fc-text">Co to jest ICE i jakie ma zastosowanie?</div><div class="fc-hint">Kliknij aby zobaczyć</div></div>
+        <div class="fc-back"><div class="fc-q">Odpowiedź</div><div class="fc-ans">In-Circuit Emulator — podłącza się do magistrali systemu wbudowanego. Pozwala: przechwytywać, analizować, modyfikować dane na magistrali, sterować transferami i rejestrować ruch. Niezastąpiony przy debugowaniu systemów embedded.</div></div>
+      </div>
+    </div>
+
+    <div class="flashcard" onclick="flip(this)">
+      <div class="flashcard-inner">
+        <div class="fc-front"><div class="fc-q">Pytanie</div><div class="fc-text">Podaj równanie czasu wykonania programu</div><div class="fc-hint">Kliknij aby zobaczyć</div></div>
+        <div class="fc-back"><div class="fc-q">Odpowiedź</div><div class="fc-ans">czas/program = (czas/cykl) × (cykle/instrukcja) × (instrukcje/program). RISC zmniejsza cykle/instrukcję, CISC zmniejsza instrukcje/program.</div></div>
+      </div>
+    </div>
+
+    <div class="flashcard" onclick="flip(this)">
+      <div class="flashcard-inner">
+        <div class="fc-front"><div class="fc-q">Pytanie</div><div class="fc-text">Jakie sygnały ma interfejs JTAG?</div><div class="fc-hint">Kliknij aby zobaczyć</div></div>
+        <div class="fc-back"><div class="fc-q">Odpowiedź</div><div class="fc-ans">TMS (wybór trybu), TDI (dane wejście), TDO (dane wyjście), TCK (zegar), RTCK (zwrotny zegar), nSRST (reset systemu), nTRST (reset test). TAP controller zarządza komunikacją.</div></div>
+      </div>
+    </div>
+
+    <div class="flashcard" onclick="flip(this)">
+      <div class="flashcard-inner">
+        <div class="fc-front"><div class="fc-q">Pytanie</div><div class="fc-text">Porównaj pobór mocy ARM vs x86</div><div class="fc-hint">Kliknij aby zobaczyć</div></div>
+        <div class="fc-back"><div class="fc-q">Odpowiedź</div><div class="fc-ans">ARM/MIPS zużywają 40–50% mniej mocy na MHz niż x86. Powierzchnia krzemu 3–4× mniejsza. x86 ma ~4–8% wyższą wydajność/MHz ale wyższy pobór wynikający z wewnętrznej translacji CISC→RISC.</div></div>
+      </div>
+    </div>
+
+    <div class="flashcard" onclick="flip(this)">
+      <div class="flashcard-inner">
+        <div class="fc-front"><div class="fc-q">Pytanie</div><div class="fc-text">Podaj 5 kroków wejścia ARM w obsługę wyjątku</div><div class="fc-hint">Kliknij aby zobaczyć</div></div>
+        <div class="fc-back"><div class="fc-q">Odpowiedź</div><div class="fc-ans">1. PC → LR. 2. CPSR → SPSR nowego trybu. 3. Ustaw tryb wyjątku w CPSR. 4. Wyłącz przerwania niższego priorytetu. 5. Załaduj wektor wyjątku do PC.</div></div>
+      </div>
+    </div>
+
+    <div class="flashcard" onclick="flip(this)">
+      <div class="flashcard-inner">
+        <div class="fc-front"><div class="fc-q">Pytanie</div><div class="fc-text">Co to format INTELA (Intel HEX)?</div><div class="fc-hint">Kliknij aby zobaczyć</div></div>
+        <div class="fc-back"><div class="fc-q">Odpowiedź</div><div class="fc-ans">Format transmisji kodu wykonywalnego. Każdy rekord: 2 znaki długość | 4 znaki adres | 2 znaki typ | N dane | 2 checksum. Ostatnia linia EOF: :00000001FF.</div></div>
+      </div>
+    </div>
+
+    <div class="flashcard" onclick="flip(this)">
+      <div class="flashcard-inner">
+        <div class="fc-front"><div class="fc-q">Pytanie</div><div class="fc-text">Co to jest potok (pipeline) i ile stopni ma ARM7 vs ARM9?</div><div class="fc-hint">Kliknij aby zobaczyć</div></div>
+        <div class="fc-back"><div class="fc-q">Odpowiedź</div><div class="fc-ans">Pipeline = nakładkowe wykonanie faz różnych instrukcji jednocześnie. ARM7: 3-stopniowy (Fetch/Decode/Execute). ARM9: 5-stopniowy (dodaje Memory Access i Write-Back). Proste instrukcje: 3× wydajność vs serial.</div></div>
+      </div>
+    </div>
+
+    <div class="flashcard" onclick="flip(this)">
+      <div class="flashcard-inner">
+        <div class="fc-front"><div class="fc-q">Pytanie</div><div class="fc-text">Czym różni się tryb Thumb od ARM w kontekście rejestrów?</div><div class="fc-hint">Kliknij aby zobaczyć</div></div>
+        <div class="fc-back"><div class="fc-q">Odpowiedź</div><div class="fc-ans">Thumb: standardowo dostępne tylko R0–R7 (dolne rejestry). R8–R15 (górne) tylko przez specjalne warianty MOV/CMP/ADD. Brak pre/post-indeksacji w adresowaniu pamięci. Instrukcje warunkowe tylko skoki (brak IT jak w Thumb-2).</div></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</main>
+
+<script>
+  function show(id) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    const tabs = ['start','basics','cisc','arm','versions','tools','flash'];
+    const idx = tabs.indexOf(id);
+    document.querySelectorAll('.tab')[idx].classList.add('active');
+  }
+
+  let flipped = new Set();
+  function flip(card) {
+    card.classList.toggle('flipped');
+    const id = Array.from(document.querySelectorAll('.flashcard')).indexOf(card);
+    if (card.classList.contains('flipped')) {
+      flipped.add(id);
+    }
+    updateProgress();
+  }
+
+  function updateProgress() {
+    const total = document.querySelectorAll('.flashcard').length;
+    const done = flipped.size;
+    const pct = Math.round(done / total * 100);
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('progressText').textContent = `${done} / ${total} kart odkrytych`;
+  }
+</script>
+
+</body>
+</html>
