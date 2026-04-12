@@ -100,7 +100,7 @@
 
   .cards {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
     gap: 16px;
   }
 
@@ -128,6 +128,10 @@
   .card-mikro:hover { border-color: #7c6aff; }
   .card-mikro .card-label { color: #7c6aff; }
   .card-mikro .card-deadline { color: #7c6aff; background: rgba(124,106,255,0.1); border: 1px solid rgba(124,106,255,0.25); }
+  .card-java { border-top: 3px solid #00d4aa; }
+  .card-java:hover { border-color: #00d4aa; }
+  .card-java .card-label { color: #00d4aa; }
+  .card-java .card-deadline { color: #00d4aa; background: rgba(0,212,170,0.1); border: 1px solid rgba(0,212,170,0.25); }
 
   .card-label {
     font-family: 'IBM Plex Mono', monospace;
@@ -226,6 +230,13 @@
       <div class="card-label">Mikroprocesory</div>
       <div class="card-title">Mikroprocesory</div>
       <div class="card-info">RISC vs CISC, pipelining, przerwania, adresowanie</div>
+      <span class="card-deadline">Kolos</span>
+      <div class="card-arrow">Otwórz →</div>
+    </a>
+    <a href="java.html" class="card card-java">
+      <div class="card-label">PWwJJ</div>
+      <div class="card-title">Programowanie Współbieżne w Java</div>
+      <div class="card-info">Wątki, synchronizacja, executory, kolekcje współbieżne</div>
       <span class="card-deadline">Kolos</span>
       <div class="card-arrow">Otwórz →</div>
     </a>
