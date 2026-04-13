@@ -152,7 +152,7 @@ ul.lst li::before { content: '→'; position: absolute; left: 0; color: var(--ac
 
 <header>
   <h1>Programowanie Współbieżne w Języku JAVA</h1>
-  <p>dr inż. Dominik Olszewski · PW 2026L · Kolos: 13.04.2026</p>
+  <p>PW 2026L · Kolos: 13.04.2026</p>
 </header>
 
 <div class="tabs">
@@ -407,7 +407,7 @@ ul.lst li::before { content: '→'; position: absolute; left: 0; color: var(--ac
     <div class="card" style="background:var(--bg3)">
       <h3>Problem: interferencja wątków</h3>
       <p style="font-size:0.82rem; line-height:1.6;">Operacja <code>a++</code> NIE jest atomowa — składa się z 3 kroków: odczyt → dodaj → zapis. Przy 2 wątkach może nastąpić wyścig i utrata danych.</p>
-      <div style="margin-top:10px; font-size:0.8rem; font-family:'JetBrains Mono',monospace; color:var(--muted);">
+      <div style="margin-top:10px; font-size:0.8rem; font-family:'IBM Plex Mono',monospace; color:var(--muted);">
         A: pobierz a=0<br>B: pobierz a=0<br>A: dodaj 1 → 1<br>B: odejmij 1 → -1<br>A: zapisz a=1<br>B: zapisz a=-1 <span style="color:var(--red)">← zły wynik!</span>
       </div>
     </div>
