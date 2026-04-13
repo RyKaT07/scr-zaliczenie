@@ -237,29 +237,28 @@ ul.lst li::before { content: '→'; position: absolute; left: 0; color: var(--ac
 <pre><span class="kw">import</span> java.util.concurrent.locks.*;
 
 <span class="kw">public class</span> <span class="cls">AClass</span> {
-    <span class="kw">private final</span> Lock lock1 = <span class="kw">new</span> <span class="cls">ReentrantLock</span>();
-    <span class="kw">private final</span> Lock lock2 = <span class="kw">new</span> <span class="cls">ReentrantLock</span>();
+    <span class="kw">private final</span> Lock lock = <span class="kw">new</span> <span class="cls">ReentrantLock</span>();
 
     <span class="kw">public void</span> <span class="fn">method1</span>() {
-        lock1.<span class="fn">lock</span>();
+        lock.<span class="fn">lock</span>();
         <span class="kw">try</span> {
             System.out.<span class="fn">println</span>(<span class="str">"instrukcja1"</span>);
         } <span class="kw">finally</span> {
-            lock1.<span class="fn">unlock</span>(); <span class="cmt">// zawsze w finally!</span>
+            lock.<span class="fn">unlock</span>(); <span class="cmt">// zawsze w finally!</span>
         }
     }
 
     <span class="kw">public void</span> <span class="fn">method2</span>() {
-        lock2.<span class="fn">lock</span>();
+        lock.<span class="fn">lock</span>();
         <span class="kw">try</span> {
             System.out.<span class="fn">println</span>(<span class="str">"instrukcja2"</span>);
         } <span class="kw">finally</span> {
-            lock2.<span class="fn">unlock</span>();
+            lock.<span class="fn">unlock</span>();
         }
     }
 }
 </pre>
-    <p style="font-size:0.82rem; color:var(--muted);">⚠️ Dwa osobne zamki — method1 i method2 mogą działać równolegle! W synchronized na this — blokują się wzajemnie.</p>
+    <p style="font-size:0.82rem; color:var(--muted);">Jeden zamek dla obu metod — tak jak synchronized na this, method1 i method2 wzajemnie się blokują. Dwa osobne zamki byłyby BŁĘDEM — metody mogłyby działać równolegle, co nie jest równoważne oryginałowi.</p>
   </div>
 
   <div class="task">
@@ -275,9 +274,10 @@ ul.lst li::before { content: '→'; position: absolute; left: 0; color: var(--ac
         ref[<span class="num">0</span>] = <span class="kw">new</span> Thread(() -> {
             <span class="kw">try</span> {
                 Thread.<span class="fn">sleep</span>(<span class="num">1000</span>);
-                ref[<span class="num">1</span>].<span class="fn">interrupt</span>(); <span class="cmt">// thread1 przerywa thread2</span>
+                ref[<span class="num">1</span>].<span class="fn">interrupt</span>();  <span class="cmt">// przerywa thread2</span>
+                Thread.<span class="fn">sleep</span>(<span class="num">5000</span>);  <span class="cmt">// czeka — musi żyć żeby thread2 mógł go przerwać!</span>
             } <span class="kw">catch</span> (InterruptedException e) {
-                System.out.<span class="fn">println</span>(<span class="str">"thread1 przerwany"</span>);
+                System.out.<span class="fn">println</span>(<span class="str">"thread1 przerwany przez thread2"</span>);
             }
         });
 
@@ -287,7 +287,7 @@ ul.lst li::before { content: '→'; position: absolute; left: 0; color: var(--ac
                 System.out.<span class="fn">println</span>(<span class="str">"thread2: 2s upłynęły"</span>);
             } <span class="kw">catch</span> (InterruptedException e) {
                 System.out.<span class="fn">println</span>(<span class="str">"thread2 przerwany przed 2s"</span>);
-                ref[<span class="num">0</span>].<span class="fn">interrupt</span>(); <span class="cmt">// thread2 przerywa thread1</span>
+                ref[<span class="num">0</span>].<span class="fn">interrupt</span>();  <span class="cmt">// przerywa thread1</span>
             }
         });
 
@@ -296,6 +296,7 @@ ul.lst li::before { content: '→'; position: absolute; left: 0; color: var(--ac
     }
 }
 </pre>
+    <p style="font-size:0.82rem; color:var(--muted);">Kluczowe: thread1 po przerwaniu thread2 musi dalej czekać (sleep), żeby był jeszcze żywy kiedy thread2 spróbuje go przerwać. Bez drugiego sleep → thread1 jest TERMINATED i interrupt() nic nie robi.</p>
   </div>
 </div>
 
