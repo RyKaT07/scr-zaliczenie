@@ -17,7 +17,7 @@ MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['$$','$$']]},options:{ski
   body {
     font-family: 'Caveat', cursive;
     font-size: 9.2pt;
-    line-height: 1.25;
+    line-height: 1.24;
     color: #1a3068;
     background: #fffef9;
   }
@@ -31,108 +31,87 @@ MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['$$','$$']]},options:{ski
     page-break-after: always;
     column-count: 3;
     column-gap: 4.5mm;
+    filter: url(#handwriting);
   }
   .page:last-child { page-break-after: avoid; }
 
-  /* tytul strony */
   h1 {
     column-span: all;
     font-size: 13pt;
     font-weight: 700;
-    margin-bottom: 1.2mm;
+    margin-bottom: 1mm;
     padding-bottom: 0.5mm;
-    border-bottom: 1.2px solid #1a3068;
-    transform: rotate(-0.2deg);
+    border-bottom: 1px solid #1a3068;
+    transform: rotate(-0.3deg);
+    margin-left: 1mm;
   }
 
   .sec {
     break-inside: avoid;
-    margin-bottom: 1.5mm;
+    margin-bottom: 1.4mm;
   }
 
   .sec-title {
-    font-size: 9pt;
+    font-size: 9.2pt;
     font-weight: 700;
     text-decoration: underline;
-    text-decoration-style: solid;
-    text-decoration-thickness: 1px;
     text-underline-offset: 1.5px;
-    margin-bottom: 0.5mm;
+    text-decoration-thickness: 0.9px;
+    margin-bottom: 0.4mm;
     text-transform: uppercase;
-    letter-spacing: 0.2px;
   }
 
-  /* nierownomiernosc - rozne sekcje lekko obrocone */
-  .sec:nth-child(3n+1) { transform: rotate(0.15deg); }
-  .sec:nth-child(3n+2) { transform: rotate(-0.25deg); }
-  .sec:nth-child(3n)   { transform: rotate(0.1deg); }
-  .sec:nth-child(5n)   { transform: rotate(-0.35deg); }
-  .sec:nth-child(7n+3) { transform: rotate(0.3deg); }
+  /* --- pseudo-losowa nierownosc --- */
+  .sec:nth-child(3n+1) { transform: rotate(0.18deg); }
+  .sec:nth-child(3n+2) { transform: rotate(-0.28deg); }
+  .sec:nth-child(3n)   { transform: rotate(0.12deg); margin-left: 0.3mm; }
+  .sec:nth-child(5n)   { transform: rotate(-0.38deg); }
+  .sec:nth-child(7n+3) { transform: rotate(0.32deg); margin-left: -0.2mm; }
+  .sec:nth-child(11n+2){ transform: rotate(0.22deg); }
 
-  /* wzor */
-  .f {
-    padding: 0.4mm 0 0.4mm 2mm;
-    margin: 0.6mm 0;
-    font-size: 8.8pt;
-  }
-
-  /* punkt */
-  .p {
+  .ln {
     font-size: 8.5pt;
-    padding-left: 3mm;
-    text-indent: -3mm;
-    margin: 0.2mm 0;
-  }
-  .p::before { content: "- "; }
-
-  /* przyklad/obliczenie */
-  .ex {
-    padding: 0.3mm 0 0.3mm 2mm;
-    margin: 0.4mm 0;
-    font-size: 8.3pt;
+    margin: 0.15mm 0;
+    padding-left: 0.5mm;
   }
 
-  /* podkreslenie reczne na wazne rzeczy */
+  /* kazda linia lekko inaczej */
+  .ln:nth-child(odd)  { margin-left: 0.2mm; }
+  .ln:nth-child(even) { margin-left: -0.1mm; }
+  .ln:nth-child(3n+1) { transform: rotate(0.12deg); font-size: 8.4pt; }
+  .ln:nth-child(3n+2) { transform: rotate(-0.18deg); font-size: 8.6pt; }
+  .ln:nth-child(3n)   { transform: rotate(0.08deg); margin-left: 0.4mm; }
+  .ln:nth-child(5n)   { transform: rotate(-0.22deg); }
+  .ln:nth-child(7n)   { margin-left: 0.6mm; font-size: 8.3pt; }
+  .ln:nth-child(7n+4) { transform: rotate(0.28deg); margin-left: -0.3mm; }
+  .ln:nth-child(11n+5){ font-size: 8.7pt; }
+  .ln:nth-child(13n+1){ margin-left: 0.5mm; transform: rotate(-0.15deg); }
+
+  /* wzor - lekko wciete */
+  .fm {
+    font-size: 8.8pt;
+    margin: 0.4mm 0 0.4mm 1.5mm;
+    padding-left: 0.5mm;
+  }
+  .fm:nth-child(odd)  { transform: rotate(0.1deg); margin-left: 1.8mm; }
+  .fm:nth-child(even) { transform: rotate(-0.15deg); margin-left: 1.2mm; }
+
+  /* podkreslenie - jak dlugopisem */
   u {
-    text-decoration-color: #1a3068;
-    text-decoration-thickness: 1.2px;
+    text-decoration-thickness: 1px;
     text-underline-offset: 1px;
-    text-decoration-style: solid;
   }
 
-  /* uwaga - tylko caps + podkreslenie */
-  .uw {
-    font-size: 8pt;
-    font-weight: 700;
-    margin: 0.3mm 0;
-    text-decoration: underline;
-    text-decoration-thickness: 0.8px;
-  }
+  /* wazne - podkreslone + pogrubione */
+  b { font-weight: 600; }
 
-  /* tabela - prosta kratka dlugopisem */
-  table.t {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 7.8pt;
-    margin: 0.6mm 0;
-  }
-  table.t th, table.t td {
-    border: 0.6px solid #1a3068;
-    padding: 0.3mm 0.8mm;
-    text-align: left;
-  }
-  table.t th { font-weight: 700; }
+  small { font-size: 7pt; }
 
-  /* lekka nierownosc tabel */
-  table.t { transform: rotate(-0.15deg); }
-
-  small { font-size: 7.2pt; }
-
-  .mjx-container { font-size: 93% !important; }
+  .mjx-container { font-size: 92% !important; }
 
   @media screen {
-    body { display: flex; flex-direction: column; align-items: center; gap: 10mm; padding: 10mm; background: #d0d0d0; }
-    .page { background: #fffef9; box-shadow: 0 2px 12px rgba(0,0,0,0.15); border: 1px solid #bbb; padding: 3mm; }
+    body { display: flex; flex-direction: column; align-items: center; gap: 10mm; padding: 10mm; background: #c8c8c8; }
+    .page { background: #fffef9; box-shadow: 0 2px 16px rgba(0,0,0,0.18); border: 1px solid #aaa; padding: 3mm; }
     .no-print { display: block; }
   }
   @media print {
@@ -145,18 +124,21 @@ MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['$$','$$']]},options:{ski
     margin-bottom: 4mm;
   }
   .no-print button {
-    font-family: 'Caveat', cursive;
-    font-size: 14pt;
-    padding: 8px 32px;
-    background: #1a3068;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
+    font-family: 'Caveat', cursive; font-size: 14pt;
+    padding: 8px 32px; background: #1a3068; color: white;
+    border: none; border-radius: 6px; cursor: pointer;
   }
 </style>
 </head>
 <body>
+
+<!-- SVG filter - emuluje nierownosc ludzkiego pisma -->
+<svg width="0" height="0" style="position:absolute">
+  <filter id="handwriting">
+    <feTurbulence type="turbulence" baseFrequency="0.012 0.016" numOctaves="3" seed="8" result="noise"/>
+    <feDisplacementMap in="SourceGraphic" in2="noise" scale="1.4" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+</svg>
 
 <!-- ===== STRONA 1 ===== -->
 <div class="page">
@@ -166,125 +148,116 @@ MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['$$','$$']]},options:{ski
 
   <div class="sec">
     <div class="sec-title">Podstawy</div>
-    <div class="f">\(\lambda = c/f \qquad c \approx 3\!\times\!10^8\) m/s</div>
-    <div class="p">fala radiowa w prozni porusza sie z predkoscia <u>c</u></div>
-    <div class="p">fale rozchodza sie na odleglosc <u>> 1E24 m</u></div>
-    <div class="p"><u>modulacja</u> = przeksztalcenie do transmisji info falami radiowymi</div>
-    <div class="p">parametry do modulacji: <u>amplituda, faza, czestotliwosc</u></div>
-    <div class="p">radiodyfuzja = jednokierunkowa komunikacja radiowa</div>
-    <div class="p">pasma ISM - bez licencji, wymagane rezimy mocy i czasu</div>
-    <div class="p">IQ = synfazowa (I) + kwadraturowa (Q)</div>
+    <div class="fm">\(\lambda = c/f \qquad c \approx 3\!\times\!10^8\) m/s</div>
+    <div class="ln">- fala radiowa w prozni: predkosc = <u>c</u> (predkosc swiatla)</div>
+    <div class="ln">- fale rozchodza sie na odleglosc <u>> 1E24 m</u></div>
+    <div class="ln">- <u>modulacja</u> = przeksztalcenie do transmisji info falami radio</div>
+    <div class="ln">- parametry do modulacji: <u>amplituda, faza, czestotliwosc</u></div>
+    <div class="ln">- radiodyfuzja = jednokierunkowa komunikacja radiowa</div>
+    <div class="ln">- pasma ISM - bez licencji, wymagane rezimy mocy i czasu</div>
+    <div class="ln">- IQ = synfazowa (I) + kwadraturowa (Q)</div>
   </div>
 
   <div class="sec">
     <div class="sec-title">Przeliczenia lambda/f</div>
-    <div class="ex">150 MHz - 2 m | 30 m - 10 MHz</div>
-    <div class="ex">225 kHz - 1333 m | <u>0,125 m - 2,4 GHz</u> (WiFi!)</div>
-    <div class="ex"><u>299 kHz - ok. 1000 m</u> | 5 kHz - 60 km</div>
+    <div class="ln">- 150 MHz -- 2 m&emsp; 30 m -- 10 MHz</div>
+    <div class="ln">- 225 kHz -- 1333 m&emsp; <u>0,125 m -- 2,4 GHz</u> (WiFi)</div>
+    <div class="ln">- <u>299 kHz -- ok. 1000 m</u>&emsp; 5 kHz -- 60 km</div>
   </div>
 
   <div class="sec">
-    <div class="sec-title">Transformata Fouriera</div>
-    <div class="f">\(G(f)=\int_{-\infty}^{\infty}g(t)e^{-j2\pi ft}dt\)</div>
-    <div class="f">\(g(t)=\int_{-\infty}^{\infty}G(f)e^{j2\pi ft}df\)</div>
-    <div class="p"><u>Fouriera</u> laczy dziedzine czasu z czestotliwosci</div>
-    <div class="p">Euler: \(e^{j2\pi f}=\cos(2\pi f)+j\sin(2\pi f)\)</div>
+    <div class="sec-title">Fourier</div>
+    <div class="fm">\(G(f)=\int_{-\infty}^{\infty}g(t)e^{-j2\pi ft}dt\)</div>
+    <div class="fm">\(g(t)=\int_{-\infty}^{\infty}G(f)e^{j2\pi ft}df\)</div>
+    <div class="ln">- <u>Fouriera</u> laczy dziedzine czasu z czestotliwosci</div>
+    <div class="ln">- Euler: \(e^{j2\pi f}=\cos(2\pi f)+j\sin(2\pi f)\)</div>
   </div>
 
   <div class="sec">
     <div class="sec-title">Jednostki dB</div>
-    <table class="t">
-      <tr><th>jedn.</th><th>ref.</th><th>przyklad</th></tr>
-      <tr><td>dBm</td><td>1 mW</td><td><u>20 dBm = 100 mW</u></td></tr>
-      <tr><td>dBW</td><td>1 W</td><td>30 dBW = 1 kW</td></tr>
-      <tr><td>dBi/dBd</td><td>izo/dipol</td><td>anteny</td></tr>
-    </table>
-    <div class="f">\(P_{dBm} = 10\log_{10}(P_{mW})\)</div>
-    <div class="uw">egz: 100 mW = 20 dBm (max WiFi w UE)</div>
+    <div class="ln">- dBm = ref. 1 mW&emsp; <u>20 dBm = 100 mW</u></div>
+    <div class="ln">- dBW = ref. 1 W&emsp; 30 dBW = 1 kW</div>
+    <div class="ln">- dBi = ref. ant. izotropowa, dBd = ref. dipol</div>
+    <div class="fm">\(P_{dBm} = 10\log_{10}(P_{mW})\)</div>
+    <div class="ln"><b><u>egz: 100 mW = 20 dBm (max WiFi w UE)</u></b></div>
   </div>
 
   <div class="sec">
     <div class="sec-title">Szum</div>
-    <div class="f">\(P_n = kTB \qquad U_n = \sqrt{4kT\Delta f R}\)</div>
-    <div class="ex"><small>k = 1,38 x 10^-23 J/K</small></div>
-    <div class="uw">1 kohm @ 25C -- 4 nV/sqrt(Hz)</div>
-    <div class="f">\(U_{rms}=\sqrt{u_1^2+u_2^2+\ldots}\)</div>
-    <div class="p"><u>podwojenie zrodel szumu = +3 dB</u> (nie x2!)</div>
-    <div class="p">szum zdominowany przez najsilniejsze zrodlo</div>
-    <table class="t">
-      <tr><th>kolor</th><th>widmo</th><th>dB/okt</th></tr>
-      <tr><td>bialy</td><td>1 (plaski)</td><td>0</td></tr>
-      <tr><td>rozowy</td><td>1/f</td><td>-3</td></tr>
-      <tr><td>czerwony</td><td>1/f^2</td><td>-6</td></tr>
-      <tr><td>niebieski</td><td>f</td><td>+3</td></tr>
-      <tr><td>fioletowy</td><td>f^2</td><td>+6</td></tr>
-    </table>
-    <div class="f">\(SNR=10\log_{10}(P_S/P_N)\) [dB]</div>
+    <div class="fm">\(P_n = kTB \qquad U_n = \sqrt{4kT\Delta f R}\)</div>
+    <div class="ln"><small>k = 1,38 x 10^-23 J/K</small></div>
+    <div class="ln"><b><u>1 kohm @ 25C -- 4 nV/sqrt(Hz)</u></b></div>
+    <div class="fm">\(U_{rms}=\sqrt{u_1^2+u_2^2+\ldots}\)</div>
+    <div class="ln">- <u>podwojenie zrodel szumu = +3 dB</u> (nie x2!)</div>
+    <div class="ln">- szum zdominowany przez najsilniejsze zrodlo</div>
+    <div class="ln">- bialy=1 (plaski) | rozowy=1/f (-3dB/okt)</div>
+    <div class="ln">- czerwony=1/f^2 (-6) | niebieski=f (+3) | fiolet=f^2 (+6)</div>
+    <div class="fm">\(SNR=10\log_{10}(P_S/P_N)\) [dB]</div>
   </div>
 
   <div class="sec">
     <div class="sec-title">Regulacje</div>
-    <div class="p"><u>ITU</u> - globalna wspolpraca radiowa</div>
-    <div class="p">CEPT/ETSI - Europa | UKE - Polska | FCC - USA</div>
-    <div class="p">jonosfera odbija pewne f - nie opuszczaja atmosfery</div>
+    <div class="ln">- <u>ITU</u> - globalna wspolpraca radiowa</div>
+    <div class="ln">- CEPT/ETSI = Europa, UKE = Polska, FCC = USA</div>
+    <div class="ln">- jonosfera odbija pewne f -- nie opuszczaja atmosfery</div>
   </div>
 
   <div class="sec">
     <div class="sec-title">AM - modulacja amplitudy</div>
-    <div class="f">\(s(t) = U_0(1+m\cos\omega_m t)\cos\omega_0 t\)</div>
-    <div class="f">\(= U_0\cos\omega_0 t + \frac{U_m}{2}[\cos(\omega_0\!-\!\omega_m)t + \cos(\omega_0\!+\!\omega_m)t]\)</div>
-    <div class="p">widmo AM: nosna + 2 wstegi boczne</div>
-    <div class="p"><u>pasmo AM = 2 f_m</u> (sygn. 0-5kHz -- B=10kHz)</div>
-    <div class="p">nosna AM w srodku pasma: f0 = (fmin+fmax)/2</div>
-    <div class="uw">egz: pasmo 323-349 kHz -- nosna = 336 kHz</div>
+    <div class="fm">\(s(t) = U_0(1+m\cos\omega_m t)\cos\omega_0 t\)</div>
+    <div class="fm">\(= U_0\cos\omega_0 t + \frac{U_m}{2}[\cos(\omega_0\!-\!\omega_m)t + \cos(\omega_0\!+\!\omega_m)t]\)</div>
+    <div class="ln">- widmo AM: nosna + 2 wstegi boczne</div>
+    <div class="ln">- <u>pasmo AM = 2 f_m</u> (sygn. 0-5kHz -- B=10kHz)</div>
+    <div class="ln">- nosna AM w srodku pasma: f0=(fmin+fmax)/2</div>
+    <div class="ln"><b><u>egz: pasmo 323-349 kHz -- nosna = 336 kHz</u></b></div>
   </div>
 
   <div class="sec">
     <div class="sec-title">Glebokosc modulacji AM</div>
-    <div class="f">\(m = \frac{U_m}{U_c} = \frac{U_{max}-U_{min}}{U_{max}+U_{min}}\)</div>
-    <div class="f">\(U_{max} = U_c(1+m) \qquad U_{min} = U_c(1-m)\)</div>
-    <div class="ex">egz: Uc=10V, m=25% -- Umax = 10 x 1,25 = <u>12,5V</u></div>
-    <div class="ex">egz: Umax=12V, m=50% -- Uc = 12/1,5 = <u>8V</u></div>
-    <div class="p">wiele czest.: \(m_{eff}=\sqrt{m_1^2+m_2^2+\ldots}\)</div>
+    <div class="fm">\(m = \frac{U_m}{U_c} = \frac{U_{max}-U_{min}}{U_{max}+U_{min}}\)</div>
+    <div class="fm">\(U_{max} = U_c(1+m) \qquad U_{min} = U_c(1-m)\)</div>
+    <div class="ln">egz: Uc=10V, m=25% -- Umax=10x1,25= <u>12,5V</u></div>
+    <div class="ln">egz: Umax=12V, m=50% -- Uc=12/1,5= <u>8V</u></div>
+    <div class="ln">- wiele czest.: \(m_{eff}=\sqrt{m_1^2+m_2^2+\ldots}\)</div>
   </div>
 
   <div class="sec">
     <div class="sec-title">Moc i sprawnosc AM</div>
-    <div class="f">\(P_{AM} = P_0(1+\frac{m^2}{2})\)</div>
-    <div class="f">\(P_{max} = P_0(1+m)^2\) wiec \(P_0 = P_{max}/(1+m)^2\)</div>
-    <div class="ex">egz: m=10%, Pmax=24,2kW -- P0 = 24200/1,21 = <u>20 kW</u></div>
-    <div class="ex">przy m=1: Pmax = 4 P0</div>
-    <div class="f">\(\mu_{AM} = \frac{m^2}{2+m^2}\)</div>
-    <div class="uw">przy m=1: mu = 1/3 = 33,3% -- wiekszosc energii na nosna!</div>
+    <div class="fm">\(P_{AM} = P_0(1+\frac{m^2}{2})\)</div>
+    <div class="fm">\(P_{max} = P_0(1+m)^2\) wiec \(P_0 = P_{max}/(1+m)^2\)</div>
+    <div class="ln">egz: m=10%, Pmax=24,2kW -- P0=24200/1,21= <u>20 kW</u></div>
+    <div class="ln">- przy m=1: Pmax=4P0</div>
+    <div class="fm">\(\mu_{AM} = \frac{m^2}{2+m^2}\)</div>
+    <div class="ln"><b><u>przy m=1: mu=1/3=33,3% -- wiekszosc energii na nosna!</u></b></div>
   </div>
 
   <div class="sec">
     <div class="sec-title">DSB-SC i SSB</div>
-    <div class="f">\(s_{DSB}(t) = A_0\cos\omega_0 t \cdot m(t)\)</div>
-    <div class="p">DSB-SC: nosna wytlumiona, wymaga demod. koherentnej</div>
-    <div class="p">odwrocenie fazy przy przejsciu m(t) przez zero</div>
-    <div class="p">SSB: tylko 1 wstega -- <u>polowa pasma</u></div>
-    <div class="p">metody SSB: fazowa, Weavera, filtrowa</div>
+    <div class="fm">\(s_{DSB}(t) = A_0\cos\omega_0 t \cdot m(t)\)</div>
+    <div class="ln">- DSB-SC: nosna wytlumiona, wymaga demod. koherentnej</div>
+    <div class="ln">- odwrocenie fazy przy przejsciu m(t) przez zero</div>
+    <div class="ln">- SSB: tylko 1 wstega -- <u>polowa pasma</u></div>
+    <div class="ln">- metody SSB: fazowa, Weavera, filtrowa</div>
   </div>
 
   <div class="sec">
     <div class="sec-title">Modulatory</div>
-    <div class="p">zrownowazony: y = 2a1 b + 4a2 bc</div>
-    <div class="p">pierscieniowy: s = 8a2 bc (czysty iloczyn)</div>
-    <div class="p">Gilbert Cell: mnoznik 4-kw., mieszacz, AGC, det. fazy</div>
+    <div class="ln">- zrownowazony: y = 2a1b + 4a2bc</div>
+    <div class="ln">- pierscieniowy: s = 8a2bc (czysty iloczyn)</div>
+    <div class="ln">- Gilbert Cell: mnoznik 4-kw, mieszacz, AGC, det.fazy</div>
   </div>
 
   <div class="sec">
     <div class="sec-title">Demodulacja AM</div>
-    <div class="p">AM klasyczne -- demod. <u>niekoherentna</u> (prostownik)</div>
-    <div class="p">DSB-SC, SSB -- wymagaja <u>koherentnej</u></div>
-    <div class="p">blad fazy: b' = 1/2 b cos(dphi)</div>
-    <div class="p">blad f: b' = 1/2 b cos(dw t)</div>
+    <div class="ln">- AM klasyczne -- demod. <u>niekoherentna</u> (prostownik)</div>
+    <div class="ln">- DSB-SC, SSB -- wymagaja <u>koherentnej</u></div>
+    <div class="ln">- blad fazy: b'=1/2 b cos(dphi)</div>
+    <div class="ln">- blad f: b'=1/2 b cos(dw t)</div>
   </div>
 
   <div class="sec">
     <div class="sec-title">Kto nie pasuje?</div>
-    <div class="uw">DSB-SC, FSK, PM, SSB, FM, AM -- FSK (jedyna cyfrowa!)</div>
+    <div class="ln"><b><u>DSB-SC, FSK, PM, SSB, FM, AM -- FSK (jedyna cyfrowa!)</u></b></div>
   </div>
 
 </div>
@@ -296,156 +269,138 @@ MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['$$','$$']]},options:{ski
 
   <div class="sec">
     <div class="sec-title">Modulacja fazy (PM)</div>
-    <div class="f">\(s_{PM}(t) = A_0\cos(\omega_0 t + k_{PM} a_m b(t))\)</div>
-    <div class="uw">IQ: dlugosc wektora PM STALA (zmienia sie faza, nie ampl.)</div>
+    <div class="fm">\(s_{PM}(t) = A_0\cos(\omega_0 t + k_{PM} a_m b(t))\)</div>
+    <div class="ln"><b><u>IQ: dlugosc wektora PM STALA (zmienia sie faza nie ampl.)</u></b></div>
   </div>
 
   <div class="sec">
     <div class="sec-title">Modulacja czestotl. (FM)</div>
-    <div class="f">\(s_{FM}(t) = A_0\cos(\omega_0 t + \beta\sin\omega_m t)\)</div>
-    <div class="f">\(\Delta f = k_{FM}\cdot a_m \qquad \beta = \Delta f / f_m\)</div>
-    <div class="p">PM: faza ~ m(t). FM: czest. chwilowa ~ m(t)</div>
-    <div class="p">posrednie: calka + PM = FM; pochodna + FM = PM</div>
+    <div class="fm">\(s_{FM}(t) = A_0\cos(\omega_0 t + \beta\sin\omega_m t)\)</div>
+    <div class="fm">\(\Delta f = k_{FM}\cdot a_m \qquad \beta = \Delta f / f_m\)</div>
+    <div class="ln">- PM: faza ~ m(t). FM: czest. chwilowa ~ m(t)</div>
+    <div class="ln">- posrednie: calka+PM=FM, pochodna+FM=PM</div>
   </div>
 
   <div class="sec">
     <div class="sec-title">Bessel i widmo FM</div>
-    <div class="f">\(s(t) = A_0\sum_{n=-\infty}^{\infty}J_n(\beta)\cos(\omega_0+n\omega_m)t\)</div>
-    <div class="p">widmo FM - teoretycznie nieskonczone!</div>
-    <div class="p">symetria: J_n(b) = (-1)^n J_-n(b)</div>
+    <div class="fm">\(s(t) = A_0\sum_{n=-\infty}^{\infty}J_n(\beta)\cos(\omega_0+n\omega_m)t\)</div>
+    <div class="ln">- widmo FM - teoretycznie nieskonczone!</div>
+    <div class="ln">- symetria: J_n(b) = (-1)^n J_-n(b)</div>
   </div>
 
   <div class="sec">
     <div class="sec-title">Wzor Carsona - pasmo FM</div>
-    <div class="f">\(B = 2(f_m + \Delta f) = 2f_m(1+\beta)\)</div>
-    <table class="t">
-      <tr><th>typ</th><th>warunek</th><th>prazki</th></tr>
-      <tr><td>NBFM</td><td>b &le; 4</td><td>N=b+1</td></tr>
-      <tr><td>WBFM</td><td>b > 4</td><td>N=b+2</td></tr>
-    </table>
-    <div class="ex">egz: fm=16kHz, df=80kHz -- b=5 (WBFM)</div>
-    <div class="ex">B = 2(16+80) = <u>192 kHz</u></div>
+    <div class="fm">\(B = 2(f_m + \Delta f) = 2f_m(1+\beta)\)</div>
+    <div class="ln">- NBFM: b&le;4, prazki N=b+1</div>
+    <div class="ln">- WBFM: b>4, prazki N=b+2</div>
+    <div class="ln">egz: fm=16kHz, df=80kHz -- b=80/16=5 (WBFM)</div>
+    <div class="ln">&emsp; B = 2(16+80) = <u>192 kHz</u></div>
   </div>
 
   <div class="sec">
     <div class="sec-title">Generowanie FM</div>
-    <div class="p">bezposrednie: waraktor w LC - proste, ale niestabilne</div>
-    <div class="p">posrednie (Armstrong): NBFM -- powielacze+miksery -- WBFM</div>
-    <div class="p">PLL (petla synchr. fazowej) stabilizuje nosna</div>
+    <div class="ln">- bezposrednie: waraktor w LC - proste ale niestabilne</div>
+    <div class="ln">- posrednie (Armstrong): NBFM--powiel.+miksery--WBFM</div>
+    <div class="ln">- PLL (petla synchr. fazowej) stabilizuje nosna</div>
   </div>
 
   <div class="sec">
     <div class="sec-title">Detektory FM</div>
-    <div class="p">dyskryminator czestotl. (FM na FM+AM)</div>
-    <div class="p">dyskr. przeciwsobny (2 obwody rezonansowe)</div>
-    <div class="p">kwadraturowy (mnozenie z przesunietym sygn.)</div>
-    <div class="p">koincydencyjny (bramka AND)</div>
-    <div class="p">PLL - najlepsza odpornosc na szumy</div>
+    <div class="ln">- dyskryminator czestotl. (FM na FM+AM)</div>
+    <div class="ln">- dyskr. przeciwsobny (2 obwody rezonansowe)</div>
+    <div class="ln">- kwadraturowy (mnozenie z przesunietym sygn.)</div>
+    <div class="ln">- koincydencyjny (bramka AND)</div>
+    <div class="ln">- PLL -- najlepsza odpornosc na szumy</div>
   </div>
 
   <div class="sec">
     <div class="sec-title">FM stereo + RDS</div>
-    <div class="p">0-15 kHz: mono (L+R)</div>
-    <div class="p">19 kHz: pilot stereo</div>
-    <div class="p">23-53 kHz: L-R na 38 kHz (DSB-SC)</div>
-    <div class="p">57 kHz: RDS (1187,5 bps)</div>
+    <div class="ln">- 0-15 kHz: mono (L+R)</div>
+    <div class="ln">- 19 kHz: pilot stereo</div>
+    <div class="ln">- 23-53 kHz: L-R na 38 kHz (DSB-SC)</div>
+    <div class="ln">- 57 kHz: RDS (1187,5 bps)</div>
   </div>
 
   <div class="sec">
     <div class="sec-title">FM vs AM</div>
-    <div class="p"><u>zalety FM:</u> lepsze SNR, odpornosc na zakl. ampl., wieksza dynamika</div>
-    <div class="p">wady FM: szersze pasmo (~200kHz), mniejszy zasieg, zlozonosc</div>
+    <div class="ln">- <u>zalety FM:</u> lepsze SNR, odpornosc na zaklocenia</div>
+    <div class="ln">&emsp; amplitudowe, wieksza dynamika, precyz. zasieg</div>
+    <div class="ln">- wady FM: szersze pasmo (~200kHz), mniejszy zasieg</div>
   </div>
 
   <div class="sec">
-    <div class="sec-title">FSK - klucz. czestotliwosci</div>
-    <div class="f">\(B_{FSK} = 2\Delta F + 2B\)</div>
-    <div class="p">MFSK: bitow/symbol = log2(M)</div>
-    <div class="ex">egz: 8FSK, 128 sym/s -- log2(8)=3 -- <u>384 bps</u></div>
-    <table class="t">
-      <tr><th>typ</th><th>co to</th></tr>
-      <tr><td>CPFSK</td><td>ciagla faza, mniej pasma</td></tr>
-      <tr><td>MSK</td><td>b~0,5, minimalne pasmo</td></tr>
-      <tr><td>GMSK</td><td>MSK + Gauss (BT, BLE, AIS)</td></tr>
-    </table>
-    <div class="p">detekcja: koherentna (korelacja) lub niekoher. (FFT, Goertzel)</div>
+    <div class="sec-title">FSK - kluczowanie czestotliwosci</div>
+    <div class="fm">\(B_{FSK} = 2\Delta F + 2B\)</div>
+    <div class="ln">- MFSK: bitow/symbol = log2(M)</div>
+    <div class="ln">egz: 8FSK, 128 sym/s -- log2(8)=3 -- <u>384 bps</u></div>
+    <div class="ln">- CPFSK = ciagla faza, mniej pasma</div>
+    <div class="ln">- MSK = b ok 0,5, minimalne pasmo</div>
+    <div class="ln">- GMSK = MSK + filtr Gaussa (BT, BLE, AIS)</div>
+    <div class="ln">- detekcja: koherentna (korelacja) lub niekoher. (FFT, Goertzel)</div>
   </div>
 
   <div class="sec">
-    <div class="sec-title">PSK - klucz. fazy</div>
-    <div class="f">\(s(t)=A_0\cos(\omega_0 t+D_p m(t))\)</div>
-    <table class="t">
-      <tr><th>typ</th><th>b/sym</th><th>co</th></tr>
-      <tr><td>BPSK</td><td>1</td><td>+/- pi/2</td></tr>
-      <tr><td>QPSK</td><td>2</td><td>I i Q niezaleznie</td></tr>
-      <tr><td>8PSK</td><td>3</td><td>co pi/4</td></tr>
-      <tr><td>OQPSK</td><td>2</td><td>offset o pol sym.</td></tr>
-      <tr><td>DPSK</td><td>1</td><td>roznicowa 1=brak zm.</td></tr>
-    </table>
-    <div class="uw">pol bajtu = 4 bity -- M = 2^4 = 16 pkt konstelacji</div>
+    <div class="sec-title">PSK - kluczowanie fazy</div>
+    <div class="fm">\(s(t)=A_0\cos(\omega_0 t+D_p m(t))\)</div>
+    <div class="ln">- BPSK: 1 b/sym, +/- pi/2</div>
+    <div class="ln">- QPSK: 2 b/sym, I i Q niezaleznie</div>
+    <div class="ln">- 8PSK: 3 b/sym, co pi/4</div>
+    <div class="ln">- OQPSK: 2 b/sym, offset o pol symbolu</div>
+    <div class="ln">- DPSK: 1 b/sym, roznicowa (1=brak zmiany fazy)</div>
+    <div class="ln"><b><u>pol bajtu=4 bity -- M=2^4=16 pkt konstelacji</u></b></div>
   </div>
 
   <div class="sec">
     <div class="sec-title">QAM</div>
-    <div class="f">\(s(t)=x(t)\cos\omega_c t + y(t)\sin\omega_c t\)</div>
-    <div class="p">jednoczesna modul. amplitudy I + Q</div>
-    <div class="p">WiFi 6: 1024-QAM, LTE/5G, DVB-C/T</div>
+    <div class="fm">\(s(t)=x(t)\cos\omega_c t + y(t)\sin\omega_c t\)</div>
+    <div class="ln">- jednoczesna modul. amplitudy I + Q</div>
+    <div class="ln">- WiFi 6: 1024-QAM, LTE/5G, DVB-C/T</div>
   </div>
 
   <div class="sec">
     <div class="sec-title">Wydajnosc widmowa</div>
-    <div class="f">\(\kappa = R/B_T\) [bit/s/Hz]</div>
-    <table class="t">
-      <tr><th>typ</th><th>k (0-0)</th><th>k (30dB)</th></tr>
-      <tr><td>BPSK</td><td>0,500</td><td>0,052</td></tr>
-      <tr><td>QPSK</td><td>1,000</td><td>0,104</td></tr>
-      <tr><td>MSK</td><td>0,667</td><td>0,438</td></tr>
-      <tr><td>16-QAM</td><td>2,000</td><td>0,208</td></tr>
-      <tr><td>64-QAM</td><td>3,000</td><td>0,313</td></tr>
-    </table>
+    <div class="fm">\(\kappa = R/B_T\) [bit/s/Hz]</div>
+    <div class="ln">- BPSK=0,5 | QPSK=1,0 | MSK=0,667</div>
+    <div class="ln">- 16-QAM=2,0 | 64-QAM=3,0</div>
   </div>
 
   <div class="sec">
     <div class="sec-title">TDMA</div>
-    <table class="t">
-      <tr><th>system</th><th>kanal</th><th>sloty</th></tr>
-      <tr><td>GSM</td><td>200 kHz</td><td>8</td></tr>
-      <tr><td>TETRA</td><td>25 kHz</td><td>10</td></tr>
-      <tr><td>DMR</td><td>12,5 kHz</td><td>2</td></tr>
-    </table>
+    <div class="ln">- GSM: kanal 200kHz, 8 slotow</div>
+    <div class="ln">- TETRA: 25kHz, 10 sl. | DMR: 12,5kHz, 2 sl.</div>
   </div>
 
   <div class="sec">
     <div class="sec-title">OFDM</div>
-    <div class="p">N podnosnych ortogonalnych, realizacja <u>IFFT/FFT</u></div>
-    <div class="p">802.11g: 64 podn. = 1 DC + 4 pilot + 48 danych + 11 cisz.</div>
-    <div class="p">Guard Interval chroni przed ISI</div>
-    <div class="p">fundament: WiFi, LTE, 5G, DVB-T, DAB+</div>
+    <div class="ln">- N podnosnych ortogonalnych, realizacja <u>IFFT/FFT</u></div>
+    <div class="ln">- 802.11g: 64 podn = 1DC + 4pilot + 48dane + 11cisz</div>
+    <div class="ln">- Guard Interval chroni przed ISI</div>
+    <div class="ln">- fundament: WiFi, LTE, 5G, DVB-T, DAB+</div>
   </div>
 
   <div class="sec">
     <div class="sec-title">CDMA</div>
-    <div class="p">wszyscy jednoczesnie w calym pasmie, rozne kody</div>
-    <div class="p"><u>iloczyn skalarny roznych kodow = 0</u> (ortogonalnosc)</div>
-    <div class="p">kwadrat kodu = n (liczba stacji)</div>
-    <div class="ex">C1=[+1,+1,+1,+1] C2=[+1,-1,+1,-1]</div>
-    <div class="ex">C3=[+1,+1,-1,-1] C4=[+1,-1,-1,+1]</div>
+    <div class="ln">- wszyscy jednoczesnie w calym pasmie, rozne kody</div>
+    <div class="ln">- <u>iloczyn skalarny roznych kodow = 0</u> (ortogon.)</div>
+    <div class="ln">- kwadrat kodu = n (liczba stacji)</div>
+    <div class="ln">C1=[+1,+1,+1,+1] C2=[+1,-1,+1,-1]</div>
+    <div class="ln">C3=[+1,+1,-1,-1] C4=[+1,-1,-1,+1]</div>
   </div>
 
   <div class="sec">
     <div class="sec-title">Mieszanie czestotl.</div>
-    <div class="f">\(f_{out} = f_{in} \pm f_{LO}\)</div>
-    <div class="ex">egz: 108-118 MHz z fp=10,7 MHz</div>
-    <div class="ex">roznicowa: 108-10,7=97,3 do 118-10,7=<u>107,3 MHz</u></div>
+    <div class="fm">\(f_{out} = f_{in} \pm f_{LO}\)</div>
+    <div class="ln">egz: 108-118 MHz z fp=10,7 MHz</div>
+    <div class="ln">roznicowa: 108-10,7=97,3 do 118-10,7=<u>107,3 MHz</u></div>
   </div>
 
   <div class="sec">
     <div class="sec-title">Spread Spectrum</div>
-    <div class="p">FHSS: pseudolos. skoki po czestotl. (patent Lamarr)</div>
-    <div class="p">DSSS: mnozenie z kodem rozszerzajacym (chipy)</div>
-    <div class="p">802.11b: <u>kod Barkera-11</u></div>
-    <div class="ex" style="font-size:7.5pt">B11: [+1,+1,+1,-1,-1,-1,+1,-1,-1,+1,-1]</div>
-    <div class="ex" style="font-size:7.5pt">B13: [+1,+1,+1,+1,+1,-1,-1,+1,+1,-1,+1,-1,+1]</div>
+    <div class="ln">- FHSS: pseudolosowe skoki po czestotl. (patent Lamarr)</div>
+    <div class="ln">- DSSS: mnozenie z kodem rozszerzajacym (chipy)</div>
+    <div class="ln">- 802.11b: <u>kod Barkera-11</u></div>
+    <div class="ln"><small>B11: [+1,+1,+1,-1,-1,-1,+1,-1,-1,+1,-1]</small></div>
+    <div class="ln"><small>B13: [+1,+1,+1,+1,+1,-1,-1,+1,+1,-1,+1,-1,+1]</small></div>
   </div>
 
 </div>
