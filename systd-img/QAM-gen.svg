@@ -1,0 +1,868 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="390.69943"
+   height="229.8387"
+   id="svg2"
+   version="1.1"
+   inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
+   sodipodi:docname="QAM-gen.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <defs
+     id="defs4">
+    <marker
+       inkscape:stockid="Arrow2Mend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow2Mend"
+       style="overflow:visible">
+      <path
+         id="path3817"
+         style="font-size:12px;fill-rule:evenodd;stroke-width:0.625;stroke-linejoin:round"
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         transform="scale(-0.6)" />
+    </marker>
+    <marker
+       inkscape:stockid="DotL"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="DotL"
+       style="overflow:visible">
+      <path
+         id="path3852"
+         d="m -2.5,-1 c 0,2.76 -2.24,5 -5,5 -2.76,0 -5,-2.24 -5,-5 0,-2.76 2.24,-5 5,-5 2.76,0 5,2.24 5,5 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none;marker-end:none"
+         transform="matrix(0.8,0,0,0.8,5.92,0.8)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow2Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow2Lend"
+       style="overflow:visible">
+      <path
+         id="path3811"
+         style="font-size:12px;fill-rule:evenodd;stroke-width:0.625;stroke-linejoin:round"
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         transform="matrix(-1.1,0,0,-1.1,-1.1,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Mstart"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Mstart"
+       style="overflow:visible">
+      <path
+         id="path3796"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(0.4,0,0,0.4,4,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="DotS"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="DotS"
+       style="overflow:visible">
+      <path
+         id="path3858"
+         d="m -2.5,-1 c 0,2.76 -2.24,5 -5,5 -2.76,0 -5,-2.24 -5,-5 0,-2.76 2.24,-5 5,-5 2.76,0 5,2.24 5,5 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none;marker-end:none"
+         transform="matrix(0.2,0,0,0.2,1.48,0.2)" />
+    </marker>
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 383.97255 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="744.09448 : 383.97255 : 1"
+       inkscape:persp3d-origin="372.04724 : 208.57885 : 1"
+       id="perspective10" />
+    <inkscape:perspective
+       id="perspective3712"
+       inkscape:persp3d-origin="0.5 : -141.87521 : 1"
+       inkscape:vp_z="1 : -141.70854 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : -141.70854 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <marker
+       inkscape:stockid="Arrow1Mend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Mend"
+       style="overflow:visible">
+      <path
+         id="path3800"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.4,0,0,-0.4,-4,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Mend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker3718"
+       style="overflow:visible">
+      <path
+         id="path3720"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.4,0,0,-0.4,-4,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Mend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker3722"
+       style="overflow:visible">
+      <path
+         id="path3724"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.4,0,0,-0.4,-4,0)" />
+    </marker>
+    <inkscape:perspective
+       id="perspective4451"
+       inkscape:persp3d-origin="0.5 : -141.87521 : 1"
+       inkscape:vp_z="1 : -141.70854 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : -141.70854 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <inkscape:perspective
+       id="perspective4484"
+       inkscape:persp3d-origin="0.5 : -141.87521 : 1"
+       inkscape:vp_z="1 : -141.70854 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : -141.70854 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <inkscape:perspective
+       id="perspective4525"
+       inkscape:persp3d-origin="0.5 : -141.87521 : 1"
+       inkscape:vp_z="1 : -141.70854 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : -141.70854 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <marker
+       inkscape:stockid="Arrow1Mend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Mend-2"
+       style="overflow:visible">
+      <path
+         id="path3800-6"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.4,0,0,-0.4,-4,0)" />
+    </marker>
+    <inkscape:perspective
+       id="perspective4553"
+       inkscape:persp3d-origin="0.5 : -141.87521 : 1"
+       inkscape:vp_z="1 : -141.70854 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : -141.70854 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <inkscape:perspective
+       id="perspective4575"
+       inkscape:persp3d-origin="0.5 : -141.87521 : 1"
+       inkscape:vp_z="1 : -141.70854 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : -141.70854 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <marker
+       inkscape:stockid="Arrow1Mend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Mend-0"
+       style="overflow:visible">
+      <path
+         id="path3800-1"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.4,0,0,-0.4,-4,0)" />
+    </marker>
+    <inkscape:perspective
+       id="perspective4669"
+       inkscape:persp3d-origin="0.5 : -141.87521 : 1"
+       inkscape:vp_z="1 : -141.70854 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : -141.70854 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <inkscape:perspective
+       id="perspective4878"
+       inkscape:persp3d-origin="0.5 : -141.87521 : 1"
+       inkscape:vp_z="1 : -141.70854 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : -141.70854 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <inkscape:perspective
+       id="perspective4912"
+       inkscape:persp3d-origin="0.5 : -141.87521 : 1"
+       inkscape:vp_z="1 : -141.70854 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : -141.70854 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <marker
+       inkscape:stockid="Arrow1Mend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Mend-5"
+       style="overflow:visible">
+      <path
+         id="path3800-3"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.4,0,0,-0.4,-4,0)" />
+    </marker>
+    <inkscape:perspective
+       id="perspective4940"
+       inkscape:persp3d-origin="0.5 : -141.87521 : 1"
+       inkscape:vp_z="1 : -141.70854 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : -141.70854 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <marker
+       inkscape:stockid="Arrow1Mend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Mend-3"
+       style="overflow:visible">
+      <path
+         id="path3800-68"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.4,0,0,-0.4,-4,0)" />
+    </marker>
+    <inkscape:perspective
+       id="perspective4968"
+       inkscape:persp3d-origin="0.5 : -141.87521 : 1"
+       inkscape:vp_z="1 : -141.70854 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : -141.70854 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <inkscape:perspective
+       id="perspective4968-5"
+       inkscape:persp3d-origin="0.5 : -141.87521 : 1"
+       inkscape:vp_z="1 : -141.70854 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : -141.70854 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <inkscape:perspective
+       id="perspective5028"
+       inkscape:persp3d-origin="0.5 : -141.87521 : 1"
+       inkscape:vp_z="1 : -141.70854 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : -141.70854 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <inkscape:perspective
+       id="perspective5108"
+       inkscape:persp3d-origin="0.5 : -141.87521 : 1"
+       inkscape:vp_z="1 : -141.70854 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : -141.70854 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <marker
+       inkscape:stockid="Arrow1Mend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Mend-32"
+       style="overflow:visible">
+      <path
+         id="path3800-684"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.4,0,0,-0.4,-4,0)" />
+    </marker>
+    <inkscape:perspective
+       id="perspective5171"
+       inkscape:persp3d-origin="0.5 : -141.87521 : 1"
+       inkscape:vp_z="1 : -141.70854 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : -141.70854 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <inkscape:perspective
+       id="perspective5199"
+       inkscape:persp3d-origin="0.5 : -141.87521 : 1"
+       inkscape:vp_z="1 : -141.70854 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : -141.70854 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <marker
+       inkscape:stockid="Arrow1Mend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Mend-57"
+       style="overflow:visible">
+      <path
+         id="path3800-0"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.4,0,0,-0.4,-4,0)" />
+    </marker>
+    <inkscape:perspective
+       id="perspective5227"
+       inkscape:persp3d-origin="0.5 : -141.87521 : 1"
+       inkscape:vp_z="1 : -141.70854 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : -141.70854 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <marker
+       inkscape:stockid="Arrow1Mend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Mend-53"
+       style="overflow:visible">
+      <path
+         id="path3800-60"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.4,0,0,-0.4,-4,0)" />
+    </marker>
+    <inkscape:perspective
+       id="perspective5277"
+       inkscape:persp3d-origin="0.5 : -141.87521 : 1"
+       inkscape:vp_z="1 : -141.70854 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : -141.70854 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <inkscape:perspective
+       id="perspective5305"
+       inkscape:persp3d-origin="0.5 : -141.87521 : 1"
+       inkscape:vp_z="1 : -141.70854 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : -141.70854 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <marker
+       inkscape:stockid="Arrow1Mend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Mend-9"
+       style="overflow:visible">
+      <path
+         id="path3800-7"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.4,0,0,-0.4,-4,0)" />
+    </marker>
+    <inkscape:perspective
+       id="perspective5333"
+       inkscape:persp3d-origin="0.5 : -141.87521 : 1"
+       inkscape:vp_z="1 : -141.70854 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : -141.70854 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <marker
+       inkscape:stockid="Arrow1Mend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Mend-1"
+       style="overflow:visible">
+      <path
+         id="path3800-2"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.4,0,0,-0.4,-4,0)" />
+    </marker>
+    <inkscape:perspective
+       id="perspective6904"
+       inkscape:persp3d-origin="0.5 : -141.87521 : 1"
+       inkscape:vp_z="1 : -141.70854 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : -141.70854 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <marker
+       inkscape:stockid="Arrow1Mend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Mend-95"
+       style="overflow:visible">
+      <path
+         id="path3800-8"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.4,0,0,-0.4,-4,0)" />
+    </marker>
+    <inkscape:perspective
+       id="perspective6960"
+       inkscape:persp3d-origin="0.5 : -141.87521 : 1"
+       inkscape:vp_z="1 : -141.70854 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : -141.70854 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <marker
+       inkscape:stockid="Arrow1Mend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Mend-39"
+       style="overflow:visible">
+      <path
+         id="path3800-69"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(-0.4,0,0,-0.4,-4,0)" />
+    </marker>
+    <inkscape:perspective
+       id="perspective7443"
+       inkscape:persp3d-origin="0.5 : -141.87521 : 1"
+       inkscape:vp_z="1 : -141.70854 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : -141.70854 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <marker
+       inkscape:stockid="Arrow1Mstart"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Mstart-6"
+       style="overflow:visible">
+      <path
+         id="path3796-0"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none"
+         transform="matrix(0.4,0,0,0.4,4,0)" />
+    </marker>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="2.1567118"
+     inkscape:cx="101.7753"
+     inkscape:cy="190.56788"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="3440"
+     inkscape:window-height="1381"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:showpageshadow="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-80.599515,-708.15855)">
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:0%;font-family:Arial;-inkscape-font-specification:Arial;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none"
+       x="79.613487"
+       y="815.62744"
+       id="text4267-0"
+       inkscape:export-filename="/home/l/Projekty/2012-T/gfx/QAM-gen.png"
+       inkscape:export-xdpi="200.09686"
+       inkscape:export-ydpi="200.09686"><tspan
+         sodipodi:role="line"
+         id="tspan4269-8"
+         x="79.613487"
+         y="815.62744"
+         style="font-size:14.9584px;line-height:1">m(t)</tspan></text>
+    <g
+       id="g5257"
+       inkscape:export-filename="/home/l/Projekty/2012-T/gfx/QAM-gen.png"
+       inkscape:export-xdpi="200.09686"
+       inkscape:export-ydpi="200.09686">
+      <g
+         inkscape:export-ydpi="300.1683"
+         inkscape:export-xdpi="300.1683"
+         inkscape:export-filename="/home/l/Projekty/2012-T/gfx/DPSK-gen.png"
+         id="g5095">
+        <rect
+           style="fill:#ffffff;fill-opacity:1;stroke:#2229bf;stroke-width:1.25;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+           id="rect4435-2"
+           width="43.584869"
+           height="40.339737"
+           x="128.2821"
+           y="801.65637"
+           inkscape:export-filename="/home/l/Projekty/2012-T/gfx/DPSK-det1.png"
+           inkscape:export-xdpi="300.21304"
+           inkscape:export-ydpi="300.21304" />
+        <text
+           id="text5088"
+           y="827.48279"
+           x="150.69237"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:0%;font-family:Arial;-inkscape-font-specification:Arial;text-align:center;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
+           xml:space="preserve"><tspan
+             y="827.48279"
+             x="150.69237"
+             id="tspan5090"
+             sodipodi:role="line"
+             style="font-size:16px;line-height:1">÷2</tspan></text>
+      </g>
+    </g>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1.25;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow1Mend)"
+       d="M 99.732578,823.02971 H 125.90088"
+       id="path3786-5-0"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/l/Projekty/2012-T/gfx/QAM-gen.png"
+       inkscape:export-xdpi="200.09686"
+       inkscape:export-ydpi="200.09686"
+       sodipodi:nodetypes="cc" />
+    <g
+       id="g5353"
+       transform="translate(-20.401428,-2.318344)"
+       inkscape:export-filename="/home/l/Projekty/2012-T/gfx/QAM-gen.png"
+       inkscape:export-xdpi="200.09686"
+       inkscape:export-ydpi="200.09686">
+      <rect
+         ry="19.474091"
+         y="711.10193"
+         x="333.60971"
+         height="38.948181"
+         width="50.539902"
+         id="rect5263-4"
+         style="fill:#ffffff;fill-opacity:1;stroke:#bf7922;stroke-width:1.25;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+      <text
+         id="text5265-0"
+         y="736.60376"
+         x="359.11151"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:0%;font-family:Arial;-inkscape-font-specification:Arial;text-align:center;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
+         xml:space="preserve"><tspan
+           y="736.60376"
+           x="359.11151"
+           id="tspan5267-4"
+           sodipodi:role="line"
+           style="font-size:16px;line-height:1">AM</tspan></text>
+    </g>
+    <g
+       id="g5379"
+       transform="translate(4.1730193,4.6366881)"
+       inkscape:export-filename="/home/l/Projekty/2012-T/gfx/QAM-gen.png"
+       inkscape:export-xdpi="200.09686"
+       inkscape:export-ydpi="200.09686">
+      <rect
+         y="834.43781"
+         x="320.39514"
+         height="28.747467"
+         width="34.311493"
+         id="rect5369"
+         style="fill:#ffffff;fill-opacity:1;stroke:#76bf22;stroke-width:1.25;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+      <text
+         transform="translate(0,680.3149)"
+         id="text5371"
+         y="174.52432"
+         x="336.62357"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:0%;font-family:Arial;-inkscape-font-specification:Arial;text-align:center;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
+         xml:space="preserve"><tspan
+           y="174.52432"
+           x="336.62357"
+           id="tspan5373"
+           sodipodi:role="line"
+           style="font-size:16px;line-height:1">90</tspan></text>
+      <text
+         id="text5375"
+         y="846.58344"
+         x="349.5737"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:0%;font-family:Arial;-inkscape-font-specification:Arial;text-align:center;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
+         xml:space="preserve"><tspan
+           y="846.58344"
+           x="349.5737"
+           id="tspan5377"
+           sodipodi:role="line"
+           style="font-size:8.30059px;line-height:1">o</tspan></text>
+    </g>
+    <g
+       id="g6948"
+       inkscape:export-filename="/home/l/Projekty/2012-T/gfx/QAM-gen.png"
+       inkscape:export-xdpi="200.09686"
+       inkscape:export-ydpi="200.09686">
+      <path
+         style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+         d="m 292.11135,801.98098 h 50.5399"
+         id="path5388" />
+      <path
+         style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-start:url(#Arrow1Mstart);marker-mid:none;marker-end:url(#Arrow1Mend-1)"
+         d="M 343.11492,838.88243 V 748.00334"
+         id="path5390" />
+    </g>
+    <g
+       id="g5252"
+       inkscape:export-filename="/home/l/Projekty/2012-T/gfx/QAM-gen.png"
+       inkscape:export-xdpi="200.09686"
+       inkscape:export-ydpi="200.09686">
+      <rect
+         transform="translate(0,680.3149)"
+         y="28.468653"
+         x="191.03156"
+         height="38.948181"
+         width="94.726067"
+         id="rect5157"
+         style="fill:#ffffff;fill-opacity:1;stroke:#22bf44;stroke-width:1.25;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+      <text
+         id="text5159"
+         y="733.82166"
+         x="237.39842"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:0%;font-family:Arial;-inkscape-font-specification:Arial;text-align:center;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
+         xml:space="preserve"><tspan
+           y="733.82166"
+           x="237.39842"
+           id="tspan5161"
+           sodipodi:role="line"
+           style="font-size:16px;line-height:1">×4 poziomy</tspan></text>
+    </g>
+    <g
+       id="g5247"
+       transform="translate(0.46366881,-5.1003569)"
+       inkscape:export-filename="/home/l/Projekty/2012-T/gfx/QAM-gen.png"
+       inkscape:export-xdpi="200.09686"
+       inkscape:export-ydpi="200.09686">
+      <rect
+         y="903.06079"
+         x="191.42641"
+         height="38.948181"
+         width="94.726067"
+         id="rect5157-0"
+         style="fill:#ffffff;fill-opacity:1;stroke:#22bf44;stroke-width:1.25;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+      <text
+         id="text5159-2"
+         y="928.09894"
+         x="237.79327"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:0%;font-family:Arial;-inkscape-font-specification:Arial;text-align:center;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
+         xml:space="preserve"><tspan
+           y="928.09894"
+           x="237.79327"
+           id="tspan5161-7"
+           sodipodi:role="line"
+           style="font-size:16px;line-height:1">×4 poziomy</tspan></text>
+    </g>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1.25;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow1Mend)"
+       d="m 147.9656,802.9494 v -74.85353 h 42.19386"
+       id="path3786-5-0-3"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/l/Projekty/2012-T/gfx/QAM-gen.png"
+       inkscape:export-xdpi="200.09686"
+       inkscape:export-ydpi="200.09686"
+       sodipodi:nodetypes="ccc" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1.25;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow1Mend)"
+       d="m 148.1371,841.8205 v 74.85353 h 42.19386"
+       id="path3786-5-0-3-8"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/l/Projekty/2012-T/gfx/QAM-gen.png"
+       inkscape:export-xdpi="200.09686"
+       inkscape:export-ydpi="200.09686"
+       sodipodi:nodetypes="ccc" />
+    <g
+       id="g5358"
+       inkscape:export-filename="/home/l/Projekty/2012-T/gfx/QAM-gen.png"
+       inkscape:export-xdpi="200.09686"
+       inkscape:export-ydpi="200.09686">
+      <rect
+         ry="19.474091"
+         y="898.42407"
+         x="314.83115"
+         height="38.948181"
+         width="50.539902"
+         id="rect5263"
+         style="fill:#ffffff;fill-opacity:1;stroke:#bf7922;stroke-width:1.25;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+      <text
+         id="text5265"
+         y="923.9259"
+         x="340.33295"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:0%;font-family:Arial;-inkscape-font-specification:Arial;text-align:center;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
+         xml:space="preserve"><tspan
+           y="923.9259"
+           x="340.33295"
+           id="tspan5267"
+           sodipodi:role="line"
+           style="font-size:16px;line-height:1">AM</tspan></text>
+    </g>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1.25;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow1Mend)"
+       d="m 285.51348,728.72131 h 26.1683"
+       id="path3786-5-0-4"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/l/Projekty/2012-T/gfx/QAM-gen.png"
+       inkscape:export-xdpi="200.09686"
+       inkscape:export-ydpi="200.09686"
+       sodipodi:nodetypes="cc" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1.25;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow1Mend)"
+       d="m 287.36816,916.97085 h 26.1683"
+       id="path3786-5-0-4-5"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/l/Projekty/2012-T/gfx/QAM-gen.png"
+       inkscape:export-xdpi="200.09686"
+       inkscape:export-ydpi="200.09686"
+       sodipodi:nodetypes="cc" />
+    <rect
+       style="fill:#ffffff;fill-opacity:1;stroke:#229bbf;stroke-width:1.25;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect5363"
+       width="36.166168"
+       height="29.674805"
+       x="255.94519"
+       y="108.21969"
+       transform="translate(0,680.3149)"
+       ry="0"
+       inkscape:export-filename="/home/l/Projekty/2012-T/gfx/QAM-gen.png"
+       inkscape:export-xdpi="200.09686"
+       inkscape:export-ydpi="200.09686" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:0%;font-family:Arial;-inkscape-font-specification:Arial;text-align:center;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
+       x="273.56458"
+       y="808.93604"
+       id="text5365"
+       inkscape:export-filename="/home/l/Projekty/2012-T/gfx/QAM-gen.png"
+       inkscape:export-xdpi="200.09686"
+       inkscape:export-ydpi="200.09686"><tspan
+         sodipodi:role="line"
+         id="tspan5367"
+         x="273.56458"
+         y="808.93604"
+         style="font-size:16px;line-height:1">f</tspan></text>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1.25;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow1Mend)"
+       d="m 342.94507,867.66456 v 30.10266"
+       id="path3786-5-0-2"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/l/Projekty/2012-T/gfx/QAM-gen.png"
+       inkscape:export-xdpi="200.09686"
+       inkscape:export-ydpi="200.09686"
+       sodipodi:nodetypes="cc" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:0%;font-family:Arial;-inkscape-font-specification:Arial;text-align:center;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
+       x="157.04655"
+       y="745.80988"
+       id="text6924"
+       inkscape:export-filename="/home/l/Projekty/2012-T/gfx/QAM-gen.png"
+       inkscape:export-xdpi="200.09686"
+       inkscape:export-ydpi="200.09686"><tspan
+         sodipodi:role="line"
+         id="tspan6926"
+         x="157.04655"
+         y="745.80988"
+         style="font-size:16px;line-height:1">I</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:0%;font-family:Arial;-inkscape-font-specification:Arial;text-align:center;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
+       x="162.29236"
+       y="907.44653"
+       id="text6928"
+       inkscape:export-filename="/home/l/Projekty/2012-T/gfx/QAM-gen.png"
+       inkscape:export-xdpi="200.09686"
+       inkscape:export-ydpi="200.09686"><tspan
+         sodipodi:role="line"
+         id="tspan6930"
+         x="162.29236"
+         y="907.44653"
+         style="font-size:16px;line-height:1">Q</tspan></text>
+    <g
+       id="g6985"
+       transform="translate(2.9507702,9.8359008)"
+       inkscape:export-filename="/home/l/Projekty/2012-T/gfx/QAM-gen.png"
+       inkscape:export-xdpi="200.09686"
+       inkscape:export-ydpi="200.09686">
+      <g
+         transform="translate(-19.671802,-2.6229069)"
+         id="g6943">
+        <text
+           xml:space="preserve"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:0%;font-family:Arial;-inkscape-font-specification:Arial;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none"
+           x="466.96283"
+           y="815.77002"
+           id="text4267-8"
+           inkscape:export-filename="/home/l/Projekty/projekty/2012-T/gfx/sampling.png"
+           inkscape:export-xdpi="150"
+           inkscape:export-ydpi="150"><tspan
+             sodipodi:role="line"
+             id="tspan4269-2"
+             x="466.96283"
+             y="815.77002"
+             style="font-size:14.9584px;line-height:1">s(t)</tspan></text>
+        <path
+           style="fill:none;stroke:#000000;stroke-width:1.25;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow1Mend)"
+           d="m 441.25346,823.54159 h 26.1683"
+           id="path3786-5-0-0"
+           inkscape:connector-curvature="0"
+           inkscape:export-filename="/home/l/Projekty/projekty/2012-T/gfx/sampling.png"
+           inkscape:export-xdpi="150"
+           inkscape:export-ydpi="150"
+           sodipodi:nodetypes="cc" />
+      </g>
+      <g
+         id="g6980">
+        <rect
+           style="fill:#ffffff;fill-opacity:1;stroke:#6822bf;stroke-width:1.25;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+           id="rect6932"
+           width="32.786335"
+           height="26.229069"
+           x="388.19022"
+           y="126.80545"
+           transform="translate(0,680.3149)" />
+        <text
+           xml:space="preserve"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:0%;font-family:Arial;-inkscape-font-specification:Arial;text-align:center;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
+           x="404.25552"
+           y="824.49713"
+           id="text6934"><tspan
+             sodipodi:role="line"
+             id="tspan6936"
+             x="404.25552"
+             y="824.49713"
+             style="font-size:16px;line-height:1">𝜮</tspan></text>
+      </g>
+    </g>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1.25;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-start:url(#Arrow1Mstart);marker-end:none"
+       d="m 408.77231,842.69695 v 74.85353 h -43.83318"
+       id="path3786-5-0-3-2"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/l/Projekty/2012-T/gfx/QAM-gen.png"
+       inkscape:export-xdpi="200.09686"
+       inkscape:export-ydpi="200.09686"
+       sodipodi:nodetypes="ccc" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1.25;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-start:url(#Arrow1Mstart);marker-end:none"
+       d="M 408.84913,815.55425 V 726.27473 H 364.03236"
+       id="path3786-5-0-3-2-7"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/l/Projekty/2012-T/gfx/QAM-gen.png"
+       inkscape:export-xdpi="200.09686"
+       inkscape:export-ydpi="200.09686"
+       sodipodi:nodetypes="ccs" />
+  </g>
+</svg>

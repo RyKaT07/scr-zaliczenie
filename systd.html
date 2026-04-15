@@ -1,0 +1,1211 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Systemy Transmisji Danych — Powtorka do egzaminu</title>
+  <script>
+    MathJax = {
+      tex: { inlineMath: [['\\(', '\\)']], displayMath: [['$$', '$$']] },
+      options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+  <style>
+    :root {
+      --bg: #0f1117; --surface: #1a1d27; --surface2: #232734; --border: #2e3345;
+      --text: #e4e6ed; --text-dim: #8b90a0;
+      --accent: #6c8cff; --accent2: #a78bfa; --green: #4ade80; --orange: #fb923c;
+      --red: #f87171; --cyan: #22d3ee; --yellow: #facc15; --radius: 12px;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; background:var(--bg); color:var(--text); line-height:1.7; }
+
+    .top-nav { position:sticky; top:0; z-index:100; background:rgba(15,17,23,0.85); backdrop-filter:blur(16px); border-bottom:1px solid var(--border); padding:0.6rem 1.5rem; display:flex; gap:0.5rem; overflow-x:auto; scrollbar-width:none; }
+    .top-nav::-webkit-scrollbar { display:none; }
+    .top-nav a { white-space:nowrap; padding:0.4rem 1rem; border-radius:999px; font-size:0.82rem; font-weight:600; color:var(--text-dim); text-decoration:none; border:1px solid transparent; transition:all 0.2s; }
+    .top-nav a:hover,.top-nav a.active { color:var(--accent); border-color:var(--accent); background:rgba(108,140,255,0.08); }
+
+    .hero { text-align:center; padding:4rem 1.5rem 2.5rem; background:linear-gradient(180deg,rgba(108,140,255,0.08) 0%,transparent 100%); }
+    .hero h1 { font-size:clamp(1.8rem,4vw,2.8rem); font-weight:800; background:linear-gradient(135deg,var(--accent),var(--accent2)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin-bottom:0.5rem; }
+    .hero p { color:var(--text-dim); font-size:1rem; }
+    .progress-bar { max-width:600px; margin:1.5rem auto 0; background:var(--surface); border-radius:999px; height:8px; overflow:hidden; }
+    .progress-bar .fill { height:100%; width:0%; background:linear-gradient(90deg,var(--accent),var(--accent2)); border-radius:999px; transition:width 0.5s; }
+    .progress-text { text-align:center; font-size:0.8rem; color:var(--text-dim); margin-top:0.4rem; }
+
+    .container { max-width:920px; margin:0 auto; padding:0 1.5rem 4rem; }
+    .lecture-section { margin-top:3rem; }
+    .lecture-section h2 { font-size:1.5rem; font-weight:700; margin-bottom:1rem; display:flex; align-items:center; gap:0.6rem; scroll-margin-top:60px; }
+    .lecture-section h2 .num { display:inline-flex; align-items:center; justify-content:center; width:36px; height:36px; border-radius:10px; font-size:0.9rem; font-weight:800; flex-shrink:0; }
+    .l1 .num { background:rgba(108,140,255,0.15); color:var(--accent); }
+    .l2 .num { background:rgba(167,139,250,0.15); color:var(--accent2); }
+    .l3 .num { background:rgba(34,211,238,0.15); color:var(--cyan); }
+    .l4 .num { background:rgba(251,146,60,0.15); color:var(--orange); }
+    .l5 .num { background:rgba(74,222,128,0.15); color:var(--green); }
+
+    .card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); margin-bottom:1rem; overflow:hidden; }
+    .card-header { padding:1rem 1.2rem; cursor:pointer; display:flex; justify-content:space-between; align-items:center; user-select:none; font-weight:600; font-size:0.95rem; transition:background 0.15s; }
+    .card-header:hover { background:var(--surface2); }
+    .card-header .arrow { font-size:0.8rem; color:var(--text-dim); transition:transform 0.3s; }
+    .card.open .card-header .arrow { transform:rotate(180deg); }
+    .card-body { display:none; padding:0 1.2rem 1.2rem; font-size:0.9rem; line-height:1.8; }
+    .card.open .card-body { display:block; }
+    .card-body h4 { font-size:0.92rem; font-weight:700; margin:1rem 0 0.4rem; color:var(--accent); }
+    .card-body h4:first-child { margin-top:0.2rem; }
+    .card-body ul,.card-body ol { padding-left:1.3rem; margin:0.3rem 0; }
+    .card-body li { margin:0.2rem 0; }
+    .card-body .formula { background:var(--surface2); border-left:3px solid var(--accent); border-radius:0 8px 8px 0; padding:0.8rem 1rem; margin:0.6rem 0; overflow-x:auto; }
+    .card-body .important { background:rgba(251,146,60,0.08); border-left:3px solid var(--orange); border-radius:0 8px 8px 0; padding:0.6rem 1rem; margin:0.6rem 0; font-size:0.88rem; }
+    .card-body .example { background:rgba(74,222,128,0.06); border-left:3px solid var(--green); border-radius:0 8px 8px 0; padding:0.6rem 1rem; margin:0.6rem 0; font-size:0.88rem; }
+    .card-body table { width:100%; border-collapse:collapse; margin:0.6rem 0; font-size:0.85rem; }
+    .card-body th,.card-body td { padding:0.5rem 0.7rem; border:1px solid var(--border); text-align:left; }
+    .card-body th { background:var(--surface2); font-weight:600; }
+    .card-body img.lecture-img { max-width:100%; border-radius:8px; margin:0.6rem 0; display:block; border:1px solid var(--border); }
+    .card-body img.lecture-img.small { max-width:50%; }
+    .card-body img.lecture-img.medium { max-width:70%; }
+    .card-body .img-caption { font-size:0.75rem; color:var(--text-dim); margin-top:0.2rem; }
+    .card-body .img-row { display:flex; gap:0.8rem; flex-wrap:wrap; align-items:center; margin:0.6rem 0; }
+    .card-body .img-row img { max-width:48%; border-radius:8px; border:1px solid var(--border); }
+
+    /* YouTube */
+    .yt-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:0.8rem; margin-top:1rem; }
+    .yt-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:1rem; transition:border-color 0.2s; }
+    .yt-card:hover { border-color:var(--accent); }
+    .yt-card a { color:var(--accent); text-decoration:none; font-weight:600; font-size:0.9rem; display:block; margin-bottom:0.3rem; }
+    .yt-card a:hover { text-decoration:underline; }
+    .yt-card .yt-meta { font-size:0.78rem; color:var(--text-dim); }
+    .yt-card .yt-desc { font-size:0.82rem; color:var(--text); margin-top:0.3rem; }
+
+    /* Exam */
+    .exam-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:1.2rem; margin-bottom:0.8rem; }
+    .exam-card .eq-head { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:0.6rem; }
+    .exam-card .question { font-weight:600; font-size:0.92rem; }
+    .exam-card .pts { font-size:0.75rem; color:var(--orange); font-weight:700; }
+    .exam-card .options label { display:block; padding:0.45rem 0.8rem; margin:0.25rem 0; border-radius:8px; cursor:pointer; font-size:0.86rem; border:1px solid var(--border); transition:all 0.15s; }
+    .exam-card .options label:hover { border-color:var(--accent); background:rgba(108,140,255,0.05); }
+    .exam-card .options input[type="radio"],.exam-card .options input[type="checkbox"] { display:none; }
+    .exam-card .answer { display:none; margin-top:0.7rem; padding:0.7rem; border-radius:8px; font-size:0.85rem; line-height:1.6; }
+    .exam-card .answer.show { display:block; }
+    .exam-card .answer.correct { background:rgba(74,222,128,0.08); border:1px solid rgba(74,222,128,0.2); }
+    .exam-card .answer.wrong { background:rgba(248,113,113,0.08); border:1px solid rgba(248,113,113,0.2); }
+    .btn-check { margin-top:0.6rem; padding:0.45rem 1.2rem; border-radius:8px; border:1px solid var(--accent); background:transparent; color:var(--accent); font-weight:600; font-size:0.82rem; cursor:pointer; transition:all 0.15s; }
+    .btn-check:hover { background:var(--accent); color:#fff; }
+
+    /* Cheat grid */
+    .cheat-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:0.8rem; margin-top:1rem; }
+    .cheat-item { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:1rem; }
+    .cheat-item h4 { font-size:0.78rem; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.4rem; }
+    .cheat-item .val { font-size:0.95rem; font-weight:600; }
+
+    /* Flashcards */
+    .flashcard { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:1.5rem; text-align:center; min-height:200px; display:flex; flex-direction:column; align-items:center; justify-content:center; cursor:pointer; user-select:none; transition:all 0.2s; position:relative; }
+    .flashcard:hover { border-color:var(--accent); }
+    .flashcard .front { font-weight:600; font-size:1.05rem; }
+    .flashcard .back { display:none; font-size:0.92rem; line-height:1.7; white-space:pre-line; }
+    .flashcard.flipped .front { display:none; }
+    .flashcard.flipped .back { display:block; }
+    .flashcard .hint { position:absolute; bottom:0.6rem; font-size:0.72rem; color:var(--text-dim); }
+    .fc-nav { display:flex; justify-content:center; gap:0.8rem; margin-top:0.8rem; }
+    .fc-nav button { padding:0.5rem 1.5rem; border-radius:8px; border:1px solid var(--border); background:var(--surface); color:var(--text); font-weight:600; font-size:0.85rem; cursor:pointer; transition:all 0.15s; }
+    .fc-nav button:hover { border-color:var(--accent); color:var(--accent); }
+    .fc-counter { text-align:center; margin-top:0.4rem; font-size:0.8rem; color:var(--text-dim); }
+
+    .section-desc { color:var(--text-dim); font-size:0.85rem; margin-bottom:1rem; }
+
+    .exam-score { text-align:center; margin:1rem 0; padding:1rem; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); }
+    .exam-score .big { font-size:1.8rem; font-weight:800; }
+
+    @media (max-width:600px) {
+      .container { padding:0 1rem 3rem; }
+      .card-header { font-size:0.88rem; padding:0.8rem 1rem; }
+      .card-body { padding:0 1rem 1rem; }
+      .yt-grid { grid-template-columns:1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="top-nav" id="topnav">
+  <a href="#intro">Wprowadzenie</a>
+  <a href="#am">Modulacje AM</a>
+  <a href="#angle">Modulacje kata</a>
+  <a href="#digital">Mod. cyfrowe</a>
+  <a href="#band">Pasmo</a>
+  <a href="#youtube">Wyklady YT</a>
+  <a href="#formulas">Sciaga</a>
+  <a href="#flashcards">Fiszki</a>
+  <a href="#exam">Egzamin</a>
+</nav>
+
+<div class="hero">
+  <h1>Systemy Transmisji Danych</h1>
+  <p>dr inz. Lukasz Makowski &bull; Politechnika Warszawska &bull; 1DR1616</p>
+  <div class="progress-bar"><div class="fill" id="progressFill"></div></div>
+  <div class="progress-text" id="progressText">Otwieraj karty, by sledzic postep</div>
+</div>
+
+<div class="container">
+
+<!-- ============ 1. WPROWADZENIE ============ -->
+<div class="lecture-section l1" id="intro">
+  <h2><span class="num">1</span> Wprowadzenie</h2>
+
+  <div class="card" data-topic="intro">
+    <div class="card-header">Transformata Fouriera i reprezentacja sygnalow <span class="arrow">&#9660;</span></div>
+    <div class="card-body">
+      <h4>Transformata Fouriera</h4>
+      <div class="formula">$$G(f) = \int_{-\infty}^{\infty} g(t)\,e^{-j2\pi ft}\,dt \qquad g(t) = \int_{-\infty}^{\infty} G(f)\,e^{j2\pi ft}\,df$$</div>
+      <h4>Wzor Eulera</h4>
+      <div class="formula">$$e^{j2\pi f} = \cos(2\pi f) + j\sin(2\pi f)$$</div>
+      <div class="important">Transformata Fouriera laczy dziedzine czasu z dziedzina czestotliwosci. Kazdy sygnal periodyczny mozna rozlozyc na sume sinusoid. <strong>To najwazniejsze przeksztalcenie na tym egzaminie!</strong></div>
+    </div>
+  </div>
+
+  <div class="card" data-topic="intro">
+    <div class="card-header">Rownania Maxwella i fale EM <span class="arrow">&#9660;</span></div>
+    <div class="card-body">
+      <h4>Postac rozniczkowa</h4>
+      <div class="formula">$$\varepsilon\nabla\cdot\vec{E}=\rho \quad \nabla\cdot\vec{B}=0 \quad \nabla\times\vec{E}=-\frac{\partial\vec{B}}{\partial t} \quad \nabla\times\vec{B}=\mu\vec{j}+\mu\varepsilon\frac{\partial\vec{E}}{\partial t}$$</div>
+      <img src="systd-img/fala.png" alt="Fala elektromagnetyczna" class="lecture-img medium">
+      <p class="img-caption">Fala elektromagnetyczna w polu dalekim — wektory E i B prostopadle do kierunku propagacji</p>
+      <h4>Predkosc fali radiowej w prozni</h4>
+      <div class="formula">$$c \approx 3\times10^8\;\text{m/s}$$</div>
+      <div class="important">Fala radiowa w prozni porusza sie z predkoscia swiatla <strong>c</strong>. Fale radiowe rozchodza sie na odleglosci > 1E24 m (praktycznie nieskonczonosc — docieraja z odleglych galaktyk).</div>
+    </div>
+  </div>
+
+  <div class="card" data-topic="intro">
+    <div class="card-header">Dlugosc fali, czestotliwosc, spektrum <span class="arrow">&#9660;</span></div>
+    <div class="card-body">
+      <div class="formula">$$\lambda = \frac{c}{f} \qquad f = \frac{c}{\lambda} \qquad c \approx 300\times10^6\;\text{m/s}$$</div>
+      <img src="systd-img/electromagneticspectrum.png" alt="Spektrum EM" class="lecture-img">
+      <p class="img-caption">Typowe zastosowania czestotliwosci radiowych</p>
+      <h4>Przeliczenia — przyklady egzaminowe</h4>
+      <div class="example">
+        <ul>
+          <li>150 MHz → \(\lambda = 300\!\times\!10^6 / 150\!\times\!10^6 = 2\;\text{m}\)</li>
+          <li>30 m → \(f = 300\!\times\!10^6 / 30 = 10\;\text{MHz}\)</li>
+          <li>225 kHz → \(\lambda = 300\!\times\!10^6 / 225\!\times\!10^3 = 1333\;\text{m}\)</li>
+          <li><strong>0,125 m → \(f = 300\!\times\!10^6 / 0{,}125 = 2{,}4\;\text{GHz}\) (WiFi!)</strong></li>
+          <li><strong>299 kHz → \(\lambda = 300\!\times\!10^6 / 299\!\times\!10^3 \approx 1003\;\text{m} \approx 1000\;\text{m}\)</strong></li>
+        </ul>
+      </div>
+      <h4>Definicja herca (od 2019)</h4>
+      <div class="formula">$$[Hz] = [s^{-1}] \qquad 1\;\text{Hz} = \frac{\Delta\nu_{CS}}{9\,192\,631\,770}$$</div>
+    </div>
+  </div>
+
+  <div class="card" data-topic="intro">
+    <div class="card-header">Jednostki dB, szum, SNR <span class="arrow">&#9660;</span></div>
+    <div class="card-body">
+      <h4>Miary sygnalu</h4>
+      <table>
+        <tr><th>Jednostka</th><th>Odniesienie</th><th>Przyklad</th></tr>
+        <tr><td>dBW</td><td>1 W</td><td>30 dBW = 1 kW</td></tr>
+        <tr><td>dBm</td><td>1 mW</td><td><strong>20 dBm = 100 mW (max WiFi w UE!)</strong></td></tr>
+        <tr><td>dBV</td><td>1 V</td><td></td></tr>
+        <tr><td>dBuV</td><td>1 uV</td><td></td></tr>
+        <tr><td>dBi</td><td>antena izotropowa</td><td></td></tr>
+        <tr><td>dBd</td><td>dipol polfalowy</td><td></td></tr>
+        <tr><td>dBc</td><td>nosna</td><td></td></tr>
+      </table>
+      <div class="important"><strong>Pytanie egzaminowe:</strong> Jak inaczej wyrazic max moc WiFi w UE = 100 mW? → <strong>20 dBm</strong> (10×log₁₀(100) = 20)</div>
+
+      <h4>Zrodla szumu</h4>
+      <ul>
+        <li><strong>Zewnetrzne:</strong> antropogeniczne, atmosferyczne, kosmiczne</li>
+        <li><strong>Wewnetrzne:</strong> termiczne (Johnsona), srutowe (Schottky'ego), wodospadowe (avalanche), popcorn</li>
+      </ul>
+
+      <h4>Szum termiczny (Johnsona)</h4>
+      <div class="formula">$$P_n = kTB \qquad U_n = \sqrt{4kT\Delta f\,R}$$
+        <p style="font-size:0.82rem;color:var(--text-dim);margin-top:0.3rem">k = 1,38 × 10⁻²³ J/K (stala Boltzmanna)</p>
+      </div>
+      <div class="important"><strong>Egzamin:</strong> Rezystor 1 k&Omega; w 25°C generuje szum <strong>4 nV/√Hz</strong>.</div>
+
+      <h4>Suma szumow</h4>
+      <div class="formula">$$U_{rms} = \sqrt{u_1^2 + u_2^2 + \ldots + u_n^2}$$</div>
+      <div class="important"><strong>Egzamin:</strong> Podwojenie identycznych zrodel szumu = <strong>+3,01 dB</strong> (nie podwojenie!).</div>
+
+      <h4>Kolory szumu</h4>
+      <img src="systd-img/Colors_of_Noise.png" alt="Kolory szumu" class="lecture-img medium">
+      <table>
+        <tr><th>Kolor</th><th>Zaleznoc widmowa</th><th>Nachylenie</th></tr>
+        <tr><td>Fioletowy</td><td>\(f^2\)</td><td>+6 dB/okt</td></tr>
+        <tr><td>Niebieski</td><td>\(f\)</td><td>+3 dB/okt</td></tr>
+        <tr><td>Bialy</td><td>\(1\)</td><td>plaski</td></tr>
+        <tr><td>Rozowy</td><td>\(1/f\)</td><td>-3 dB/okt</td></tr>
+        <tr><td>Czerwony</td><td>\(1/f^2\)</td><td>-6 dB/okt</td></tr>
+      </table>
+
+      <h4>SNR</h4>
+      <div class="formula">$$\text{SNR} = 10\log_{10}\frac{P_S}{P_N}\;\text{[dB]}$$</div>
+    </div>
+  </div>
+
+  <div class="card" data-topic="intro">
+    <div class="card-header">Regulacje i historia <span class="arrow">&#9660;</span></div>
+    <div class="card-body">
+      <h4>Kamienie milowe</h4>
+      <ul>
+        <li><strong>1891</strong> — radiowa transmisja energii (Tesla)</li>
+        <li><strong>1901</strong> — transmisja transatlantycka (Marconi)</li>
+        <li><strong>1906</strong> — radiowa transmisja mowy (Fessenden)</li>
+        <li><strong>1933</strong> — radio FM (Armstrong)</li>
+        <li><strong>1948</strong> — teoria informacji (Shannon) + pierwszy tranzystor</li>
+        <li><strong>1997</strong> — WiFi</li>
+      </ul>
+      <h4>Organizacje regulacyjne</h4>
+      <table>
+        <tr><th>Org.</th><th>Pelna nazwa</th><th>Zakres</th></tr>
+        <tr><td><strong>ITU</strong></td><td>International Telecommunication Union</td><td>Globalny</td></tr>
+        <tr><td>CEPT</td><td>Conf. of Postal and Telecom. Administrations</td><td>Europa</td></tr>
+        <tr><td>ETSI</td><td>European Telecom. Standards Institute</td><td>Europa</td></tr>
+        <tr><td>UKE</td><td>Urzad Komunikacji Elektronicznej</td><td>Polska</td></tr>
+        <tr><td>FCC</td><td>Federal Communications Commission</td><td>USA</td></tr>
+      </table>
+      <div class="important"><strong>Egzamin:</strong> Ktora instytucja dba o globalna wspolprace radiowa? → <strong>ITU</strong></div>
+
+      <h4>Pojecia</h4>
+      <ul>
+        <li><strong>Modulacja</strong> — przeksztalcenie pozwalajace na transmisje informacji za pomoca fal radiowych</li>
+        <li><strong>Radiodyfuzja</strong> — specyficzna, jednokierunkowa komunikacja radiowa (broadcasting)</li>
+        <li><strong>Pasma ISM</strong> — pasma Industrial, Scientific, Medical. Wymagaja zachowania rezimow mocy i czasu transmisji (brak licencji indywidualnej)</li>
+        <li><strong>Parametry sygnalu do modulowania:</strong> amplituda, faza, czestotliwosc</li>
+        <li><strong>Plaszczyzna IQ:</strong> skladowa synfazowa (I) i kwadraturowa (Q)</li>
+      </ul>
+      <div class="important"><strong>Egzamin:</strong> Pewne czestotliwosci nie moga opuscic atmosfery, bo <strong>odbijaja sie i zalamuja w zjonizowanych czesciach atmosfery</strong> (jonosfera).</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 2. MODULACJE AMPLITUDY ============ -->
+<div class="lecture-section l2" id="am">
+  <h2><span class="num">2</span> Modulacje amplitudy</h2>
+
+  <div class="card" data-topic="am">
+    <div class="card-header">Modulacja AM — podstawy i wzory <span class="arrow">&#9660;</span></div>
+    <div class="card-body">
+      <h4>Definicja modulacji</h4>
+      <p>Modulacja to przeksztalcenie nosnej \(c(t)\) przez sygnal modulujacy \(m(t)\) w sygnal wynikowy \(s(t)\) o czestotliwosci zblizonej do nosnej, ale niosacy informacje. Warunek: \(f_c \gg f_m\).</p>
+
+      <h4>Sygnal AM (z harmonicznym modulujacym)</h4>
+      <div class="formula">$$s(t) = U_0\left(1 + m\cos(\omega_m t)\right)\cos(\omega_0 t)$$</div>
+      <p>Po tozsamosci trygonometrycznej:</p>
+      <div class="formula">$$s(t) = U_0\cos(\omega_0 t) + \frac{U_m}{2}\left[\cos(\omega_0-\omega_m)t + \cos(\omega_0+\omega_m)t\right]$$</div>
+      <div class="important"><strong>3 skladowe widma AM:</strong> nosna \(f_0\) + dolna wstega \(f_0-f_m\) + gorna wstega \(f_0+f_m\).<br>
+      <strong>Egzamin:</strong> Pasmo AM z sygnalem 0-5 kHz = <strong>10 kHz</strong> (2 × 5 kHz). Nosna w srodku pasma: np. pasmo 323-349 kHz → nosna = <strong>336 kHz</strong>.</div>
+    </div>
+  </div>
+
+  <div class="card" data-topic="am">
+    <div class="card-header">Glebokosc modulacji, moc, sprawnosc <span class="arrow">&#9660;</span></div>
+    <div class="card-body">
+      <h4>Wspolczynnik glebokosci modulacji</h4>
+      <div class="formula">$$m = \frac{U_m}{U_c} = \frac{U_{max}-U_{min}}{U_{max}+U_{min}}$$</div>
+      <div class="formula">$$U_{max} = U_c(1+m) \qquad U_{min} = U_c(1-m)$$</div>
+
+      <div class="example">
+        <strong>Egzamin (pyt. 11):</strong> Amplituda nosnej = 10V, m = 25%.<br>
+        Max obwiedni: \(U_{max} = 10(1+0{,}25) = \mathbf{12{,}5\;\text{V}}\)
+      </div>
+
+      <div class="example">
+        <strong>Egzamin (pyt. 12):</strong> AM, m = 50%, wartosc max = 12V. Amplituda nosnej?<br>
+        \(U_c = U_{max}/(1+m) = 12/1{,}5 = \mathbf{8\;\text{V}}\)
+      </div>
+
+      <h4>Efektywna glebokosc modulacji (wiele czestotliwosci)</h4>
+      <div class="formula">$$m_{eff} = \sqrt{m_1^2 + m_2^2 + \ldots}$$</div>
+
+      <h4>Moc srednia AM</h4>
+      <div class="formula">$$P_{AM} = P_0\left(1+\frac{m^2}{2}\right)$$</div>
+
+      <h4>Moc szczytowa AM</h4>
+      <div class="formula">$$P_{max} = P_0(1+m)^2 \qquad \text{Przy } m\!=\!1:\; P_{max}=4P_0$$</div>
+
+      <div class="example">
+        <strong>Egzamin (pyt. 10):</strong> m = 10%, Pmax = 24,2 kW. Moc nosnej?<br>
+        \(P_0 = P_{max}/(1+m)^2 = 24200/(1{,}1)^2 = 24200/1{,}21 = \mathbf{20\;\text{kW}}\)
+      </div>
+
+      <h4>Sprawnosc energetyczna AM</h4>
+      <div class="formula">$$\mu_{AM} = \frac{m^2}{2+m^2}$$</div>
+      <div class="important">Przy m=1 (max): \(\mu = 1/3 \approx\) <strong>33,3%</strong>. Wiekszosc energii marnowana na nosna!</div>
+    </div>
+  </div>
+
+  <div class="card" data-topic="am">
+    <div class="card-header">DSB-SC, SSB, modulatory <span class="arrow">&#9660;</span></div>
+    <div class="card-body">
+      <h4>DSB-SC (Double Sideband Suppressed Carrier)</h4>
+      <div class="formula">$$s_{DSB\text{-}SC}(t) = A_0\cos(2\pi f_0 t)\cdot m(t)$$
+        $$S(f) = \frac{A_0}{2}\left[M(f-f_0)+M(f+f_0)\right]$$</div>
+      <p>Nosna wytlumiona → cala moc w wstegach bocznych. Cecha: odwrocenie fazy przy przejsciu m(t) przez zero. Wymaga demodulacji koherentnej!</p>
+
+      <h4>Modulator zrownowazony</h4>
+      <div class="formula">$$y(t) = 2a_1 b(t) + 4a_2 b(t)c(t)$$</div>
+
+      <h4>Modulator pierscieniowy (podwojnie zrownowazony)</h4>
+      <div class="formula">$$s(t) = 8a_2\,b(t)\,c(t)$$</div>
+      <p>Czysty iloczyn — brak nosnej, brak skladowych modulujacych.</p>
+
+      <h4>Uklad Gilberta (Gilbert Cell)</h4>
+      <p>Zastosowania: analogowy mnoznik 4-kwadrantowy, zbalansowany modulator, mieszacz czestotliwosci, wzmacniacz AGC, detektor fazy.</p>
+
+      <h4>SSB (Single Sideband)</h4>
+      <ul>
+        <li><strong>Metoda fazowa</strong> — kompensacja jednej wstegi przez przesuniecie o 90°</li>
+        <li><strong>Metoda Weavera</strong> — dwie pary modulatorow + FDP</li>
+        <li><strong>Metoda filtrowa</strong> — filtracja jednej wstegi z DSB-SC</li>
+      </ul>
+      <div class="important">SSB zajmuje <strong>polowe pasma</strong> AM/DSB-SC — najbardziej efektywne widmowo. Zastosowania: amatorskie (HF), wojskowe (HFGCS), lotnicze (HF VOLMET).</div>
+    </div>
+  </div>
+
+  <div class="card" data-topic="am">
+    <div class="card-header">Demodulacja AM <span class="arrow">&#9660;</span></div>
+    <div class="card-body">
+      <ul>
+        <li><strong>Niekoherentna</strong> — bezposrednio z odebranego sygnalu (detektor obwiedniowy/prostownik)</li>
+        <li><strong>Koherentna</strong> — z synchronizacja z lokalnie odtworzona nosna</li>
+      </ul>
+      <h4>Bledy demodulacji koherentnej</h4>
+      <div class="formula">$$\text{Blad fazy: } b'(t)=\tfrac{1}{2}b(t)\cos(\Delta\varphi) \qquad \text{Blad czestotliwosci: } b'(t)=\tfrac{1}{2}b(t)\cos(\Delta\omega t)$$</div>
+      <div class="important">AM klasyczne → demodulacja niekoherentna (prosta). DSB-SC i SSB → wymagaja demodulacji koherentnej!</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 3. MODULACJE KATA ============ -->
+<div class="lecture-section l3" id="angle">
+  <h2><span class="num">3</span> Modulacje kata (FM / PM)</h2>
+
+  <div class="card" data-topic="angle">
+    <div class="card-header">Modulacja fazy (PM) i czestotliwosci (FM) <span class="arrow">&#9660;</span></div>
+    <div class="card-body">
+      <h4>Modulacja fazy (PM)</h4>
+      <div class="formula">$$s_{PM}(t) = A_0\cos\left(\omega_0 t + k_{PM}\,a_m\,b(t)\right)$$</div>
+      <img src="systd-img/Phase-modulation.gif" alt="Animacja modulacji fazy" class="lecture-img medium">
+      <p class="img-caption">Animacja: modulacja fazy (PM) — faza zmienia sie proporcjonalnie do sygnalu modulujacego</p>
+      <img src="systd-img/PM-static.png" alt="PM - widok statyczny" class="lecture-img small">
+      <div class="important"><strong>Egzamin (pyt. 15):</strong> Jak zmienia sie na plaszczyznie IQ dlugosc wektora w PM? → <strong>Pozostaje stala</strong> (zmienia sie faza, nie amplituda!).</div>
+
+      <h4>Modulacja czestotliwosci (FM)</h4>
+      <div class="formula">$$s_{FM}(t) = A_0\cos\left(\omega_0 t + \beta\sin(\omega_m t)\right)$$</div>
+      <img src="systd-img/fm-time.png" alt="FM w dziedzinie czasu" class="lecture-img medium">
+      <p class="img-caption">Sygnal FM w dziedzinie czasu — czestotliwosc zmienia sie z amplituda modulujacego</p>
+
+      <h4>Dewiacja czestotliwosci i indeks modulacji</h4>
+      <div class="formula">$$\Delta f_{FM} = k_{FM}\cdot a_m \qquad \beta = \frac{\Delta f}{f_m}$$</div>
+      <div class="important"><strong>PM vs FM:</strong> W PM <em>faza</em> wprost proporcjonalna do m(t). W FM <em>pulsacja</em> (czestotliwosc chwilowa) wprost proporcjonalna do m(t).<br>
+      Posrednie generowanie: calka na m(t) + PM = FM; pochodna na m(t) + FM = PM.</div>
+    </div>
+  </div>
+
+  <div class="card" data-topic="angle">
+    <div class="card-header">Funkcje Bessela i widmo FM <span class="arrow">&#9660;</span></div>
+    <div class="card-body">
+      <h4>Rozklad Bessela sygnalu FM</h4>
+      <div class="formula">$$s(t) = A_0\sum_{n=-\infty}^{+\infty}J_n(\beta)\cos(\omega_0+n\omega_m)t$$</div>
+      <img src="systd-img/bessel.png" alt="Funkcje Bessela" class="lecture-img medium">
+      <p class="img-caption">Funkcje Bessela pierwszego rodzaju J₀, J₁, J₂, J₃ ... — amplitudy prazkow widma FM</p>
+
+      <h4>Widmo FM (Fourier)</h4>
+      <div class="formula">$$S(f) = \frac{A_0}{2}\sum_{n=-\infty}^{\infty}J_n(\beta)\left[\delta(f-f_0-nf_m)+\delta(f+f_0+nf_m)\right]$$</div>
+      <img src="systd-img/fm-spectrum.png" alt="Widmo FM" class="lecture-img medium">
+      <p class="img-caption">Widmo FM na oscyloskopie — widoczne prazki boczne</p>
+      <div class="important">Widmo FM jest teoretycznie nieskonczone! Symetria: \(J_n(\beta) = (-1)^n J_{-n}(\beta)\)</div>
+    </div>
+  </div>
+
+  <div class="card" data-topic="angle">
+    <div class="card-header">Wzor Carsona i szerokosc pasma FM <span class="arrow">&#9660;</span></div>
+    <div class="card-body">
+      <div class="formula">$$B_{FM} = 2(f_m + \Delta f) = 2f_m(1+\beta) = 2\Delta f\left(1+\frac{1}{\beta}\right)$$</div>
+      <table>
+        <tr><th>Typ</th><th>Warunek</th><th>Istotne prazki</th></tr>
+        <tr><td>NBFM</td><td>\(\beta \leq 4\)</td><td>\(N = \beta+1\)</td></tr>
+        <tr><td>WBFM</td><td>\(\beta > 4\)</td><td>\(N = \beta+2\)</td></tr>
+      </table>
+      <div class="example">
+        <strong>Egzamin (pyt. 18):</strong> fm=16 kHz, &Delta;f=80 kHz. Pasmo?<br>
+        \(\beta = 80/16 = 5\) (WBFM)<br>
+        \(B = 2(16+80) = 2\times96 = \mathbf{192\;\text{kHz}}\) (Carson)
+      </div>
+      <div class="example">
+        <strong>Lancuch pompujacy:</strong> NBFM (fc=200kHz, &Delta;f=25Hz) → ×64 → mikser 10,7MHz → ×48.<br>
+        &Delta;f wynikowe: 25 × 64 × 48 = 76,8 kHz (WBFM!)
+      </div>
+    </div>
+  </div>
+
+  <div class="card" data-topic="angle">
+    <div class="card-header">Generowanie i detekcja FM <span class="arrow">&#9660;</span></div>
+    <div class="card-body">
+      <h4>Generowanie bezposrednie</h4>
+      <img src="systd-img/FM_bezposrednio.png" alt="Generator FM bezposredni" class="lecture-img medium">
+      <ul>
+        <li>Dioda waraktorowa zmienia pojemnosc w obwodzie LC</li>
+        <li>Zaleta: prostota. Wady: niestabilna nosna, pasozytnicza AM</li>
+      </ul>
+      <h4>Generowanie posrednie (Armstrong)</h4>
+      <img src="systd-img/FM_posrednio.png" alt="Generator FM posredni" class="lecture-img medium">
+      <ul>
+        <li>m(t) → calka → modulator PM → FM</li>
+        <li>Lancuch pompujacy: NBFM → powielacze + miksery → WBFM</li>
+      </ul>
+      <h4>PLL (petla synchronizacji fazowej)</h4>
+      <img src="systd-img/PLL.png" alt="Schemat PLL" class="lecture-img medium">
+      <h4>Detektory FM</h4>
+      <ul>
+        <li><strong>Dyskryminator czestotliwosci</strong> — zmienia FM na FM+AM</li>
+        <li><strong>Dyskryminator przeciwsobny</strong> — dwa obwody rezonansowe</li>
+        <li><strong>Detektor kwadraturowy</strong> — mnozenie z przesunietym sygnalym</li>
+        <li><strong>Demodulator koincydencyjny</strong> — bramka AND</li>
+        <li><strong>Demodulator PLL</strong> — najlepsza odpornosc na szumy</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card" data-topic="angle">
+    <div class="card-header">FM stereo, RDS, zalety vs AM <span class="arrow">&#9660;</span></div>
+    <div class="card-body">
+      <h4>Widmo stereo FM (MPX)</h4>
+      <img src="systd-img/FM-MPX.jpg" alt="Widmo MPX" class="lecture-img medium">
+      <ul>
+        <li>0-15 kHz: mono (L+R)</li>
+        <li>19 kHz: pilot stereo</li>
+        <li>23-53 kHz: roznicowy (L-R) na 38 kHz (DSB-SC)</li>
+        <li>57 kHz: RDS (1187,5 bps, 48 okresow/bit)</li>
+      </ul>
+      <h4>Zalety FM vs AM</h4>
+      <ul>
+        <li>Redukcja wplywu zaklocen (zakloczenia glownie amplitudowe)</li>
+        <li>Precyzyjniej zdefiniowany obszar nadawania</li>
+        <li><strong>Lepsza wartosc SNR</strong></li>
+        <li>Wieksza dynamika (wiekszy indeks modulacji)</li>
+      </ul>
+      <h4>Wady FM vs AM</h4>
+      <ul>
+        <li>Szersze pasmo (~200 kHz vs ~10 kHz)</li>
+        <li>Mniejszy zasieg (krotsze fale, brak propagacji jonosferycznej)</li>
+        <li>Bardziej zlozone obwody detekcji</li>
+      </ul>
+      <div class="important"><strong>Egzamin (pyt. 13):</strong> Ktora modulacja nie pasuje: DSB-SC, FSK, PM, SSB, FM, AM? → <strong>FSK</strong> (jedyna cyfrowa, reszta analogowe).</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 4. MODULACJE CYFROWE ============ -->
+<div class="lecture-section l4" id="digital">
+  <h2><span class="num">4</span> Modulacje cyfrowe</h2>
+
+  <div class="card" data-topic="digital">
+    <div class="card-header">FSK, CPFSK, MSK, GMSK <span class="arrow">&#9660;</span></div>
+    <div class="card-body">
+      <h4>FSK — Frequency Shift Keying</h4>
+      <img src="systd-img/FSK.png" alt="Oscylogram FSK" class="lecture-img medium">
+      <div class="formula">$$s_n(t)=\sqrt{\frac{2E_b}{T_b}}\cos(2\pi f_n t)$$</div>
+
+      <h4>MFSK — M-ary FSK</h4>
+      <div class="formula">$$\text{Bitow na symbol} = \log_2 M$$
+        $$f_i = f_c + (2i-1-M)f_d, \quad i\in(1;M)$$</div>
+
+      <div class="example">
+        <strong>Egzamin (pyt. 6):</strong> 8FSK, 128 symboli/s. Ile bitow/s?<br>
+        8FSK → 8 poziomow → \(\log_2 8 = 3\) bity/symbol<br>
+        128 × 3 = <strong>384 bps</strong>
+      </div>
+
+      <h4>Pasmo FSK (regula Carsona)</h4>
+      <div class="formula">$$B_{FSK} = 2(\beta+1)B = 2\Delta F + 2B$$</div>
+
+      <h4>Warianty</h4>
+      <table>
+        <tr><th>Typ</th><th>Cecha</th><th>Zastosowanie</th></tr>
+        <tr><td>CPFSK</td><td>Ciagla faza</td><td>—</td></tr>
+        <tr><td>MSK</td><td>\(\beta\approx0{,}5\), min pasmo</td><td>—</td></tr>
+        <tr><td>GMSK</td><td>MSK + filtr Gaussa</td><td>Bluetooth, BLE, AIS, GSM</td></tr>
+      </table>
+      <img src="systd-img/PSD-BPSKQPSKMSK.png" alt="Porownanie PSD" class="lecture-img medium">
+      <p class="img-caption">Porownanie gestosci widmowej mocy: BPSK vs QPSK vs MSK</p>
+
+      <h4>Detekcja FSK</h4>
+      <ul>
+        <li><strong>Koherentna:</strong> korelacja z sygnalem odniesienia</li>
+        <li><strong>Niekoherentna:</strong> FPP o wysokim Q, FFT, algorytm Goertzela</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card" data-topic="digital">
+    <div class="card-header">PSK, QPSK, DPSK <span class="arrow">&#9660;</span></div>
+    <div class="card-body">
+      <h4>BPSK (Binary PSK)</h4>
+      <div class="formula">$$s(t) = A_0\cos(\omega_0 t + D_p\,m(t))$$</div>
+      <p>Zmiana fazy o \(\pm\pi/2\). Wydajnosc: 0,5 bit/s/Hz.</p>
+
+      <h4>MPSK — wielofazowe PSK</h4>
+      <img src="systd-img/PSK-IQ.png" alt="Diagram IQ PSK" class="lecture-img medium">
+      <p class="img-caption">Diagram IQ sygnalow MPSK — punkty konstelacji na okregu</p>
+      <div class="formula">$$\text{Bitow na symbol} = \log_2 M \qquad M = 2^L$$</div>
+
+      <div class="example">
+        <strong>Egzamin (pyt. 19):</strong> Ile punktow konstelacji dla pol bajtu (4 bity)?<br>
+        \(M = 2^4 = \mathbf{16}\) punktow
+      </div>
+
+      <h4>Warianty PSK</h4>
+      <table>
+        <tr><th>Typ</th><th>Bity/sym</th><th>Cecha</th></tr>
+        <tr><td>BPSK</td><td>1</td><td>Najprostszy, wymaga synchro</td></tr>
+        <tr><td>QPSK</td><td>2</td><td>I i Q niezaleznie</td></tr>
+        <tr><td>OQPSK</td><td>2</td><td>Offset o pol symbolu</td></tr>
+        <tr><td>\(\pi/4\) QPSK</td><td>2</td><td>2 konstelacje obrocone o \(\pi/4\)</td></tr>
+        <tr><td>8PSK</td><td>3</td><td>8 faz co \(\pi/4\)</td></tr>
+        <tr><td>DPSK</td><td>1</td><td>Roznicowa: 1=brak zmiany, 0=zmiana</td></tr>
+        <tr><td>D8PSK</td><td>3</td><td>\(\phi_k=\phi_{k-1}+\Delta\phi_k\)</td></tr>
+      </table>
+      <p>Zastosowania: DAB+ (DQPSK), SIGFOX (BPSK), TETRA (QPSK/&pi;/4), DVB-S (QPSK/8PSK).</p>
+    </div>
+  </div>
+
+  <div class="card" data-topic="digital">
+    <div class="card-header">QAM i porownanie wydajnosci <span class="arrow">&#9660;</span></div>
+    <div class="card-body">
+      <h4>QAM — Quadrature Amplitude Modulation</h4>
+      <div class="formula">$$s(t) = x(t)\cos\omega_c t + y(t)\sin\omega_c t$$</div>
+      <p>Jednoczesna modulacja amplitudy na osi I (cos) i Q (sin).</p>
+      <ul>
+        <li><strong>Zaleta:</strong> najwyzsza wydajnosc widmowa</li>
+        <li><strong>Wada:</strong> wrazliwosc na szum, zlozonosc</li>
+        <li>Zastosowania: DVB-C/T, LTE, 5G, WiFi 6 (1024-QAM)</li>
+      </ul>
+
+      <h4>Wydajnosc widmowa</h4>
+      <div class="formula">$$\kappa = \frac{R}{B_T}\;\left[\frac{\text{bit/s}}{\text{Hz}}\right]$$</div>
+      <table>
+        <tr><th>Typ</th><th>\(\kappa\) (pasmo 0→0)</th><th>\(\kappa\) (30 dB)</th></tr>
+        <tr><td>OOK, BPSK</td><td>0,500</td><td>0,052</td></tr>
+        <tr><td>QPSK, OQPSK, &pi;/4 QPSK</td><td>1,000</td><td>0,104</td></tr>
+        <tr><td>MSK</td><td>0,667</td><td>0,438</td></tr>
+        <tr><td>16-QAM</td><td>2,000</td><td>0,208</td></tr>
+        <tr><td>64-QAM</td><td>3,000</td><td>0,313</td></tr>
+      </table>
+      <div class="important">Wyzszy rzad modulacji = wieksza wydajnosc bitowa, ale tez wieksza wrazliwosc na szumy i wyzsze wymagania SNR.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 5. ZARZADZANIE PASMEM ============ -->
+<div class="lecture-section l5" id="band">
+  <h2><span class="num">5</span> Zarzadzanie pasmem</h2>
+
+  <div class="card" data-topic="band">
+    <div class="card-header">TDMA — zwielokrotnianie w dziedzinie czasu <span class="arrow">&#9660;</span></div>
+    <div class="card-body">
+      <p>Wiele urzadzen dzieli kanal — kazde na wylacznosc w przydzielonej szczelinie czasowej.</p>
+      <table>
+        <tr><th>System</th><th>Kanal</th><th>Szczeliny</th></tr>
+        <tr><td>GSM (2G)</td><td>200 kHz</td><td>8</td></tr>
+        <tr><td>TETRA</td><td>25 kHz</td><td>10</td></tr>
+        <tr><td>DMR</td><td>12,5 kHz</td><td>2</td></tr>
+        <tr><td>Iridium</td><td>satelitarny</td><td>TDMA/FDMA</td></tr>
+        <tr><td>Bluetooth</td><td>1 MHz</td><td>625 (FHSS)</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="card" data-topic="band">
+    <div class="card-header">FDMA i OFDM <span class="arrow">&#9660;</span></div>
+    <div class="card-body">
+      <h4>OFDM — Orthogonal Frequency Division Multiplexing</h4>
+      <img src="systd-img/OFDM.png" alt="OFDM" class="lecture-img medium">
+      <ul>
+        <li>Szybki strumien → N rowoleglych podstrumieni na N podnosnych</li>
+        <li>Minimalne odstepy miedzykanalowe (ortogonalnosc!)</li>
+        <li>Realizacja: IFFT (nadajnik) / FFT (odbiornik)</li>
+        <li>Guard Interval (GI) chroni przed interferencja</li>
+      </ul>
+      <div class="example"><strong>WiFi 802.11g:</strong> 64 podnosne = 1 DC + 4 pilotujace + 48 danych + 11 wyciszonych</div>
+      <div class="important">OFDM = fundament nowoczesnosci: WiFi, LTE, 5G, DVB-T, DAB+.</div>
+    </div>
+  </div>
+
+  <div class="card" data-topic="band">
+    <div class="card-header">CDMA — zwielokrotnianie kodowe <span class="arrow">&#9660;</span></div>
+    <div class="card-body">
+      <p>Wszystkie stacje jednoczesnie w calym pasmie. Rozroznienie przez unikalne kody ortogonalne.</p>
+      <h4>Wlasciwosci kodow</h4>
+      <ul>
+        <li>Kwadrat sekwencji = n (liczba stacji)</li>
+        <li><strong>Iloczyn skalarny roznych sekwencji = 0</strong> (ortogonalnosc!)</li>
+      </ul>
+      <div class="example">
+        C₁=[+1,+1,+1,+1], C₂=[+1,-1,+1,-1], C₃=[+1,+1,-1,-1], C₄=[+1,-1,-1,+1]<br>
+        Nadawanie: suma iloczynow. Odbior: korelacja (iloczyn skalarny) z wlasnym kodem.
+      </div>
+
+      <h4>Mieszanie czestotliwosci — skladowa roznicowa</h4>
+      <div class="example">
+        <strong>Egzamin (pyt. 21):</strong> Sygnal 108-118 MHz zmieszany z fp=10,7 MHz.<br>
+        Skladowa roznicowa: 108-10,7=97,3 MHz do 118-10,7=107,3 MHz → <strong>97,3-107,3 MHz</strong>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" data-topic="band">
+    <div class="card-header">Spread Spectrum (FHSS, DSSS) <span class="arrow">&#9660;</span></div>
+    <div class="card-body">
+      <img src="systd-img/SS-EN.png" alt="Spread Spectrum" class="lecture-img medium">
+      <h4>FHSS — Frequency Hopping Spread Spectrum</h4>
+      <img src="systd-img/FHSS.png" alt="FHSS" class="lecture-img small">
+      <ul>
+        <li>Patent Hedy Lamarr & George Antheil (US2292387)</li>
+        <li>Pseudolosowa zmiana czestotliwosci nosnej co okres \(T_h\)</li>
+      </ul>
+      <h4>DSSS — Direct Sequence Spread Spectrum</h4>
+      <ul>
+        <li>Mnozenie sygnalu z kodem rozszerzajacym (chipy)</li>
+        <li>Pasmo rosnie n-krotnie</li>
+        <li><strong>802.11b:</strong> 11-elementowy kod Barkera</li>
+      </ul>
+      <h4>Kody Barkera</h4>
+      <p>Dlugosci: 2, 3, 4, 5, 7, 11, 13. Optymalna autokorelacja.</p>
+      <div class="example">Barker-11: [+1,+1,+1,-1,-1,-1,+1,-1,-1,+1,-1]<br>Barker-13: [+1,+1,+1,+1,+1,-1,-1,+1,+1,-1,+1,-1,+1]</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ YOUTUBE WYKLADY ============ -->
+<div class="lecture-section" id="youtube" style="scroll-margin-top:60px;">
+  <h2>Wyklady na YouTube (dr Makowski)</h2>
+  <p class="section-desc">Oficjalne nagrania wykladzicy — ten sam material co na slajdach, ale z objasnienami.</p>
+  <div class="yt-grid">
+    <div class="yt-card">
+      <a href="https://youtu.be/llma3NpwSds" target="_blank">Modulacja AM — podstawy teoretyczne</a>
+      <div class="yt-meta">39:11 &bull; LM</div>
+      <div class="yt-desc">Wprowadzenie do AM: nosna, sygnal modulujacy, widmo, glebokosc modulacji, moc.</div>
+    </div>
+    <div class="yt-card">
+      <a href="https://youtu.be/K3dzUk9p9GQ" target="_blank">Modulacja AM — modulatory</a>
+      <div class="yt-meta">22:54 &bull; LM</div>
+      <div class="yt-desc">Konstrukcja modulatorow AM: element nieliniowy, prostownikowy, bazowy, PIN, MC1496.</div>
+    </div>
+    <div class="yt-card">
+      <a href="https://youtu.be/G0Rxoxi99TI" target="_blank">Modulacja DSB-SC</a>
+      <div class="yt-meta">33:12 &bull; LM</div>
+      <div class="yt-desc">DSB-SC, modulatory zrownowazone, pierscieniowe, mieszacze (miksery), uklad Gilberta.</div>
+    </div>
+    <div class="yt-card">
+      <a href="https://youtu.be/TQo5gcexILE" target="_blank">Jednowstegowa modulacja SSB</a>
+      <div class="yt-meta">13:46 &bull; LM</div>
+      <div class="yt-desc">Podstawy SSB, metoda fazowa, filtrowa, Weavera. Generowanie sygnalow jednowstegowych.</div>
+    </div>
+    <div class="yt-card">
+      <a href="https://youtu.be/IPo-Awgt61c" target="_blank">Demodulacja AM / DSB-SC</a>
+      <div class="yt-meta">20:30 &bull; LM</div>
+      <div class="yt-desc">Demodulacja niekoherentna (kwadraturowa, liniowa) i koherentna sygnalow AM.</div>
+    </div>
+    <div class="yt-card">
+      <a href="https://youtu.be/vSWRPAZLSgQ" target="_blank">Wprowadzenie do modulacji kata</a>
+      <div class="yt-meta">57:49 &bull; LM</div>
+      <div class="yt-desc">PM i FM: analiza czasowa, wektorowa, czestotliwosciowa. Funkcje Bessela. Wzor Carsona.</div>
+    </div>
+    <div class="yt-card">
+      <a href="https://youtu.be/quzf3WxjKvg" target="_blank">Modulacja FM — modulatory</a>
+      <div class="yt-meta">37:18 &bull; LM</div>
+      <div class="yt-desc">Elektronika analogowa: waraktory, VCO, PLL, Armstrong. Wspolczesne realizacje FM.</div>
+    </div>
+    <div class="yt-card">
+      <a href="https://youtu.be/KquZLmBYmqE" target="_blank">Demodulacja FM</a>
+      <div class="yt-meta">54:21 &bull; LM</div>
+      <div class="yt-desc">Detektory FM (dyskryminator, kwadraturowy, PLL). Stereo FM, RDS. Porownanie FM vs AM.</div>
+    </div>
+    <div class="yt-card">
+      <a href="https://youtu.be/aJizifK0aVM" target="_blank">FSK — kluczowanie czestotliwosci</a>
+      <div class="yt-meta">30:21 &bull; LM</div>
+      <div class="yt-desc">FSK, CPFSK, MSK, GMSK. Detekcja koherentna i niekoherentna. Realizacje i zastosowania.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SCIAGA ============ -->
+<div class="lecture-section" id="formulas" style="scroll-margin-top:60px;">
+  <h2>Sciaga — najwazniejsze wzory</h2>
+  <div class="cheat-grid">
+    <div class="cheat-item"><h4>Dlugosc fali</h4><div class="val">\(\lambda = c/f\)</div></div>
+    <div class="cheat-item"><h4>Szum Johnsona</h4><div class="val">\(P_n=kTB\), \(U_n=\sqrt{4kTBR}\)</div></div>
+    <div class="cheat-item"><h4>SNR</h4><div class="val">\(10\log_{10}(P_S/P_N)\)</div></div>
+    <div class="cheat-item"><h4>dBm → mW</h4><div class="val">\(P=10^{dBm/10}\) mW<br>20 dBm = 100 mW</div></div>
+    <div class="cheat-item"><h4>Glebokosc mod. AM</h4><div class="val">\(m=\frac{U_{max}-U_{min}}{U_{max}+U_{min}}\)</div></div>
+    <div class="cheat-item"><h4>Moc AM</h4><div class="val">\(P_{AM}=P_0(1+m^2/2)\)</div></div>
+    <div class="cheat-item"><h4>Moc szczytowa AM</h4><div class="val">\(P_{max}=P_0(1+m)^2\)</div></div>
+    <div class="cheat-item"><h4>Sprawnosc AM</h4><div class="val">\(\mu=m^2/(2+m^2)\)</div></div>
+    <div class="cheat-item"><h4>Pasmo AM</h4><div class="val">\(B_{AM}=2f_m\)</div></div>
+    <div class="cheat-item"><h4>Indeks mod. FM</h4><div class="val">\(\beta=\Delta f/f_m\)</div></div>
+    <div class="cheat-item"><h4>Pasmo FM (Carson)</h4><div class="val">\(B=2(f_m+\Delta f)\)</div></div>
+    <div class="cheat-item"><h4>Bity/symbol MPSK</h4><div class="val">\(\log_2 M\)</div></div>
+    <div class="cheat-item"><h4>Pasmo FSK</h4><div class="val">\(B=2\Delta F+2B_{mod}\)</div></div>
+    <div class="cheat-item"><h4>Wydajnosc widmowa</h4><div class="val">\(\kappa=R/B_T\) [bit/s/Hz]</div></div>
+    <div class="cheat-item"><h4>Nosna AM z pasma</h4><div class="val">\(f_0=(f_{min}+f_{max})/2\)</div></div>
+    <div class="cheat-item"><h4>Mieszanie</h4><div class="val">\(f_{out}=f_{in}\pm f_{LO}\)</div></div>
+  </div>
+</div>
+
+<!-- ============ FLASHCARDS ============ -->
+<div class="lecture-section" id="flashcards" style="scroll-margin-top:60px;">
+  <h2>Fiszki do powtorki</h2>
+  <p class="section-desc">Kliknij w karte by zobaczyc odpowiedz. 25 fiszek z kluczowymi pojec.</p>
+  <div class="flashcard" id="fc" onclick="flipCard()">
+    <div class="front" id="fcFront"></div>
+    <div class="back" id="fcBack"></div>
+    <div class="hint">kliknij by odwrocic</div>
+  </div>
+  <div class="fc-counter" id="fcCounter"></div>
+  <div class="fc-nav">
+    <button onclick="prevCard()">&#8592; Poprzednia</button>
+    <button onclick="nextCard()">Nastepna &#8594;</button>
+  </div>
+</div>
+
+<!-- ============ EGZAMIN ============ -->
+<div class="lecture-section" id="exam" style="scroll-margin-top:60px;">
+  <h2>Egzamin — pytania z zeszlego roku</h2>
+  <p class="section-desc">25 pytan z prawdziwego egzaminu. Sprawdz odpowiedz po zaznaczeniu — rozwiazanie z obliczeniami.</p>
+  <div class="exam-score" id="examScore" style="display:none;">
+    <div class="big" id="scoreVal"></div>
+    <div style="color:var(--text-dim);font-size:0.85rem;" id="scoreText"></div>
+  </div>
+
+  <!-- Q1 -->
+  <div class="exam-card" id="eq1">
+    <div class="eq-head"><div class="question">1. Z jaka predkoscia porusza sie fala radiowa w prozni?</div><span class="pts">1 pkt</span></div>
+    <div class="options">
+      <label><input type="radio" name="eq1" value="a"><span> c</span></label>
+      <label><input type="radio" name="eq1" value="b"><span> 300 km/s</span></label>
+      <label><input type="radio" name="eq1" value="c"><span> 300 km/h</span></label>
+      <label><input type="radio" name="eq1" value="d"><span> 300 m/s</span></label>
+    </div>
+    <button class="btn-check" onclick="checkExam('eq1','a','Fala radiowa porusza sie z predkoscia swiatla c ≈ 3×10⁸ m/s ≈ 300 000 km/s.')">Sprawdz</button>
+    <div class="answer" id="eq1-a"></div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="exam-card" id="eq2">
+    <div class="eq-head"><div class="question">2. Jak nazywa sie przeksztalcenie pozwalajace na transmisje informacji za pomoca fal radiowych?</div><span class="pts">1 pkt</span></div>
+    <div class="options">
+      <label><input type="radio" name="eq2" value="a"><span> probkowanie</span></label>
+      <label><input type="radio" name="eq2" value="b"><span> sterowanie</span></label>
+      <label><input type="radio" name="eq2" value="c"><span> kwantyzacja</span></label>
+      <label><input type="radio" name="eq2" value="d"><span> modulacja</span></label>
+    </div>
+    <button class="btn-check" onclick="checkExam('eq2','d','Modulacja to przeksztalcenie nosnej przez sygnal modulujacy w celu niesienia informacji.')">Sprawdz</button>
+    <div class="answer" id="eq2-a"></div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="exam-card" id="eq3">
+    <div class="eq-head"><div class="question">3. Jakie przeksztalcenie laczy dziedzine czasu i dziedzine czestotliwosci?</div><span class="pts">1 pkt</span></div>
+    <div class="options">
+      <label><input type="radio" name="eq3" value="a"><span> Lorentza</span></label>
+      <label><input type="radio" name="eq3" value="b"><span> Laplace'a</span></label>
+      <label><input type="radio" name="eq3" value="c"><span> Legendre'a</span></label>
+      <label><input type="radio" name="eq3" value="d"><span> Fouriera</span></label>
+    </div>
+    <button class="btn-check" onclick="checkExam('eq3','d','Transformata Fouriera pozwala przejsc z dziedziny czasu do dziedziny czestotliwosci i odwrotnie.')">Sprawdz</button>
+    <div class="answer" id="eq3-a"></div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="exam-card" id="eq4">
+    <div class="eq-head"><div class="question">4. Sygnal mowy odfiltrowano dolnoprzepustowo o granicznej 5 kHz, przeslano modulacja AM. Jaka jest przyblizona szerokosc pasma?</div><span class="pts">2 pkt</span></div>
+    <div class="options">
+      <label><input type="radio" name="eq4" value="a"><span> 10 kHz</span></label>
+      <label><input type="radio" name="eq4" value="b"><span> 20 kHz</span></label>
+      <label><input type="radio" name="eq4" value="c"><span> 5 kHz</span></label>
+      <label><input type="radio" name="eq4" value="d"><span> 15 kHz</span></label>
+    </div>
+    <button class="btn-check" onclick="checkExam('eq4','a','Pasmo AM = 2 × fm_max. Sygnal 0-5 kHz → B = 2×5 = 10 kHz (gorna + dolna wstega boczna).')">Sprawdz</button>
+    <div class="answer" id="eq4-a"></div>
+  </div>
+
+  <!-- Q5 -->
+  <div class="exam-card" id="eq5">
+    <div class="eq-head"><div class="question">5. Ile bitow na sekunde nadaje modulator 8FSK, jesli nadaje 128 symboli na sekunde?</div><span class="pts">3 pkt</span></div>
+    <div class="options">
+      <label><input type="radio" name="eq5" value="a"><span> 256 bps</span></label>
+      <label><input type="radio" name="eq5" value="b"><span> 128 bps</span></label>
+      <label><input type="radio" name="eq5" value="c"><span> 1024 bps</span></label>
+      <label><input type="radio" name="eq5" value="d"><span> 384 bps</span></label>
+    </div>
+    <button class="btn-check" onclick="checkExam('eq5','d','8FSK = 8 poziomow czestotliwosci. Bity/symbol = log₂(8) = 3. Wynik: 128 × 3 = 384 bps.')">Sprawdz</button>
+    <div class="answer" id="eq5-a"></div>
+  </div>
+
+  <!-- Q6 -->
+  <div class="exam-card" id="eq6">
+    <div class="eq-head"><div class="question">6. Ktora instytucja dba o globalna wspolprace w zakresie komunikacji radiowej?</div><span class="pts">1 pkt</span></div>
+    <div class="options">
+      <label><input type="radio" name="eq6" value="a"><span> Roskomnadzor</span></label>
+      <label><input type="radio" name="eq6" value="b"><span> International Telecommunication Union (ITU)</span></label>
+      <label><input type="radio" name="eq6" value="c"><span> Institute of Electrical and Electronics Engineers</span></label>
+      <label><input type="radio" name="eq6" value="d"><span> Rada Mediow Narodowych</span></label>
+    </div>
+    <button class="btn-check" onclick="checkExam('eq6','b','ITU — International Telecommunication Union — globalna organizacja ds. komunikacji radiowej.')">Sprawdz</button>
+    <div class="answer" id="eq6-a"></div>
+  </div>
+
+  <!-- Q7 -->
+  <div class="exam-card" id="eq7">
+    <div class="eq-head"><div class="question">7. Jaka jest przyblizona dlugosc fali radiowej o czestotliwosci 299 kHz?</div><span class="pts">2 pkt</span></div>
+    <div class="options">
+      <label><input type="radio" name="eq7" value="a"><span> 10 000 m</span></label>
+      <label><input type="radio" name="eq7" value="b"><span> 100 m</span></label>
+      <label><input type="radio" name="eq7" value="c"><span> 1000 m</span></label>
+      <label><input type="radio" name="eq7" value="d"><span> 10 m</span></label>
+    </div>
+    <button class="btn-check" onclick="checkExam('eq7','c','λ = c/f = 300×10⁶ / 299×10³ ≈ 1003 m ≈ 1000 m.')">Sprawdz</button>
+    <div class="answer" id="eq7-a"></div>
+  </div>
+
+  <!-- Q8 -->
+  <div class="exam-card" id="eq8">
+    <div class="eq-head"><div class="question">8. Dlaczego pewne czestotliwosci radiowe nie moga opuscic atmosfery ziemskiej?</div><span class="pts">1 pkt</span></div>
+    <div class="options">
+      <label><input type="radio" name="eq8" value="a"><span> fale te maja za male dlugosci</span></label>
+      <label><input type="radio" name="eq8" value="b"><span> fale te maja za duze dlugosci</span></label>
+      <label><input type="radio" name="eq8" value="c"><span> odbijaja sie i zalamuja w zjonizowanych czesciach atmosfery</span></label>
+      <label><input type="radio" name="eq8" value="d"><span> naruszyloby to umowy zakazujace militaryzacji kosmosu</span></label>
+    </div>
+    <button class="btn-check" onclick="checkExam('eq8','c','Jonosfera odbija i zalamuje pewne czestotliwosci radiowe (szczegolnie HF), nie pozwalajac im opuscic atmosfery.')">Sprawdz</button>
+    <div class="answer" id="eq8-a"></div>
+  </div>
+
+  <!-- Q9 -->
+  <div class="exam-card" id="eq9">
+    <div class="eq-head"><div class="question">9. Jaka moc przenosi nosna sygnalu AM, jesli m=10% a moc szczytowa = 24,2 kW?</div><span class="pts">5 pkt</span></div>
+    <div class="options">
+      <label><input type="radio" name="eq9" value="a"><span> 12,10 kW</span></label>
+      <label><input type="radio" name="eq9" value="b"><span> 20,00 kW</span></label>
+      <label><input type="radio" name="eq9" value="c"><span> 2,42 kW</span></label>
+      <label><input type="radio" name="eq9" value="d"><span> 21,78 kW</span></label>
+    </div>
+    <button class="btn-check" onclick="checkExam('eq9','b','P_max = P₀(1+m)². Stad: P₀ = P_max/(1+m)² = 24200/(1,1)² = 24200/1,21 = 20 000 W = 20 kW.')">Sprawdz</button>
+    <div class="answer" id="eq9-a"></div>
+  </div>
+
+  <!-- Q10 -->
+  <div class="exam-card" id="eq10">
+    <div class="eq-head"><div class="question">10. Jaka wartosc max osiagnie obwiednia sygnalu AM, jesli amplituda nosnej = 10V, m = 25%?</div><span class="pts">3 pkt</span></div>
+    <div class="options">
+      <label><input type="radio" name="eq10" value="a"><span> 10 V</span></label>
+      <label><input type="radio" name="eq10" value="b"><span> 7,5 V</span></label>
+      <label><input type="radio" name="eq10" value="c"><span> 12,5 V</span></label>
+      <label><input type="radio" name="eq10" value="d"><span> 2,5 V</span></label>
+    </div>
+    <button class="btn-check" onclick="checkExam('eq10','c','U_max = Uc(1+m) = 10 × (1+0,25) = 10 × 1,25 = 12,5 V.')">Sprawdz</button>
+    <div class="answer" id="eq10-a"></div>
+  </div>
+
+  <!-- Q11 -->
+  <div class="exam-card" id="eq11">
+    <div class="eq-head"><div class="question">11. Ktora modulacja nie pasuje do pozostalych: DSB-SC, FSK, PM, SSB, FM, AM?</div><span class="pts">1 pkt</span></div>
+    <div class="options">
+      <label><input type="radio" name="eq11" value="a"><span> DSB-SC</span></label>
+      <label><input type="radio" name="eq11" value="b"><span> FSK</span></label>
+      <label><input type="radio" name="eq11" value="c"><span> PM</span></label>
+      <label><input type="radio" name="eq11" value="d"><span> AM</span></label>
+    </div>
+    <button class="btn-check" onclick="checkExam('eq11','b','FSK to jedyna modulacja cyfrowa na liscie. Wszystkie inne (DSB-SC, PM, SSB, FM, AM) to modulacje analogowe.')">Sprawdz</button>
+    <div class="answer" id="eq11-a"></div>
+  </div>
+
+  <!-- Q12 -->
+  <div class="exam-card" id="eq12">
+    <div class="eq-head"><div class="question">12. Jakie sa zalety transmisji FM w stosunku do AM?</div><span class="pts">1 pkt</span></div>
+    <div class="options">
+      <label><input type="checkbox" name="eq12" value="a"><span> Precyzyjniej zdefiniowany obszar nadawania</span></label>
+      <label><input type="checkbox" name="eq12" value="b"><span> Mniejsze systemy antenowe</span></label>
+      <label><input type="checkbox" name="eq12" value="c"><span> Lepsza wartosc stosunku sygnalu do szumu</span></label>
+    </div>
+    <button class="btn-check" onclick="checkExamMulti('eq12',['a','c'],'Zalety FM: precyzyjniejszy zasieg + lepsze SNR. FM jest odporna na zakloczenia amplitudowe.')">Sprawdz</button>
+    <div class="answer" id="eq12-a"></div>
+  </div>
+
+  <!-- Q13 -->
+  <div class="exam-card" id="eq13">
+    <div class="eq-head"><div class="question">13. Jak zmienia sie na plaszczyznie IQ dlugosc wektora reprezentujacego modulacje PM?</div><span class="pts">1 pkt</span></div>
+    <div class="options">
+      <label><input type="radio" name="eq13" value="a"><span> proporcjonalnie do pochodnej</span></label>
+      <label><input type="radio" name="eq13" value="b"><span> pozostaje stala</span></label>
+      <label><input type="radio" name="eq13" value="c"><span> liniowo w czasie</span></label>
+      <label><input type="radio" name="eq13" value="d"><span> oscyluje sinusoidalnie</span></label>
+    </div>
+    <button class="btn-check" onclick="checkExam('eq13','b','W modulacji fazy (PM) zmienia sie tylko KAT wektora, nie jego dlugosc — amplituda jest stala.')">Sprawdz</button>
+    <div class="answer" id="eq13-a"></div>
+  </div>
+
+  <!-- Q14 -->
+  <div class="exam-card" id="eq14">
+    <div class="eq-head"><div class="question">14. Jak inaczej wyrazic max moc transmisji WiFi w Europie = 100 mW?</div><span class="pts">2 pkt</span></div>
+    <div class="options">
+      <label><input type="radio" name="eq14" value="a"><span> 20 dBm</span></label>
+      <label><input type="radio" name="eq14" value="b"><span> 10 dBm</span></label>
+      <label><input type="radio" name="eq14" value="c"><span> 0 dBm</span></label>
+      <label><input type="radio" name="eq14" value="d"><span> 30 dBm</span></label>
+    </div>
+    <button class="btn-check" onclick="checkExam('eq14','a','dBm = 10×log₁₀(P_mW). 10×log₁₀(100) = 10×2 = 20 dBm.')">Sprawdz</button>
+    <div class="answer" id="eq14-a"></div>
+  </div>
+
+  <!-- Q15 -->
+  <div class="exam-card" id="eq15">
+    <div class="eq-head"><div class="question">15. Nosna sygnalu AM z pasma 323 kHz – 349 kHz. Na jakiej czestotliwosci?</div><span class="pts">2 pkt</span></div>
+    <div class="options">
+      <label><input type="radio" name="eq15" value="a"><span> 323 kHz</span></label>
+      <label><input type="radio" name="eq15" value="b"><span> 336 kHz</span></label>
+      <label><input type="radio" name="eq15" value="c"><span> 349 kHz</span></label>
+      <label><input type="radio" name="eq15" value="d"><span> 333 kHz</span></label>
+    </div>
+    <button class="btn-check" onclick="checkExam('eq15','b','Nosna AM jest w srodku pasma: f₀ = (323+349)/2 = 672/2 = 336 kHz.')">Sprawdz</button>
+    <div class="answer" id="eq15-a"></div>
+  </div>
+
+  <!-- Q16 -->
+  <div class="exam-card" id="eq16">
+    <div class="eq-head"><div class="question">16. FM: fm=16 kHz, Δf=80 kHz. Jak szerokie pasmo (Carson)?</div><span class="pts">5 pkt</span></div>
+    <div class="options">
+      <label><input type="radio" name="eq16" value="a"><span> 32 kHz</span></label>
+      <label><input type="radio" name="eq16" value="b"><span> 160 kHz</span></label>
+      <label><input type="radio" name="eq16" value="c"><span> 192 kHz</span></label>
+      <label><input type="radio" name="eq16" value="d"><span> 112 kHz</span></label>
+      <label><input type="radio" name="eq16" value="e"><span> 80 kHz</span></label>
+    </div>
+    <button class="btn-check" onclick="checkExam('eq16','c','Carson: B = 2(fm + Δf) = 2(16+80) = 2×96 = 192 kHz. β=80/16=5 (WBFM).')">Sprawdz</button>
+    <div class="answer" id="eq16-a"></div>
+  </div>
+
+  <!-- Q17 -->
+  <div class="exam-card" id="eq17">
+    <div class="eq-head"><div class="question">17. Ile punktow konstelacji MPSK, jesli w symbolu wysylane pol bajtu?</div><span class="pts">3 pkt</span></div>
+    <div class="options">
+      <label><input type="radio" name="eq17" value="a"><span> 16</span></label>
+      <label><input type="radio" name="eq17" value="b"><span> 8</span></label>
+      <label><input type="radio" name="eq17" value="c"><span> 4</span></label>
+      <label><input type="radio" name="eq17" value="d"><span> 32</span></label>
+    </div>
+    <button class="btn-check" onclick="checkExam('eq17','a','Pol bajtu = 4 bity. Liczba punktow konstelacji = 2⁴ = 16.')">Sprawdz</button>
+    <div class="answer" id="eq17-a"></div>
+  </div>
+
+  <!-- Q18 -->
+  <div class="exam-card" id="eq18">
+    <div class="eq-head"><div class="question">18. Ktore parametry sygnalu moga byc modulowane?</div><span class="pts">1 pkt</span></div>
+    <div class="options">
+      <label><input type="checkbox" name="eq18" value="a"><span> amplituda</span></label>
+      <label><input type="checkbox" name="eq18" value="b"><span> faza</span></label>
+      <label><input type="checkbox" name="eq18" value="c"><span> czestotliwosc</span></label>
+    </div>
+    <button class="btn-check" onclick="checkExamMulti('eq18',['a','b','c'],'Wszystkie trzy: amplituda (AM), faza (PM), czestotliwosc (FM). Kazdy z tych parametrow moze byc modulowany.')">Sprawdz</button>
+    <div class="answer" id="eq18-a"></div>
+  </div>
+
+  <!-- Q19 -->
+  <div class="exam-card" id="eq19">
+    <div class="eq-head"><div class="question">19. Skladowa roznicowa sygnalu 108-118 MHz zmieszanego z fp=10,7 MHz?</div><span class="pts">3 pkt</span></div>
+    <div class="options">
+      <label><input type="radio" name="eq19" value="a"><span> 97,3 – 107,3 MHz</span></label>
+      <label><input type="radio" name="eq19" value="b"><span> 97,3 – 128,7 MHz</span></label>
+      <label><input type="radio" name="eq19" value="c"><span> 113,35 – 112,65 MHz</span></label>
+      <label><input type="radio" name="eq19" value="d"><span> 118,7 – 128,7 MHz</span></label>
+    </div>
+    <button class="btn-check" onclick="checkExam('eq19','a','Skladowa roznicowa: f_out = f_in - f_LO. 108-10,7=97,3 MHz do 118-10,7=107,3 MHz.')">Sprawdz</button>
+    <div class="answer" id="eq19-a"></div>
+  </div>
+
+  <!-- Q20 -->
+  <div class="exam-card" id="eq20">
+    <div class="eq-head"><div class="question">20. Czego wymagaja transmisje na pasmach ISM?</div><span class="pts">1 pkt</span></div>
+    <div class="options">
+      <label><input type="checkbox" name="eq20" value="a"><span> zachowania rezimow mocy i czasu transmisji</span></label>
+      <label><input type="checkbox" name="eq20" value="b"><span> wniesienia oplaty do KRRiT</span></label>
+      <label><input type="checkbox" name="eq20" value="c"><span> posiadania licencji wydanej przez UKE</span></label>
+    </div>
+    <button class="btn-check" onclick="checkExamMulti('eq20',['a'],'Pasma ISM nie wymagaja indywidualnej licencji — wystarczy przestrzegac rezimow mocy i czasu transmisji (duty cycle).')">Sprawdz</button>
+    <div class="answer" id="eq20-a"></div>
+  </div>
+
+  <!-- Q21 -->
+  <div class="exam-card" id="eq21">
+    <div class="eq-head"><div class="question">21. Ktora czestotliwosc jest najblizsza fali radiowej o dlugosci 0,125 m?</div><span class="pts">2 pkt</span></div>
+    <div class="options">
+      <label><input type="radio" name="eq21" value="a"><span> 2,4 THz</span></label>
+      <label><input type="radio" name="eq21" value="b"><span> 2,4 GHz</span></label>
+      <label><input type="radio" name="eq21" value="c"><span> 2,4 MHz</span></label>
+      <label><input type="radio" name="eq21" value="d"><span> 2,4 kHz</span></label>
+    </div>
+    <button class="btn-check" onclick="checkExam('eq21','b','f = c/λ = 3×10⁸ / 0,125 = 2,4×10⁹ Hz = 2,4 GHz. To pasmo WiFi!')">Sprawdz</button>
+    <div class="answer" id="eq21-a"></div>
+  </div>
+
+  <!-- Q22 -->
+  <div class="exam-card" id="eq22">
+    <div class="eq-head"><div class="question">22. Jak nazywaja sie skladowe plaszczyzny wektorowej (IQ) sygnalow radiowych?</div><span class="pts">1 pkt</span></div>
+    <div class="options">
+      <label><input type="radio" name="eq22" value="a"><span> amplitudowa i czestotliwosciowa</span></label>
+      <label><input type="radio" name="eq22" value="b"><span> synfazowa i kwadraturowa</span></label>
+      <label><input type="radio" name="eq22" value="c"><span> rzeczywista i urojona</span></label>
+      <label><input type="radio" name="eq22" value="d"><span> fazowa i kwadratowa</span></label>
+    </div>
+    <button class="btn-check" onclick="checkExam('eq22','b','Skladowe IQ: I = synfazowa (In-phase), Q = kwadraturowa (Quadrature). Prostopadle wzgledem siebie.')">Sprawdz</button>
+    <div class="answer" id="eq22-a"></div>
+  </div>
+
+  <!-- Q23 -->
+  <div class="exam-card" id="eq23">
+    <div class="eq-head"><div class="question">23. Co oficjalnie oznacza &bdquo;radiodyfuzja&rdquo;?</div><span class="pts">1 pkt</span></div>
+    <div class="options">
+      <label><input type="radio" name="eq23" value="a"><span> specyficzna, jednokierunkowa komunikacja radiowa</span></label>
+      <label><input type="radio" name="eq23" value="b"><span> rozpraszanie sygnalu radiowego w atmosferze</span></label>
+      <label><input type="radio" name="eq23" value="c"><span> mieszanie sie fal sygnalow radiowych</span></label>
+      <label><input type="radio" name="eq23" value="d"><span> nielegalne wykorzystanie czestotliwosci</span></label>
+    </div>
+    <button class="btn-check" onclick="checkExam('eq23','a','Radiodyfuzja = broadcasting = specyficzna, jednokierunkowa komunikacja radiowa (np. radio FM, TV).')">Sprawdz</button>
+    <div class="answer" id="eq23-a"></div>
+  </div>
+
+  <!-- Q24 -->
+  <div class="exam-card" id="eq24">
+    <div class="eq-head"><div class="question">24. Jaka jest amplituda nosnej, jesli AM o m=50% osiaga wartosc max 12V?</div><span class="pts">4 pkt</span></div>
+    <div class="options">
+      <label><input type="radio" name="eq24" value="a"><span> 12 V</span></label>
+      <label><input type="radio" name="eq24" value="b"><span> 6 V</span></label>
+      <label><input type="radio" name="eq24" value="c"><span> 10 V</span></label>
+      <label><input type="radio" name="eq24" value="d"><span> 8 V</span></label>
+    </div>
+    <button class="btn-check" onclick="checkExam('eq24','d','U_max = Uc(1+m). Stad: Uc = U_max/(1+m) = 12/(1+0,5) = 12/1,5 = 8V.')">Sprawdz</button>
+    <div class="answer" id="eq24-a"></div>
+  </div>
+
+  <!-- Q25 -->
+  <div class="exam-card" id="eq25">
+    <div class="eq-head"><div class="question">25. Na jaka odleglosc rozchodza sie fale radiowe w prozni?</div><span class="pts">2 pkt</span></div>
+    <div class="options">
+      <label><input type="radio" name="eq25" value="a"><span> 1E12 m – 1E24 m</span></label>
+      <label><input type="radio" name="eq25" value="b"><span> 1E6 m – 1E12 m</span></label>
+      <label><input type="radio" name="eq25" value="c"><span> < 1E6 m</span></label>
+      <label><input type="radio" name="eq25" value="d"><span> > 1E24 m</span></label>
+    </div>
+    <button class="btn-check" onclick="checkExam('eq25','d','Fale radiowe w prozni rozchodza sie praktycznie na dowolna odleglosc (>1E24 m). Odbieramy sygnaly z odleglych galaktyk!')">Sprawdz</button>
+    <div class="answer" id="eq25-a"></div>
+  </div>
+
+  <div style="text-align:center;margin-top:1.5rem;">
+    <button class="btn-check" style="font-size:1rem;padding:0.7rem 2rem;" onclick="showScore()">Pokaz wynik</button>
+  </div>
+</div>
+
+</div><!-- container -->
+
+<script>
+// ===== CARD TOGGLE =====
+document.querySelectorAll('.card-header').forEach(h=>{
+  h.addEventListener('click',()=>{h.parentElement.classList.toggle('open');updateProgress();});
+});
+function updateProgress(){
+  const t=document.querySelectorAll('.card').length, o=document.querySelectorAll('.card.open').length;
+  const p=Math.round(o/t*100);
+  document.getElementById('progressFill').style.width=p+'%';
+  document.getElementById('progressText').textContent=`Przerobiono ${o} z ${t} tematow (${p}%)`;
+}
+
+// ===== EXAM (radio) =====
+const examAnswers={};
+function checkExam(id,correct,explanation){
+  const sel=document.querySelector(`input[name="${id}"]:checked`);
+  const d=document.getElementById(id+'-a');
+  if(!sel){d.className='answer show wrong';d.innerHTML='Zaznacz odpowiedz!';return;}
+  examAnswers[id]=sel.value===correct;
+  if(sel.value===correct){d.className='answer show correct';d.innerHTML='&#10004; '+explanation;}
+  else{d.className='answer show wrong';d.innerHTML='&#10008; Blednie. '+explanation;}
+}
+function checkExamMulti(id,correct,explanation){
+  const checked=[...document.querySelectorAll(`input[name="${id}"]:checked`)].map(i=>i.value);
+  const d=document.getElementById(id+'-a');
+  if(!checked.length){d.className='answer show wrong';d.innerHTML='Zaznacz odpowiedz!';return;}
+  const ok=correct.length===checked.length&&correct.every(c=>checked.includes(c));
+  examAnswers[id]=ok;
+  if(ok){d.className='answer show correct';d.innerHTML='&#10004; '+explanation;}
+  else{d.className='answer show wrong';d.innerHTML='&#10008; Blednie. '+explanation;}
+}
+function showScore(){
+  const answered=Object.keys(examAnswers).length;
+  const correct=Object.values(examAnswers).filter(v=>v).length;
+  const total=25;
+  const d=document.getElementById('examScore');
+  d.style.display='block';
+  document.getElementById('scoreVal').textContent=correct+' / '+answered;
+  document.getElementById('scoreVal').style.color=correct/answered>0.6?'var(--green)':'var(--red)';
+  document.getElementById('scoreText').textContent=`Odpowiedziano na ${answered} z ${total} pytan. Poprawnych: ${correct} (${Math.round(correct/Math.max(answered,1)*100)}%).`;
+  d.scrollIntoView({behavior:'smooth'});
+}
+
+// ===== FLASHCARDS =====
+const flashcards=[
+  {q:"Co to modulacja?",a:"Przeksztalcenie nosnej c(t) przez sygnal modulujacy m(t) w celu niesienia informacji."},
+  {q:"Wzor: dlugosc fali?",a:"λ = c/f\nc ≈ 3×10⁸ m/s\n0,125 m → 2,4 GHz (WiFi)"},
+  {q:"Glebokosc modulacji AM?",a:"m = (Umax-Umin)/(Umax+Umin)\nm = Um/Uc\nUmax = Uc(1+m)"},
+  {q:"Sprawnosc AM?",a:"μ = m²/(2+m²)\nm=1 → μ = 1/3 ≈ 33,3%"},
+  {q:"Moc AM: srednia i szczytowa?",a:"Srednia: P_AM = P₀(1+m²/2)\nSzczytowa: P_max = P₀(1+m)²\nm=1 → P_max = 4P₀"},
+  {q:"Czym rozni sie DSB-SC od AM?",a:"DSB-SC: nosna wytlumiona\nCala moc w wstegach bocznych\nWymaga demodulacji koherentnej"},
+  {q:"Co to SSB?",a:"Single Sideband — 1 wstega boczna\nPolowa pasma AM\nMetody: fazowa, Weavera, filtrowa"},
+  {q:"Indeks modulacji FM?",a:"β = Δf / fm\nΔf — dewiacja czestotliwosci\nfm — czestotliwosc modulujaca"},
+  {q:"Wzor Carsona (pasmo FM)?",a:"B = 2(fm + Δf) = 2fm(1+β)\nNBFM: β ≤ 4\nWBFM: β > 4"},
+  {q:"Szum termiczny Johnsona?",a:"Pn = kTB\nUn = √(4kTΔfR)\nk = 1,38×10⁻²³ J/K\n1kΩ @ 25°C → 4 nV/√Hz"},
+  {q:"Kolory szumu?",a:"Bialy: plaski (1)\nRozowy: 1/f (-3dB/okt)\nCzerwony: 1/f² (-6dB/okt)\nNiebieski: f (+3dB/okt)\nFioletowy: f² (+6dB/okt)"},
+  {q:"Bity na symbol (MPSK)?",a:"log₂(M)\nBPSK:1, QPSK:2, 8PSK:3\nPol bajtu = 4 bity → 16 punktow"},
+  {q:"Co to QAM?",a:"Quadrature Amplitude Modulation\ns(t) = x(t)cos + y(t)sin\nWyzsza wydajnosc, mniej odporna na szum\nWiFi 6: 1024-QAM"},
+  {q:"OFDM?",a:"Orthogonal FDM\nN podnosnych, min. odstepy\nRealizacja: IFFT/FFT\nWiFi, LTE, DVB-T, DAB+"},
+  {q:"CDMA — ortogonalnosc?",a:"Iloczyn skalarny roznych kodow = 0\nWszystkie stacje jednoczesnie\nKwadrat kodu = n (liczba stacji)"},
+  {q:"FHSS vs DSSS?",a:"FHSS: pseudolosowe skoki po czestotliwosciach\nDSSS: mnozenie z kodem (chipy)\n802.11b: 11-el. kod Barkera"},
+  {q:"Zalety FM nad AM?",a:"1. Mniejszy wplyw zaklocen\n2. Lepsze SNR\n3. Stala moc srednia\n4. Wieksza dynamika"},
+  {q:"Gilbert Cell?",a:"Mnoznik 4-kwadrantowy\nModulator, mieszacz, AGC, detektor fazy"},
+  {q:"100 mW = ? dBm",a:"10×log₁₀(100) = 20 dBm\n(max WiFi w UE)"},
+  {q:"ITU?",a:"International Telecommunication Union\nGlobalna wspolpraca radiowa\n3 regiony czetstotliwosciowe"},
+  {q:"Skladowe IQ?",a:"I = synfazowa (In-phase)\nQ = kwadraturowa (Quadrature)\nProstopadle wzgledem siebie"},
+  {q:"Radiodyfuzja?",a:"Specyficzna, jednokierunkowa komunikacja radiowa\n= broadcasting (radio, TV)"},
+  {q:"Pasma ISM?",a:"Industrial, Scientific, Medical\nBez licencji indywidualnej\nWymagane: rezimy mocy i duty cycle"},
+  {q:"Mieszanie czestotliwosci?",a:"f_out = f_in ± f_LO\nSkladowa roznicowa: f_in - f_LO\nSkladowa sumacyjna: f_in + f_LO"},
+  {q:"Wydajnosc widmowa — tabela?",a:"BPSK: 0,5 bit/s/Hz\nQPSK: 1,0\nMSK: 0,667\n16-QAM: 2,0\n64-QAM: 3,0"}
+];
+
+let fcIdx=0;
+function showCard(){
+  document.getElementById('fc').classList.remove('flipped');
+  document.getElementById('fcFront').textContent=flashcards[fcIdx].q;
+  document.getElementById('fcBack').textContent=flashcards[fcIdx].a;
+  document.getElementById('fcCounter').textContent=`${fcIdx+1} / ${flashcards.length}`;
+}
+function flipCard(){document.getElementById('fc').classList.toggle('flipped');}
+function nextCard(){fcIdx=(fcIdx+1)%flashcards.length;showCard();}
+function prevCard(){fcIdx=(fcIdx-1+flashcards.length)%flashcards.length;showCard();}
+showCard();
+
+// ===== NAV =====
+document.querySelectorAll('.top-nav a').forEach(a=>{
+  a.addEventListener('click',e=>{e.preventDefault();document.querySelector(a.getAttribute('href'))?.scrollIntoView({behavior:'smooth'});});
+});
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){
+    document.querySelectorAll('.top-nav a').forEach(a=>a.classList.remove('active'));
+    document.querySelector(`.top-nav a[href="#${e.target.id}"]`)?.classList.add('active');
+  }});
+},{threshold:0.1});
+['intro','am','angle','digital','band','youtube','formulas','flashcards','exam'].forEach(id=>{
+  const el=document.getElementById(id);if(el)obs.observe(el);
+});
+</script>
+</body>
+</html>
