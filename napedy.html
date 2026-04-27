@@ -1,0 +1,1648 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sterowanie Napędów Elektrycznych — Kolokwium</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Serif:ital,wght@0,300;0,400;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false});"></script>
+<style>
+  :root {
+    --bg: #0d0e10;
+    --bg2: #16181c;
+    --bg3: #1e2026;
+    --bg4: #252830;
+    --border: #2a2d35;
+    --border2: #383c46;
+    --text: #e8eaf0;
+    --muted: #7a8090;
+    --dim: #4a4f5a;
+    --accent: #d97706;
+    --accent2: #f59e0b;
+    --accent-soft: rgba(217,119,6,0.12);
+    --accent-border: rgba(217,119,6,0.35);
+    --green: #22c55e;
+    --red: #ef4444;
+    --blue: #4f8ef7;
+    --purple: #a855f7;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'IBM Plex Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    line-height: 1.6;
+  }
+
+  /* Subtle grid background */
+  body::before {
+    content: ''; position: fixed; inset: 0;
+    background-image:
+      linear-gradient(rgba(217,119,6,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(217,119,6,0.025) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none; z-index: 0;
+  }
+
+  /* HEADER */
+  header {
+    border-bottom: 1px solid var(--border);
+    padding: 22px 40px;
+    display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0;
+    background: rgba(13,14,16,0.92);
+    backdrop-filter: blur(12px);
+    z-index: 100;
+  }
+  .logo {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    color: var(--accent2);
+    letter-spacing: 0.08em;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .logo::before {
+    content: ''; width: 8px; height: 8px;
+    background: var(--accent); border-radius: 50%;
+    box-shadow: 0 0 12px var(--accent);
+  }
+  .deadline {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--red);
+    background: rgba(239,68,68,0.08);
+    border: 1px solid rgba(239,68,68,0.25);
+    padding: 6px 12px; border-radius: 3px;
+    letter-spacing: 0.06em; text-transform: uppercase;
+  }
+
+  /* HERO */
+  .hero {
+    padding: 80px 40px 50px;
+    border-bottom: 1px solid var(--border);
+    position: relative; z-index: 1;
+  }
+  .hero-inner { max-width: 1200px; margin: 0 auto; }
+  .hero-tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px; color: var(--accent2);
+    letter-spacing: 0.18em; text-transform: uppercase;
+    margin-bottom: 20px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .hero-tag::after {
+    content: ''; flex: 1; max-width: 60px; height: 1px;
+    background: var(--accent-border);
+  }
+  h1 {
+    font-family: 'IBM Plex Serif', serif;
+    font-size: clamp(34px, 5.5vw, 56px);
+    font-weight: 300; line-height: 1.05; margin-bottom: 24px;
+    letter-spacing: -0.02em;
+  }
+  h1 em { font-style: italic; color: var(--accent2); font-weight: 400; }
+  .hero-sub {
+    font-size: 16px; color: var(--muted);
+    max-width: 640px; line-height: 1.7;
+  }
+  .hero-meta {
+    display: flex; gap: 24px; margin-top: 32px;
+    flex-wrap: wrap;
+  }
+  .meta-item {
+    display: flex; flex-direction: column; gap: 4px;
+  }
+  .meta-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px; color: var(--dim);
+    letter-spacing: 0.12em; text-transform: uppercase;
+  }
+  .meta-value { font-size: 14px; color: var(--text); }
+
+  /* TOPIC NAV */
+  .topic-nav {
+    padding: 28px 40px;
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    position: sticky; top: 71px; z-index: 50;
+    backdrop-filter: blur(12px);
+  }
+  .topic-nav-inner {
+    max-width: 1200px; margin: 0 auto;
+    display: flex; gap: 8px; flex-wrap: wrap;
+  }
+  .topic-pill {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    padding: 8px 14px; border-radius: 3px;
+    cursor: pointer; transition: all 0.2s;
+    letter-spacing: 0.04em;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .topic-pill:hover {
+    color: var(--accent2);
+    border-color: var(--accent-border);
+  }
+  .topic-pill.active {
+    color: var(--accent2);
+    background: var(--accent-soft);
+    border-color: var(--accent-border);
+  }
+  .topic-pill .num {
+    color: var(--dim); font-weight: 600;
+  }
+  .topic-pill.active .num { color: var(--accent); }
+
+  /* MAIN CONTENT */
+  main {
+    padding: 50px 40px 100px;
+    max-width: 1200px; margin: 0 auto;
+    position: relative; z-index: 1;
+  }
+  .panel { display: none; animation: fadeIn 0.4s ease; }
+  .panel.active { display: block; }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .panel-head {
+    display: flex; align-items: baseline; gap: 16px;
+    margin-bottom: 12px;
+  }
+  .panel-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 14px; color: var(--accent);
+    letter-spacing: 0.1em;
+  }
+  .panel-source {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px; color: var(--dim);
+    letter-spacing: 0.1em; text-transform: uppercase;
+    margin-left: auto;
+    background: var(--bg3); padding: 4px 10px;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+  }
+  .panel h2 {
+    font-family: 'IBM Plex Serif', serif;
+    font-size: clamp(24px, 3.5vw, 36px);
+    font-weight: 400; line-height: 1.2;
+    margin-bottom: 36px;
+    letter-spacing: -0.01em;
+  }
+
+  /* QUESTION BLOCK */
+  .question-block {
+    background: var(--bg2);
+    border-left: 3px solid var(--accent);
+    padding: 24px 28px;
+    margin-bottom: 36px;
+    border-radius: 0 4px 4px 0;
+  }
+  .question-block .label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px; color: var(--accent2);
+    letter-spacing: 0.15em; text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .question-block .text {
+    font-family: 'IBM Plex Serif', serif;
+    font-size: 17px; color: var(--text);
+    font-style: italic; line-height: 1.6;
+  }
+
+  /* SECTION */
+  section.solution { margin-bottom: 32px; }
+  section.solution h3 {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px; color: var(--accent2);
+    letter-spacing: 0.12em; text-transform: uppercase;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 8px;
+  }
+  section.solution h3::before {
+    content: ''; width: 6px; height: 6px;
+    background: var(--accent); transform: rotate(45deg);
+  }
+  section.solution p { margin-bottom: 14px; color: var(--text); }
+  section.solution p strong { color: var(--accent2); font-weight: 500; }
+
+  /* MATH BLOCKS */
+  .math-block {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    padding: 18px 24px;
+    margin: 16px 0;
+    border-radius: 3px;
+    overflow-x: auto;
+    text-align: center;
+  }
+  .math-block.highlight {
+    border-color: var(--accent-border);
+    background: var(--accent-soft);
+  }
+  .math-block.highlight::before {
+    content: '★'; position: absolute;
+    color: var(--accent); font-size: 11px;
+  }
+  .math-block { position: relative; }
+  .katex-display { margin: 0 !important; }
+
+  /* LISTS */
+  ol, ul { margin: 12px 0 16px 24px; }
+  li { margin-bottom: 8px; padding-left: 4px; }
+  li::marker { color: var(--accent); }
+
+  /* CODE/SCHEME */
+  pre.scheme {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    padding: 20px 24px;
+    border-radius: 3px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px; color: var(--text);
+    line-height: 1.55; overflow-x: auto;
+    margin: 16px 0;
+  }
+  pre.scheme .arr { color: var(--accent2); }
+  pre.scheme .lbl { color: var(--blue); }
+
+  /* CALLOUTS */
+  .callout {
+    background: var(--bg3);
+    border-left: 3px solid var(--accent);
+    padding: 16px 22px;
+    margin: 18px 0;
+    border-radius: 0 3px 3px 0;
+    font-style: italic;
+    color: var(--text);
+    font-family: 'IBM Plex Serif', serif;
+    font-size: 15px;
+  }
+  .callout.warning { border-color: var(--red); background: rgba(239,68,68,0.06); }
+  .callout.info { border-color: var(--blue); background: rgba(79,142,247,0.06); }
+  .callout strong { font-style: normal; color: var(--accent2); font-weight: 600; }
+
+  /* TABLES */
+  table {
+    width: 100%; border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 14px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  th, td {
+    text-align: left; padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  th {
+    background: var(--bg3);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px; color: var(--accent2);
+    letter-spacing: 0.08em; text-transform: uppercase;
+    font-weight: 500;
+  }
+  tr:last-child td { border-bottom: none; }
+  td.muted { color: var(--muted); font-size: 13px; }
+  td code {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px; color: var(--accent2);
+    background: var(--bg3); padding: 2px 6px;
+    border-radius: 2px;
+  }
+
+  /* TWO COLUMN */
+  .two-col {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 24px; margin: 18px 0;
+  }
+  @media (max-width: 768px) {
+    .two-col { grid-template-columns: 1fr; }
+    header, .hero, .topic-nav, main { padding-left: 20px; padding-right: 20px; }
+    .topic-nav { top: 65px; padding-top: 18px; padding-bottom: 18px; }
+  }
+
+  /* TAGS */
+  .tag-row {
+    display: flex; gap: 8px; margin: 12px 0 18px;
+    flex-wrap: wrap;
+  }
+  .tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    padding: 4px 10px; border-radius: 2px;
+    letter-spacing: 0.06em; text-transform: uppercase;
+  }
+  .tag.hot { color: var(--accent2); border-color: var(--accent-border); background: var(--accent-soft); }
+
+  /* SCHEMA BOXES */
+  .scheme-flow {
+    display: flex; align-items: center; justify-content: center;
+    gap: 8px; padding: 20px;
+    background: var(--bg3); border: 1px solid var(--border);
+    border-radius: 3px; margin: 18px 0;
+    overflow-x: auto; flex-wrap: wrap;
+  }
+  .scheme-flow .box {
+    background: var(--bg2); border: 1px solid var(--border2);
+    padding: 8px 14px; border-radius: 3px;
+    font-family: 'IBM Plex Mono', monospace; font-size: 12px;
+    white-space: nowrap;
+  }
+  .scheme-flow .box.accent { border-color: var(--accent-border); color: var(--accent2); }
+  .scheme-flow .arrow { color: var(--dim); font-size: 14px; }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 32px 40px;
+    display: flex; justify-content: space-between;
+    align-items: center; flex-wrap: wrap; gap: 16px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px; color: var(--dim);
+    letter-spacing: 0.05em;
+    background: var(--bg2);
+  }
+  footer .accent-text { color: var(--accent2); }
+
+  /* MOBILE TWEAKS */
+  @media (max-width: 600px) {
+    .panel-head { flex-wrap: wrap; }
+    .panel-source { margin-left: 0; }
+  }
+
+  /* ============ SVG DIAGRAMS ============ */
+  .svg-scheme {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 24px 16px;
+    margin: 18px 0;
+    overflow-x: auto;
+  }
+  .svg-scheme svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-width: 880px;
+    margin: 0 auto;
+  }
+  .diagram { font-family: 'IBM Plex Sans', sans-serif; }
+  .diag-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    fill: var(--accent2);
+    letter-spacing: 0.14em;
+  }
+  .diag-section-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9.5px;
+    fill: var(--dim);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .diag-box { fill: var(--bg2); stroke: var(--border2); stroke-width: 1.3; }
+  .diag-box-pi { fill: var(--bg2); stroke: var(--accent2); stroke-width: 1.5; }
+  .diag-box-accent { fill: rgba(217,119,6,0.12); stroke: var(--accent-border); stroke-width: 1.5; }
+  .diag-box-power { fill: rgba(79,142,247,0.08); stroke: rgba(79,142,247,0.4); stroke-width: 1.3; }
+  .diag-box-est { fill: rgba(168,85,247,0.08); stroke: rgba(168,85,247,0.4); stroke-width: 1.3; }
+  .diag-text { font-family: 'IBM Plex Sans', sans-serif; font-size: 12.5px; fill: var(--text); font-weight: 500; }
+  .diag-text-small { font-family: 'IBM Plex Sans', sans-serif; font-size: 10.5px; fill: var(--text); }
+  .diag-text-pi { font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; fill: var(--accent2); font-weight: 600; }
+  .diag-label { font-family: 'IBM Plex Serif', serif; font-size: 13px; fill: var(--text); font-style: italic; }
+  .diag-label-accent { font-family: 'IBM Plex Serif', serif; font-size: 13px; fill: var(--accent2); font-style: italic; font-weight: 500; }
+  .diag-label-blue { font-family: 'IBM Plex Serif', serif; font-size: 12px; fill: var(--blue); font-style: italic; }
+  .diag-label-purple { font-family: 'IBM Plex Serif', serif; font-size: 12px; fill: var(--purple); font-style: italic; }
+  .diag-label-small { font-family: 'IBM Plex Serif', serif; font-size: 10.5px; fill: var(--muted); font-style: italic; }
+  .diag-line { stroke: var(--muted); stroke-width: 1.4; fill: none; }
+  .diag-line-accent { stroke: var(--accent2); stroke-width: 2; fill: none; }
+  .diag-line-fb { stroke: var(--blue); stroke-width: 1.2; stroke-dasharray: 4 3; fill: none; opacity: 0.85; }
+  .diag-line-est { stroke: var(--purple); stroke-width: 1.2; stroke-dasharray: 5 3; fill: none; opacity: 0.9; }
+  .diag-sum { fill: var(--bg2); stroke: var(--accent-border); stroke-width: 1.5; }
+  .diag-sign { font-family: 'IBM Plex Sans', sans-serif; font-size: 10px; fill: var(--muted); font-weight: 600; text-anchor: middle; }
+  .diag-junction { fill: var(--muted); }
+  .diag-legend-text { font-family: 'IBM Plex Mono', monospace; font-size: 10px; fill: var(--muted); letter-spacing: 0.05em; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">SterNap.exam · 2026</div>
+  <div class="deadline">⏰ Kolos jutro</div>
+</header>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-tag">Egzamin · Kolokwium termin 1</div>
+    <h1>Sterowanie napędów<br><em>elektrycznych</em></h1>
+    <div class="hero-sub">
+      Bank pytań z 3 poprzednich kolokwiów (T1 2023, kolokwium 2023, kolos 2024) wraz z gotowymi odpowiedziami.
+      Zadania wyciągnięte ze źródeł, rozwiązania zgodne ze schematem prowadzącego.
+    </div>
+    <div class="hero-meta">
+      <div class="meta-item">
+        <span class="meta-label">Pytań w bazie</span>
+        <span class="meta-value">10 (8 historycznych + 2 prawdopodobne)</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Wykładowca</span>
+        <span class="meta-value">prof. ISEP</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Czas trwania</span>
+        <span class="meta-value">~60–75 min</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<nav class="topic-nav">
+  <div class="topic-nav-inner">
+    <button class="topic-pill active" onclick="showPanel(0)"><span class="num">01</span> Transmitancja DC</button>
+    <button class="topic-pill" onclick="showPanel(1)"><span class="num">02</span> Inercja I rzędu</button>
+    <button class="topic-pill" onclick="showPanel(2)"><span class="num">03</span> Regulator stanu</button>
+    <button class="topic-pill" onclick="showPanel(3)"><span class="num">04</span> FOC PMSM</button>
+    <button class="topic-pill" onclick="showPanel(4)"><span class="num">05</span> RFOC klatkowy</button>
+    <button class="topic-pill" onclick="showPanel(5)"><span class="num">06</span> Estymator $\psi_s$</button>
+    <button class="topic-pill" onclick="showPanel(6)"><span class="num">07</span> Reg. położenia</button>
+    <button class="topic-pill" onclick="showPanel(7)"><span class="num">08</span> Transm. zastępcza</button>
+    <button class="topic-pill" onclick="showPanel(8)"><span class="num">09</span> Optimum: M vs S</button>
+    <button class="topic-pill" onclick="showPanel(9)"><span class="num">10</span> Założenia AC</button>
+  </div>
+</nav>
+
+<main>
+
+<!-- PANEL 1: Transmitancja DC -->
+<div class="panel active">
+  <div class="panel-head">
+    <span class="panel-num">[ 01 / 10 ]</span>
+    <span class="panel-source">Materiały_1.docx · T1 · 2023-06-07</span>
+  </div>
+  <h2>Transmitancja DC drive z wejściem $u_s$ i wyjściem $i_a$</h2>
+  <div class="tag-row">
+    <span class="tag hot">★ powtarza się</span>
+    <span class="tag">silnik prądu stałego</span>
+    <span class="tag">przekształtnik</span>
+  </div>
+
+  <div class="question-block">
+    <div class="label">Treść zadania</div>
+    <div class="text">
+      Dany jest schemat symulacyjny przekształtnikowego napędu z silnikiem prądu stałego (DC).
+      Podać wzór na transmitancję dla układu z wejściem „$u_s$" i wyjściem „$i_a$".
+      Przyjąć $M_o = 0$.
+    </div>
+  </div>
+
+  <section class="solution">
+    <h3>Rozwiązanie pełne (z wpływem $\psi\omega_m$)</h3>
+    <p>Z modelu silnika i przekształtnika:</p>
+    <div class="math-block">$$G_{przek}(s) = \frac{k_p}{\tau_p s + 1}, \qquad G_1(s) = \frac{1/R_a}{\tau_e s + 1} \cdot \frac{1}{1 + \frac{1/R_a}{\tau_e s + 1} \cdot \frac{\psi^2}{J_z s}}$$</div>
+    <div class="math-block highlight">$$G(s) = \frac{i_a(s)}{u_s(s)} = \frac{k_p}{\tau_p s + 1} \cdot G_1(s)$$</div>
+  </section>
+
+  <section class="solution">
+    <h3>Rozwiązanie uproszczone (zalecane przez prowadzącego)</h3>
+    <p>Pomijamy wpływ zmian prędkości kątowej (przerywamy sprzężenie od $\psi\omega_m$):</p>
+    <div class="math-block highlight">$$G(s) = \frac{k_p}{\tau_p s + 1} \cdot \frac{1/R_a}{\tau_e s + 1}$$</div>
+    <div class="callout warning">
+      <strong>UWAGA — bez tego komentarza punkty mogą polecieć:</strong>
+      „W tym przypadku konieczny jest komentarz, że <strong>szybkość zmian prądu jest zdecydowanie większa od szybkości zmian prędkości kątowej</strong>."
+      To dosłowne sformułowanie z rozwiązania prowadzącego.
+    </div>
+  </section>
+
+  <section class="solution">
+    <h3>Stałe czasowe — przypomnienie</h3>
+    <table>
+      <tr><th>Stała</th><th>Wzór</th><th>Wartość typowa</th></tr>
+      <tr><td>elektromagnetyczna</td><td>$\tau_e = L_a / R_a$</td><td class="muted">ms (szybka)</td></tr>
+      <tr><td>mechaniczna</td><td>$\tau_t = J_z / c_t$</td><td class="muted">100ms–s (wolna)</td></tr>
+      <tr><td>przekształtnika</td><td>$\tau_p = \frac{1}{2}T_{PWM}$</td><td class="muted">~50–100 µs</td></tr>
+    </table>
+    <p>W napędach: <strong>$\tau_t \gg \tau_e \gg \tau_p$</strong> — to uzasadnia uproszczenia w obu kierunkach.</p>
+  </section>
+</div>
+
+<!-- PANEL 2: Inercja I rzędu -->
+<div class="panel">
+  <div class="panel-head">
+    <span class="panel-num">[ 02 / 10 ]</span>
+    <span class="panel-source">Materiały_1.docx · T1 · 2023</span>
+  </div>
+  <h2>Człon inercyjny pierwszego rzędu — 3 reprezentacje</h2>
+  <div class="tag-row">
+    <span class="tag">teoria</span>
+    <span class="tag">równania stanu</span>
+  </div>
+
+  <div class="question-block">
+    <div class="label">Treść zadania</div>
+    <div class="text">
+      Podać wzór na transmitancję członu inercyjnego pierwszego rzędu o wzmocnieniu „b" i stałej czasowej „c"
+      oraz podać opis tego układu równaniem stanu (dziedzina czasu).
+    </div>
+  </div>
+
+  <section class="solution">
+    <h3>1) Transmitancja</h3>
+    <div class="math-block highlight">$$G(s) = \frac{Y(s)}{X(s)} = \frac{b}{c \cdot s + 1}$$</div>
+  </section>
+
+  <section class="solution">
+    <h3>2) Wyprowadzenie do dziedziny czasu</h3>
+    <div class="math-block">$$Y(s)(c s + 1) = b X(s) \implies c\, \dot{y}(t) + y(t) = b\, x(t)$$</div>
+    <p>Przekształcamy do postaci jawnej dla pochodnej:</p>
+    <div class="math-block">$$\dot{y}(t) = -\frac{1}{c} y(t) + \frac{b}{c} x(t)$$</div>
+  </section>
+
+  <section class="solution">
+    <h3>3) Równania stanu</h3>
+    <div class="math-block highlight">$$\dot{x}(t) = \left[-\frac{1}{c}\right] x(t) + \left[\frac{b}{c}\right] u(t)$$</div>
+    <div class="math-block highlight">$$y(t) = [1] x(t) + [0] u(t)$$</div>
+    <p>Czyli: $A = -\dfrac{1}{c}$, $B = \dfrac{b}{c}$, $C = 1$, $D = 0$.</p>
+  </section>
+</div>
+
+<!-- PANEL 3: Regulator stanu -->
+<div class="panel">
+  <div class="panel-head">
+    <span class="panel-num">[ 03 / 10 ]</span>
+    <span class="panel-source">Materiały_1 · kolokwium_2023 · pytanie powtórne</span>
+  </div>
+  <h2>Regulator stanu z zerowym uchybem przy skoku $M_o$</h2>
+  <div class="tag-row">
+    <span class="tag hot">★ powtarza się 2x</span>
+    <span class="tag">DC + BLDC</span>
+    <span class="tag">całka uchybu</span>
+  </div>
+
+  <div class="question-block">
+    <div class="label">Treść zadania</div>
+    <div class="text">
+      Narysować schemat sterowania z regulatorem stanu. Struktura regulacji powinna zapewnić
+      zerowy uchyb ustalony po wystąpieniu skokowej zmiany momentu obciążenia.
+      Dorysować czujniki pomiarowe oraz ich połączenia z regulatorami.
+    </div>
+  </div>
+
+  <section class="solution">
+    <h3>Klucz: dodanie 4. zmiennej stanu</h3>
+    <p>Standardowy regulator stanu (czysto proporcjonalny) <strong>nie radzi sobie ze skokiem $M_o$</strong>.
+    Należy <strong>dodać integrator uchybu prędkości</strong> jako dodatkową zmienną stanu:</p>
+    <div class="math-block highlight">$$\frac{dp}{dt} = \omega_m^{ref} - \omega_{mx}$$</div>
+  </section>
+
+  <section class="solution">
+    <h3>Schemat regulatora stanu (do narysowania)</h3>
+    <div class="svg-scheme"><svg viewBox="0 0 760 380" xmlns="http://www.w3.org/2000/svg" class="diagram">
+      <defs>
+        <marker id="arr-r3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="#7a8090"/></marker>
+        <marker id="arr-r3-acc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="#f59e0b"/></marker>
+        <marker id="arr-r3-fb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="#4f8ef7"/></marker>
+      </defs>
+
+      <text x="380" y="22" text-anchor="middle" class="diag-title">REGULATOR STANU Z CAŁKĄ UCHYBU PRĘDKOŚCI</text>
+      <text x="380" y="38" text-anchor="middle" class="diag-label-small">— zapewnia zerowy uchyb ustalony przy skoku M_o —</text>
+
+      <!-- THREE TOP STATE INPUTS -->
+      <text x="58" y="83" text-anchor="end" class="diag-label">i<tspan baseline-shift="sub" font-size="10">ax</tspan></text>
+      <line x1="68" y1="78" x2="180" y2="78" class="diag-line" marker-end="url(#arr-r3)"/>
+      <rect x="180" y="60" width="62" height="36" rx="4" class="diag-box-accent"/>
+      <text x="211" y="83" text-anchor="middle" class="diag-text">k₁</text>
+      <line x1="242" y1="78" x2="438" y2="142" class="diag-line" marker-end="url(#arr-r3)"/>
+
+      <text x="58" y="163" text-anchor="end" class="diag-label">ω<tspan baseline-shift="sub" font-size="10">mx</tspan></text>
+      <line x1="68" y1="158" x2="180" y2="158" class="diag-line" marker-end="url(#arr-r3)"/>
+      <rect x="180" y="140" width="62" height="36" rx="4" class="diag-box-accent"/>
+      <text x="211" y="163" text-anchor="middle" class="diag-text">k₂</text>
+      <line x1="242" y1="158" x2="438" y2="158" class="diag-line" marker-end="url(#arr-r3)"/>
+
+      <text x="58" y="243" text-anchor="end" class="diag-label">u<tspan baseline-shift="sub" font-size="10">ax</tspan></text>
+      <line x1="68" y1="238" x2="180" y2="238" class="diag-line" marker-end="url(#arr-r3)"/>
+      <rect x="180" y="220" width="62" height="36" rx="4" class="diag-box-accent"/>
+      <text x="211" y="243" text-anchor="middle" class="diag-text">k₃</text>
+      <line x1="242" y1="238" x2="438" y2="174" class="diag-line" marker-end="url(#arr-r3)"/>
+
+      <!-- MAIN SUMMATOR -->
+      <circle cx="455" cy="158" r="20" class="diag-sum"/>
+      <text x="455" y="164" text-anchor="middle" class="diag-text">Σ</text>
+
+      <!-- OUTPUT -->
+      <line x1="475" y1="158" x2="640" y2="158" class="diag-line-accent" marker-end="url(#arr-r3-acc)"/>
+      <text x="655" y="163" class="diag-label-accent">−u<tspan baseline-shift="sub" font-size="10">spp</tspan></text>
+      <text x="600" y="148" text-anchor="middle" class="diag-section-label">SYGNAŁ STERUJĄCY</text>
+
+      <!-- BOTTOM PATH: integrator branch -->
+      <text x="58" y="320" text-anchor="end" class="diag-label">ω<tspan baseline-shift="sub" font-size="10">ref</tspan></text>
+      <line x1="68" y1="315" x2="155" y2="315" class="diag-line" marker-end="url(#arr-r3)"/>
+
+      <!-- Inner summator -->
+      <circle cx="172" cy="315" r="16" class="diag-sum"/>
+      <text x="172" y="320" text-anchor="middle" class="diag-text">Σ</text>
+      <text x="159" y="306" class="diag-sign">+</text>
+      <text x="159" y="335" class="diag-sign">−</text>
+
+      <!-- 1/s -->
+      <line x1="188" y1="315" x2="225" y2="315" class="diag-line" marker-end="url(#arr-r3)"/>
+      <rect x="225" y="297" width="62" height="36" rx="4" class="diag-box"/>
+      <text x="256" y="320" text-anchor="middle" class="diag-text">1/s</text>
+
+      <!-- k_4 -->
+      <line x1="287" y1="315" x2="320" y2="315" class="diag-line" marker-end="url(#arr-r3)"/>
+      <rect x="320" y="297" width="62" height="36" rx="4" class="diag-box-accent"/>
+      <text x="351" y="320" text-anchor="middle" class="diag-text">k₄</text>
+
+      <!-- Path up to main summator -->
+      <polyline points="382,315 415,315 415,178" class="diag-line" marker-end="url(#arr-r3)"/>
+
+      <!-- "całka uchybu" annotation -->
+      <text x="305" y="285" text-anchor="middle" class="diag-section-label">CAŁKA UCHYBU PRĘDKOŚCI (4. zmienna stanu)</text>
+
+      <!-- Feedback ω_mx to inner summator -->
+      <polyline points="172,355 172,358" class="diag-line-fb"/>
+      <line x1="172" y1="358" x2="172" y2="335" class="diag-line-fb" marker-end="url(#arr-r3-fb)"/>
+      <text x="184" y="362" class="diag-label-blue">ω<tspan baseline-shift="sub" font-size="9">mx</tspan> — sprzężenie zwrotne</text>
+
+      <!-- LEGEND -->
+      <line x1="500" y1="305" x2="525" y2="305" class="diag-line-accent"/>
+      <text x="532" y="309" class="diag-legend-text">tor sterowania</text>
+      <line x1="500" y1="325" x2="525" y2="325" class="diag-line-fb"/>
+      <text x="532" y="329" class="diag-legend-text">sprzężenia zwrotne</text>
+    </svg></div>
+    <p>Prawo sterowania:</p>
+    <div class="math-block">$$u_s = -k_{11} i_{ax} - k_{12} \omega_{mx} - k_{13} u_{ax} - k_{14} \cdot p$$</div>
+  </section>
+
+  <section class="solution">
+    <h3>Czujniki pomiarowe (do dorysowania na schemacie fizycznym)</h3>
+    <table>
+      <tr><th>Czujnik</th><th>Mierzy</th><th>Skalowanie</th></tr>
+      <tr><td>$k_i$</td><td>prąd twornika $i_a$</td><td class="muted">shunt + wzmacniacz lub Hall</td></tr>
+      <tr><td>$k_\omega$</td><td>prędkość $\omega_m$</td><td class="muted">enkoder lub tachoprądnica</td></tr>
+      <tr><td>$k_u$</td><td>napięcie twornika $u_a$</td><td class="muted">dzielnik napięciowy</td></tr>
+    </table>
+  </section>
+
+  <section class="solution">
+    <h3>Macierze (z modelem przekształtnika)</h3>
+    <div class="math-block">$$x_{spp} = \begin{bmatrix} i_{ax} \\ \omega_{mx} \\ u_{ax} \end{bmatrix}, \quad
+A_{sp} = \begin{bmatrix}
+-\frac{R_a}{L_a} & -\frac{\psi k_i}{L_a k_\omega} & \frac{k_i}{L_a k_u} \\
+\frac{\psi k_\omega}{J_z k_i} & -\frac{c_t}{J_z} & 0 \\
+0 & 0 & -\frac{1}{\tau_p}
+\end{bmatrix}$$</div>
+    <div class="math-block">$$B_{sp} = \begin{bmatrix} 0 \\ 0 \\ \frac{k_u k_p}{\tau_p} \end{bmatrix}, \quad
+E_{sp} = \begin{bmatrix} 0 \\ -\frac{k_\omega}{J_z} \\ 0 \end{bmatrix}$$</div>
+  </section>
+
+  <section class="solution">
+    <h3>Komentarz słowny (do napisania)</h3>
+    <div class="callout">
+      Dodanie integratora uchybu prędkości jako 4. zmiennej stanu zapewnia zerowy uchyb ustalony
+      przy skokowych zaburzeniach momentu obciążenia. Regulator stanu wykorzystuje pełne sprzężenie
+      zwrotne od wektora stanu $(i_a, \omega_m, u_a, p)$ z macierzą wzmocnień $K$ dobieraną metodą
+      lokowania biegunów lub LQR.
+    </div>
+  </section>
+</div>
+
+<!-- PANEL 4: FOC PMSM -->
+<div class="panel">
+  <div class="panel-head">
+    <span class="panel-num">[ 04 / 10 ]</span>
+    <span class="panel-source">Materiały_1.docx · T1 · 2023</span>
+  </div>
+  <h2>FOC dla silnika PMSM, $i_d^{ref} = 0$</h2>
+  <div class="tag-row">
+    <span class="tag hot">★ pewne</span>
+    <span class="tag">PMSM</span>
+    <span class="tag">3 PI</span>
+    <span class="tag">transformacje dq/αβ</span>
+  </div>
+
+  <div class="question-block">
+    <div class="label">Treść zadania</div>
+    <div class="text">
+      Narysować schemat blokowy struktury sterowania FOC dla silnika PMSM. Przyjąć, że sygnał referencyjny
+      dla składowej prądu w osi „d" jest równy zero. Dostępne są sygnały pomiarowe prądów i napięć fazowych
+      oraz sygnał prędkości kątowej.
+    </div>
+  </div>
+
+  <section class="solution">
+    <h3>Schemat blokowy — komplet bloków</h3>
+    <div class="svg-scheme"><svg viewBox="0 0 880 540" xmlns="http://www.w3.org/2000/svg" class="diagram">
+      <defs>
+        <marker id="arr-foc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="#7a8090"/></marker>
+        <marker id="arr-foc-acc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="#f59e0b"/></marker>
+        <marker id="arr-foc-fb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="#4f8ef7"/></marker>
+      </defs>
+
+      <text x="440" y="22" text-anchor="middle" class="diag-title">FOC DLA PMSM — KASKADA REGULATORÓW PI Z i_d^ref = 0</text>
+
+      <!-- ===== TIER 1: TOP CASCADE (ω → i_q) ===== -->
+      <text x="38" y="74" class="diag-section-label">PĘTLA PRĘDKOŚCI</text>
+
+      <text x="44" y="105" text-anchor="end" class="diag-label">ω<tspan baseline-shift="sub" font-size="10">m</tspan><tspan baseline-shift="super" font-size="10">ref</tspan></text>
+      <line x1="56" y1="100" x2="100" y2="100" class="diag-line" marker-end="url(#arr-foc)"/>
+
+      <circle cx="115" cy="100" r="13" class="diag-sum"/>
+      <text x="115" y="105" text-anchor="middle" class="diag-text">Σ</text>
+      <text x="103" y="91" class="diag-sign">+</text>
+      <text x="103" y="118" class="diag-sign">−</text>
+
+      <line x1="128" y1="100" x2="155" y2="100" class="diag-line" marker-end="url(#arr-foc)"/>
+      <rect x="155" y="83" width="68" height="34" rx="4" class="diag-box-pi"/>
+      <text x="189" y="105" text-anchor="middle" class="diag-text-pi">PI ω</text>
+
+      <line x1="223" y1="100" x2="270" y2="100" class="diag-line" marker-end="url(#arr-foc)"/>
+      <text x="246" y="92" text-anchor="middle" class="diag-label-small">i<tspan baseline-shift="sub" font-size="9">q</tspan><tspan baseline-shift="super" font-size="9">ref</tspan></text>
+
+      <circle cx="285" cy="100" r="13" class="diag-sum"/>
+      <text x="285" y="105" text-anchor="middle" class="diag-text">Σ</text>
+      <text x="273" y="91" class="diag-sign">+</text>
+      <text x="273" y="118" class="diag-sign">−</text>
+
+      <line x1="298" y1="100" x2="325" y2="100" class="diag-line" marker-end="url(#arr-foc)"/>
+      <rect x="325" y="83" width="68" height="34" rx="4" class="diag-box-pi"/>
+      <text x="359" y="105" text-anchor="middle" class="diag-text-pi">PI i_q</text>
+
+      <line x1="393" y1="100" x2="455" y2="100" class="diag-line" marker-end="url(#arr-foc)"/>
+      <text x="424" y="92" text-anchor="middle" class="diag-label-small">u<tspan baseline-shift="sub" font-size="9">q</tspan><tspan baseline-shift="super" font-size="9">ref</tspan></text>
+
+      <!-- ===== TIER 2: BOTTOM CASCADE (i_d^ref=0 → i_d) ===== -->
+      <text x="220" y="160" class="diag-section-label">PĘTLA PRĄDU OSI d</text>
+
+      <text x="50" y="190" text-anchor="end" class="diag-label">i<tspan baseline-shift="sub" font-size="10">d</tspan><tspan baseline-shift="super" font-size="10">ref</tspan> = 0</text>
+      <line x1="56" y1="185" x2="270" y2="185" class="diag-line" marker-end="url(#arr-foc)"/>
+
+      <circle cx="285" cy="185" r="13" class="diag-sum"/>
+      <text x="285" y="190" text-anchor="middle" class="diag-text">Σ</text>
+      <text x="273" y="176" class="diag-sign">+</text>
+      <text x="273" y="203" class="diag-sign">−</text>
+
+      <line x1="298" y1="185" x2="325" y2="185" class="diag-line" marker-end="url(#arr-foc)"/>
+      <rect x="325" y="168" width="68" height="34" rx="4" class="diag-box-pi"/>
+      <text x="359" y="190" text-anchor="middle" class="diag-text-pi">PI i_d</text>
+
+      <line x1="393" y1="185" x2="455" y2="185" class="diag-line" marker-end="url(#arr-foc)"/>
+      <text x="424" y="177" text-anchor="middle" class="diag-label-small">u<tspan baseline-shift="sub" font-size="9">d</tspan><tspan baseline-shift="super" font-size="9">ref</tspan></text>
+
+      <!-- ===== TIER 3: TRANSFORMATIONS + INVERTER + MOTOR ===== -->
+      <!-- dq → αβ block -->
+      <rect x="455" y="125" width="74" height="40" rx="4" class="diag-box"/>
+      <text x="492" y="143" text-anchor="middle" class="diag-text-small">dq → αβ</text>
+      <text x="492" y="158" text-anchor="middle" class="diag-text-small">→ abc</text>
+
+      <!-- Connect u_d, u_q to dq→abc -->
+      <polyline points="455,100 460,100 460,140 455,140" class="diag-line" fill="none"/>
+      <polyline points="455,185 460,185 460,150 455,150" class="diag-line" fill="none"/>
+
+      <!-- dq→abc → PWM -->
+      <line x1="529" y1="145" x2="565" y2="145" class="diag-line" marker-end="url(#arr-foc)"/>
+      <rect x="565" y="125" width="58" height="40" rx="4" class="diag-box"/>
+      <text x="594" y="149" text-anchor="middle" class="diag-text">PWM</text>
+
+      <!-- PWM → Falownik -->
+      <line x1="623" y1="145" x2="660" y2="145" class="diag-line" marker-end="url(#arr-foc)"/>
+      <rect x="660" y="115" width="64" height="60" rx="4" class="diag-box-power"/>
+      <text x="692" y="138" text-anchor="middle" class="diag-text-small">Falownik</text>
+      <text x="692" y="153" text-anchor="middle" class="diag-text-small">6×IGBT</text>
+      <text x="692" y="168" text-anchor="middle" class="diag-label-small">U_dc</text>
+
+      <!-- Falownik → PMSM -->
+      <line x1="724" y1="145" x2="760" y2="145" class="diag-line-accent" marker-end="url(#arr-foc-acc)"/>
+      <text x="742" y="135" text-anchor="middle" class="diag-section-label">3φ</text>
+      
+      <circle cx="788" cy="145" r="22" class="diag-box-accent"/>
+      <text x="788" y="142" text-anchor="middle" class="diag-text-pi">PMSM</text>
+      <text x="788" y="156" text-anchor="middle" class="diag-label-small">M_o</text>
+
+      <!-- ω_m output -->
+      <line x1="810" y1="145" x2="850" y2="145" class="diag-line-accent"/>
+      <text x="858" y="149" class="diag-label-accent">ω_m</text>
+
+      <!-- ===== TIER 4: MEASUREMENT BUS (currents) ===== -->
+      <text x="38" y="290" class="diag-section-label">TOR POMIARU PRĄDÓW (FEEDBACK)</text>
+
+      <!-- Tap from inverter output for currents -->
+      <polyline points="740,167 740,255" class="diag-line-fb" fill="none"/>
+      <circle cx="740" cy="167" r="2.5" class="diag-junction"/>
+
+      <!-- Current sensor labels -->
+      <text x="755" y="218" class="diag-label-blue">i_a, i_b</text>
+
+      <!-- abc → αβ block -->
+      <rect x="630" y="305" width="80" height="36" rx="4" class="diag-box"/>
+      <text x="670" y="328" text-anchor="middle" class="diag-text-small">abc → αβ</text>
+      <line x1="740" y1="255" x2="740" y2="323" class="diag-line-fb" marker-end="url(#arr-foc-fb)"/>
+      <line x1="710" y1="323" x2="730" y2="323" class="diag-line-fb"/>
+
+      <!-- αβ → dq block (with α_e input) -->
+      <line x1="630" y1="323" x2="490" y2="323" class="diag-line-fb"/>
+      <rect x="410" y="305" width="80" height="36" rx="4" class="diag-box"/>
+      <text x="450" y="328" text-anchor="middle" class="diag-text-small">αβ → dq</text>
+
+      <!-- αβ→dq output → split to i_d and i_q feedback -->
+      <line x1="410" y1="323" x2="320" y2="323" class="diag-line-fb"/>
+      <text x="365" y="318" text-anchor="middle" class="diag-label-blue">i_d, i_q</text>
+
+      <!-- Branch up to summators -->
+      <polyline points="320,323 320,210 285,210 285,198" class="diag-line-fb" marker-end="url(#arr-foc-fb)"/>
+      <polyline points="320,323 320,135 285,135 285,113" class="diag-line-fb" marker-end="url(#arr-foc-fb)"/>
+      <circle cx="320" cy="323" r="2.5" class="diag-junction"/>
+
+      <!-- ===== TIER 5: ANGLE/SPEED FEEDBACK ===== -->
+      <text x="38" y="395" class="diag-section-label">TOR POŁOŻENIA / PRĘDKOŚCI</text>
+
+      <!-- α_m sensor from PMSM -->
+      <polyline points="788,167 788,440 720,440" class="diag-line-fb" fill="none"/>
+      <text x="797" y="305" class="diag-label-small">CPW (czujnik położenia)</text>
+      <text x="730" y="432" class="diag-label-blue">α_m</text>
+
+      <!-- p_b multiplier (×p_b) -->
+      <rect x="595" y="420" width="56" height="36" rx="4" class="diag-box"/>
+      <text x="623" y="437" text-anchor="middle" class="diag-text-small">×p_b</text>
+      <text x="623" y="450" text-anchor="middle" class="diag-label-small">(kąt el.)</text>
+      <line x1="720" y1="438" x2="651" y2="438" class="diag-line-fb"/>
+
+      <!-- α_e output to αβ↔dq transformations -->
+      <polyline points="595,438 580,438 580,323 530,323" class="diag-line-fb"/>
+      <text x="540" y="318" class="diag-label-blue">α_e</text>
+      <!-- α_e also up to dq→abc -->
+      <polyline points="580,323 580,145 529,145" class="diag-line-fb" marker-end="url(#arr-foc-fb)"/>
+      <circle cx="580" cy="323" r="2.5" class="diag-junction"/>
+      <circle cx="580" cy="438" r="2.5" class="diag-junction"/>
+
+      <!-- d/dt block for ω_m -->
+      <rect x="450" y="420" width="68" height="36" rx="4" class="diag-box"/>
+      <text x="484" y="442" text-anchor="middle" class="diag-text-small">d/dt</text>
+
+      <polyline points="595,438 525,438" class="diag-line-fb"/>
+      <line x1="518" y1="438" x2="525" y2="438" class="diag-line-fb"/>
+      <circle cx="540" cy="438" r="2.5" class="diag-junction"/>
+
+      <line x1="450" y1="438" x2="380" y2="438" class="diag-line-fb"/>
+      <text x="410" y="430" text-anchor="middle" class="diag-label-blue">ω_m</text>
+
+      <!-- ω_m feedback up to top summator -->
+      <polyline points="380,438 115,438 115,113" class="diag-line-fb" marker-end="url(#arr-foc-fb)"/>
+      <circle cx="380" cy="438" r="2.5" class="diag-junction"/>
+
+      <!-- LEGEND -->
+      <line x1="38" y1="500" x2="68" y2="500" class="diag-line-accent"/>
+      <text x="74" y="504" class="diag-legend-text">tor sterowania</text>
+      <line x1="200" y1="500" x2="230" y2="500" class="diag-line-fb"/>
+      <text x="236" y="504" class="diag-legend-text">sprzężenia zwrotne (pomiar)</text>
+      <rect x="450" y="494" width="14" height="12" rx="2" class="diag-box-pi"/>
+      <text x="470" y="504" class="diag-legend-text">regulator PI</text>
+      <rect x="560" y="494" width="14" height="12" rx="2" class="diag-box-power"/>
+      <text x="580" y="504" class="diag-legend-text">tor mocy</text>
+    </svg></div>
+  </section>
+
+  <section class="solution">
+    <h3>Lista bloków obowiązkowych do narysowania</h3>
+    <ol>
+      <li><strong>3 regulatory PI</strong> w kaskadzie: $\omega_m$, $i_d$, $i_q$</li>
+      <li><strong>$i_d^{ref} = 0$</strong> wyraźnie zaznaczone</li>
+      <li><strong>Transformacja abc→αβ</strong> (Clarke) na pomiarach prądów</li>
+      <li><strong>Transformacja αβ→dq</strong> (Park forward) z kątem $\alpha_e$</li>
+      <li><strong>Transformacja dq→αβ</strong> (Park inverse) na sygnałach sterowania</li>
+      <li><strong>Mnożnik $p_b$</strong>: $\alpha_e = p_b \cdot \alpha_m$ (kąt elektryczny!)</li>
+      <li><strong>Różniczkowanie</strong>: $\omega_m = d\alpha_m/dt$</li>
+      <li><strong>PWM + Falownik 6×IGBT</strong>, źródło DC</li>
+      <li><strong>PMSM</strong> + obciążenie + czujnik położenia (resolver/enkoder)</li>
+    </ol>
+  </section>
+
+  <section class="solution">
+    <h3>Dlaczego $i_d = 0$?</h3>
+    <p>Moment elektromagnetyczny PMSM (z magnesami powierzchniowymi):</p>
+    <div class="math-block">$$m_e = \frac{3}{2} p_b \psi_f \cdot i_q$$</div>
+    <p>Tylko składowa $i_q$ wytwarza moment; $i_d$ tylko zwiększa straty miedzi.
+    Wymuszenie $i_d^{ref} = 0$ daje strategię <strong>MTPA</strong> (Maximum Torque per Ampere).</p>
+  </section>
+
+  <section class="solution">
+    <h3>Komentarz słowny</h3>
+    <div class="callout">
+      Trzy regulatory PI w kaskadzie: zewnętrzny PI prędkości generuje referencję momentu
+      (czyli $i_q^{ref}$), wewnętrzne PI prądów wymuszają zadane składowe $i_d$ i $i_q$.
+      W stanie ustalonym sygnały w wirującym układzie dq są stałe — co umożliwia stosowanie
+      zwykłych regulatorów PI.
+    </div>
+  </section>
+</div>
+
+<!-- PANEL 5: RFOC klatkowy -->
+<div class="panel">
+  <div class="panel-head">
+    <span class="panel-num">[ 05 / 10 ]</span>
+    <span class="panel-source">kolokwium_2023 Q2 · kolos_2024 Q3</span>
+  </div>
+  <h2>FOC dla silnika klatkowego (RFOC) — orientacja wg strumienia wirnika</h2>
+  <div class="tag-row">
+    <span class="tag hot">★ powtarza się 2x</span>
+    <span class="tag">silnik indukcyjny</span>
+    <span class="tag">estymator</span>
+  </div>
+
+  <div class="question-block">
+    <div class="label">Treść zadania</div>
+    <div class="text">
+      Narysować FOC dla silnika klatkowego. Sterowanie. Układ odniesienia związany z wektorem przestrzennym strumienia wirnika.
+    </div>
+  </div>
+
+  <section class="solution">
+    <h3>Schemat (DRFOC)</h3>
+    <div class="svg-scheme"><svg viewBox="0 0 880 540" xmlns="http://www.w3.org/2000/svg" class="diagram">
+      <defs>
+        <marker id="arr-rfoc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="#7a8090"/></marker>
+        <marker id="arr-rfoc-acc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="#f59e0b"/></marker>
+        <marker id="arr-rfoc-fb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="#4f8ef7"/></marker>
+        <marker id="arr-rfoc-est" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="#a855f7"/></marker>
+      </defs>
+
+      <text x="440" y="22" text-anchor="middle" class="diag-title">RFOC — ORIENTACJA WG STRUMIENIA WIRNIKA (4 PI + ESTYMATOR)</text>
+
+      <!-- ===== TIER 1: SPEED CASCADE (ω → i_sq) ===== -->
+      <text x="38" y="68" class="diag-section-label">PĘTLA PRĘDKOŚCI → PRĄD i_sq (MOMENT)</text>
+
+      <text x="44" y="105" text-anchor="end" class="diag-label">ω<tspan baseline-shift="sub" font-size="10">m</tspan><tspan baseline-shift="super" font-size="10">ref</tspan></text>
+      <line x1="56" y1="100" x2="100" y2="100" class="diag-line" marker-end="url(#arr-rfoc)"/>
+
+      <circle cx="115" cy="100" r="13" class="diag-sum"/>
+      <text x="115" y="105" text-anchor="middle" class="diag-text">Σ</text>
+      <text x="103" y="91" class="diag-sign">+</text>
+      <text x="103" y="118" class="diag-sign">−</text>
+
+      <line x1="128" y1="100" x2="155" y2="100" class="diag-line" marker-end="url(#arr-rfoc)"/>
+      <rect x="155" y="83" width="68" height="34" rx="4" class="diag-box-pi"/>
+      <text x="189" y="105" text-anchor="middle" class="diag-text-pi">PI ω</text>
+
+      <line x1="223" y1="100" x2="270" y2="100" class="diag-line" marker-end="url(#arr-rfoc)"/>
+      <text x="246" y="92" text-anchor="middle" class="diag-label-small">i<tspan baseline-shift="sub" font-size="9">sq</tspan><tspan baseline-shift="super" font-size="9">ref</tspan></text>
+
+      <circle cx="285" cy="100" r="13" class="diag-sum"/>
+      <text x="285" y="105" text-anchor="middle" class="diag-text">Σ</text>
+      <text x="273" y="91" class="diag-sign">+</text>
+      <text x="273" y="118" class="diag-sign">−</text>
+
+      <line x1="298" y1="100" x2="325" y2="100" class="diag-line" marker-end="url(#arr-rfoc)"/>
+      <rect x="325" y="83" width="68" height="34" rx="4" class="diag-box-pi"/>
+      <text x="359" y="105" text-anchor="middle" class="diag-text-pi">PI i_sq</text>
+
+      <line x1="393" y1="100" x2="455" y2="100" class="diag-line" marker-end="url(#arr-rfoc)"/>
+      <text x="424" y="92" text-anchor="middle" class="diag-label-small">u<tspan baseline-shift="sub" font-size="9">sq</tspan><tspan baseline-shift="super" font-size="9">ref</tspan></text>
+
+      <!-- ===== TIER 2: FLUX CASCADE (ψ_r → i_sd) ===== -->
+      <text x="38" y="160" class="diag-section-label">PĘTLA STRUMIENIA → PRĄD i_sd (WZBUDZENIE)</text>
+
+      <text x="44" y="195" text-anchor="end" class="diag-label">ψ<tspan baseline-shift="sub" font-size="10">r</tspan><tspan baseline-shift="super" font-size="10">ref</tspan></text>
+      <line x1="56" y1="190" x2="100" y2="190" class="diag-line" marker-end="url(#arr-rfoc)"/>
+
+      <circle cx="115" cy="190" r="13" class="diag-sum"/>
+      <text x="115" y="195" text-anchor="middle" class="diag-text">Σ</text>
+      <text x="103" y="181" class="diag-sign">+</text>
+      <text x="103" y="208" class="diag-sign">−</text>
+
+      <line x1="128" y1="190" x2="155" y2="190" class="diag-line" marker-end="url(#arr-rfoc)"/>
+      <rect x="155" y="173" width="68" height="34" rx="4" class="diag-box-pi"/>
+      <text x="189" y="195" text-anchor="middle" class="diag-text-pi">PI ψ</text>
+
+      <line x1="223" y1="190" x2="270" y2="190" class="diag-line" marker-end="url(#arr-rfoc)"/>
+      <text x="246" y="182" text-anchor="middle" class="diag-label-small">i<tspan baseline-shift="sub" font-size="9">sd</tspan><tspan baseline-shift="super" font-size="9">ref</tspan></text>
+
+      <circle cx="285" cy="190" r="13" class="diag-sum"/>
+      <text x="285" y="195" text-anchor="middle" class="diag-text">Σ</text>
+      <text x="273" y="181" class="diag-sign">+</text>
+      <text x="273" y="208" class="diag-sign">−</text>
+
+      <line x1="298" y1="190" x2="325" y2="190" class="diag-line" marker-end="url(#arr-rfoc)"/>
+      <rect x="325" y="173" width="68" height="34" rx="4" class="diag-box-pi"/>
+      <text x="359" y="195" text-anchor="middle" class="diag-text-pi">PI i_sd</text>
+
+      <line x1="393" y1="190" x2="455" y2="190" class="diag-line" marker-end="url(#arr-rfoc)"/>
+      <text x="424" y="182" text-anchor="middle" class="diag-label-small">u<tspan baseline-shift="sub" font-size="9">sd</tspan><tspan baseline-shift="super" font-size="9">ref</tspan></text>
+
+      <!-- ===== TIER 3: TRANSFORMATIONS + INVERTER + MOTOR ===== -->
+      <rect x="455" y="125" width="74" height="40" rx="4" class="diag-box"/>
+      <text x="492" y="143" text-anchor="middle" class="diag-text-small">dq → αβ</text>
+      <text x="492" y="158" text-anchor="middle" class="diag-text-small">→ abc</text>
+
+      <polyline points="455,100 460,100 460,140 455,140" class="diag-line" fill="none"/>
+      <polyline points="455,190 460,190 460,150 455,150" class="diag-line" fill="none"/>
+
+      <line x1="529" y1="145" x2="565" y2="145" class="diag-line" marker-end="url(#arr-rfoc)"/>
+      <rect x="565" y="125" width="58" height="40" rx="4" class="diag-box"/>
+      <text x="594" y="149" text-anchor="middle" class="diag-text">PWM</text>
+
+      <line x1="623" y1="145" x2="660" y2="145" class="diag-line" marker-end="url(#arr-rfoc)"/>
+      <rect x="660" y="115" width="64" height="60" rx="4" class="diag-box-power"/>
+      <text x="692" y="138" text-anchor="middle" class="diag-text-small">Falownik</text>
+      <text x="692" y="153" text-anchor="middle" class="diag-text-small">6×IGBT</text>
+      <text x="692" y="168" text-anchor="middle" class="diag-label-small">U_dc</text>
+
+      <line x1="724" y1="145" x2="760" y2="145" class="diag-line-accent" marker-end="url(#arr-rfoc-acc)"/>
+      <text x="742" y="135" text-anchor="middle" class="diag-section-label">3φ</text>
+
+      <circle cx="788" cy="145" r="22" class="diag-box-accent"/>
+      <text x="788" y="142" text-anchor="middle" class="diag-text-pi">IM</text>
+      <text x="788" y="156" text-anchor="middle" class="diag-label-small">M_o</text>
+
+      <line x1="810" y1="145" x2="850" y2="145" class="diag-line-accent"/>
+      <text x="858" y="149" class="diag-label-accent">ω_m</text>
+
+      <!-- ===== TIER 4: CURRENT MEASUREMENT ===== -->
+      <text x="38" y="265" class="diag-section-label">TOR POMIARU PRĄDÓW</text>
+
+      <polyline points="740,167 740,255" class="diag-line-fb" fill="none"/>
+      <circle cx="740" cy="167" r="2.5" class="diag-junction"/>
+
+      <text x="755" y="218" class="diag-label-blue">i_sa, i_sb</text>
+
+      <rect x="630" y="280" width="80" height="34" rx="4" class="diag-box"/>
+      <text x="670" y="302" text-anchor="middle" class="diag-text-small">abc → αβ</text>
+      <line x1="740" y1="255" x2="740" y2="297" class="diag-line-fb" marker-end="url(#arr-rfoc-fb)"/>
+      <line x1="710" y1="297" x2="730" y2="297" class="diag-line-fb"/>
+
+      <!-- αβ → dq (z γ_ψ) -->
+      <line x1="630" y1="297" x2="490" y2="297" class="diag-line-fb"/>
+      <rect x="410" y="280" width="80" height="34" rx="4" class="diag-box"/>
+      <text x="450" y="296" text-anchor="middle" class="diag-text-small">αβ → dq</text>
+      <text x="450" y="309" text-anchor="middle" class="diag-label-small">(z γ_ψ)</text>
+
+      <line x1="410" y1="297" x2="320" y2="297" class="diag-line-fb"/>
+      <text x="365" y="292" text-anchor="middle" class="diag-label-blue">i_sd, i_sq</text>
+
+      <polyline points="320,297 320,205 285,205 285,203" class="diag-line-fb" marker-end="url(#arr-rfoc-fb)"/>
+      <polyline points="320,297 320,115 285,115 285,113" class="diag-line-fb" marker-end="url(#arr-rfoc-fb)"/>
+      <circle cx="320" cy="297" r="2.5" class="diag-junction"/>
+
+      <!-- ===== TIER 5: ROTOR FLUX ESTIMATOR ===== -->
+      <text x="38" y="370" class="diag-section-label">ESTYMATOR STRUMIENIA WIRNIKA (KLUCZOWE!)</text>
+
+      <rect x="430" y="385" width="180" height="50" rx="4" class="diag-box-est"/>
+      <text x="520" y="405" text-anchor="middle" class="diag-text">Estymator strumienia wirnika</text>
+      <text x="520" y="422" text-anchor="middle" class="diag-label-purple">ψ̂_r = (L_r / L_M)(ψ̂_s − σ L_s i_s)</text>
+
+      <!-- Inputs to estimator: voltage and currents tap -->
+      <polyline points="710,165 720,165 720,410 610,410" class="diag-line-est" marker-end="url(#arr-rfoc-est)"/>
+      <text x="725" y="385" class="diag-label-purple">u_sαβ, i_sαβ</text>
+      
+      <!-- ω_m to estimator -->
+      <polyline points="858,150 868,150 868,460 530,460 530,435" class="diag-line-est" marker-end="url(#arr-rfoc-est)"/>
+      <circle cx="868" cy="150" r="2.5" class="diag-junction"/>
+      <text x="700" y="455" class="diag-label-purple">ω_m</text>
+
+      <!-- Outputs from estimator: ψ_rd to top, γ_ψ to transformation -->
+      <polyline points="430,400 200,400 200,190 128,190" class="diag-line-est" marker-end="url(#arr-rfoc-est)"/>
+      <text x="210" y="395" class="diag-label-purple">ψ̂_rd → reg. ψ</text>
+      <circle cx="430" cy="400" r="2.5" class="diag-junction"/>
+
+      <polyline points="430,420 405,420 405,355 450,355 450,314" class="diag-line-est" marker-end="url(#arr-rfoc-est)"/>
+      <text x="370" y="358" class="diag-label-purple">γ_ψ → transformacja</text>
+
+      <!-- γ_ψ also to dq→abc -->
+      <polyline points="450,355 540,355 540,165" class="diag-line-est" marker-end="url(#arr-rfoc-est)"/>
+      <circle cx="450" cy="355" r="2.5" class="diag-junction"/>
+
+      <!-- ω_m feedback to summator -->
+      <polyline points="868,150 870,150 870,500 115,500 115,113" class="diag-line-fb" marker-end="url(#arr-rfoc-fb)"/>
+
+      <!-- LEGEND -->
+      <line x1="38" y1="510" x2="68" y2="510" class="diag-line-accent"/>
+      <text x="74" y="514" class="diag-legend-text">tor sterowania</text>
+      <line x1="190" y1="510" x2="220" y2="510" class="diag-line-fb"/>
+      <text x="226" y="514" class="diag-legend-text">pomiary</text>
+      <line x1="290" y1="510" x2="320" y2="510" class="diag-line-est"/>
+      <text x="326" y="514" class="diag-legend-text">sygnały estymowane</text>
+      <rect x="490" y="504" width="14" height="12" rx="2" class="diag-box-est"/>
+      <text x="510" y="514" class="diag-legend-text">estymator</text>
+    </svg></div>
+  </section>
+
+  <section class="solution">
+    <h3>Cechy odróżniające od FOC PMSM</h3>
+    <table>
+      <tr><th>FOC PMSM</th><th>RFOC silnik klatkowy</th></tr>
+      <tr><td>$i_d^{ref} = 0$</td><td>$\psi_r^{ref}$ jako sygnał wejściowy</td></tr>
+      <tr><td>3 regulatory PI</td><td><strong>4 regulatory PI</strong> (+ pętla strumienia)</td></tr>
+      <tr><td>Czujnik położenia $\alpha_m$</td><td>Estymator strumienia wirnika</td></tr>
+      <tr><td>Strumień od magnesów stałych</td><td>Strumień wzbudzany przez $i_{sd}$</td></tr>
+    </table>
+  </section>
+
+  <section class="solution">
+    <h3>Estymator strumienia wirnika</h3>
+    <div class="math-block highlight">$$\hat{\underline{\psi}}_r = \frac{\hat{L}_r}{\hat{L}_M}\left(\hat{\underline{\psi}}_s - \hat{\sigma}\hat{L}_s \underline{i}_s\right)$$</div>
+    <p>gdzie <strong>całkowity współczynnik rozproszenia</strong>:</p>
+    <div class="math-block">$$\sigma = 1 - \frac{L_M^2}{L_s L_r}$$</div>
+    <p>Strumień stojana $\hat{\psi}_s$ wyznaczany z całkowania EMF (patrz pytanie 06).</p>
+  </section>
+
+  <section class="solution">
+    <h3>Moment elektromagnetyczny w RFOC</h3>
+    <div class="math-block">$$m_e = \frac{3}{2} p_b \frac{L_M}{L_r} \psi_{rd} \cdot i_{sq}$$</div>
+    <p>Składowa $i_{sd}$ wytwarza strumień, $i_{sq}$ moment — analogia do silnika DC.</p>
+  </section>
+</div>
+
+<!-- PANEL 6: Estymator strumienia stojana -->
+<div class="panel">
+  <div class="panel-head">
+    <span class="panel-num">[ 06 / 10 ]</span>
+    <span class="panel-source">Materiały_2.jpg · kolos_2024 Q4</span>
+  </div>
+  <h2>Wyznaczanie strumienia stojana z mierzalnych $u_s, i_s$</h2>
+  <div class="tag-row">
+    <span class="tag hot">★ powtarza się</span>
+    <span class="tag">indukcyjny</span>
+    <span class="tag">ograniczenia!</span>
+  </div>
+
+  <div class="question-block">
+    <div class="label">Treść zadania</div>
+    <div class="text">
+      Poniższe równania opisują maszynę indukcyjną klatkową. W jaki sposób można wyznaczyć strumień stojana
+      wykorzystując łatwo mierzalne wielkości elektryczne prądu i napięcia stojana?
+      <strong>Podać ewentualne ograniczenia związane z dokładnością pomiarów.</strong>
+    </div>
+  </div>
+
+  <section class="solution">
+    <h3>Wyprowadzenie metody</h3>
+    <p>Z równania stojana w stacjonarnym układzie odniesienia:</p>
+    <div class="math-block">$$\underline{u}_s = R_s \underline{i}_s + \frac{d\underline{\psi}_s}{dt}$$</div>
+    <p>Wyizolujemy pochodną strumienia i scałkujemy:</p>
+    <div class="math-block highlight">$$\underline{\psi}_s(t) = \underline{\psi}_s(t_0) + \int_{t_0}^{t}\left(\underline{u}_s - R_s \underline{i}_s\right) dt$$</div>
+    <p>W składowych $\alpha, \beta$ (po transformacji abc→αβ):</p>
+    <div class="math-block">$$\hat{\psi}_{s\alpha}(t) = \hat{\psi}_{s\alpha}(t_0) + \int_{t_0}^{t}(u_{s\alpha} - R_s i_{s\alpha})\,dt$$</div>
+    <div class="math-block">$$\hat{\psi}_{s\beta}(t) = \hat{\psi}_{s\beta}(t_0) + \int_{t_0}^{t}(u_{s\beta} - R_s i_{s\beta})\,dt$$</div>
+  </section>
+
+  <section class="solution">
+    <h3>Dlaczego to „łatwo mierzalne wielkości"?</h3>
+    <ul>
+      <li>$u_{sa}, u_{sb}, u_{sc}$ — pomiar napięć fazowych (proste dzielniki napięciowe)</li>
+      <li>$i_{sa}, i_{sb}$ — czujniki Hall lub transformatory prądowe</li>
+      <li>$i_{sc} = -i_{sa} - i_{sb}$ — wynika z bilansu (brak przewodu N)</li>
+      <li>Po transformacji abc→αβ otrzymujemy wektory $\underline{u}_s, \underline{i}_s$</li>
+    </ul>
+  </section>
+
+  <section class="solution">
+    <h3>★ OGRANICZENIA (kluczowa część odpowiedzi!)</h3>
+    
+    <div class="callout warning">
+      <strong>1) Dryft idealnego integratora.</strong>
+      Czyste całkowanie $\frac{1}{s}$ + nawet niewielki <strong>offset DC</strong> w pomiarach $u_s$ albo $i_s$
+      → wynik całki rośnie do nieskończoności. <strong>Rozwiązanie:</strong> zastąpić idealny integrator
+      członem inercyjnym pierwszego rzędu: $\frac{1}{s} \to \frac{1}{s + \omega_c}$.
+    </div>
+
+    <div class="callout warning">
+      <strong>2) Niedokładność znajomości $R_s$.</strong>
+      Rezystancja stojana zmienia się z temperaturą (wzrost o ~30% przy nagrzaniu).
+      Przy <strong>małych prędkościach</strong> spadek $R_s i_s$ jest dominujący nad EMF —
+      mały błąd w $R_s$ daje duży błąd w estymacji.
+      <br><strong>Wniosek:</strong> estymator dokładny tylko przy dużych prędkościach.
+    </div>
+
+    <div class="callout warning">
+      <strong>3) Offset DC i błędy skalowania w przetwornikach A/C.</strong>
+      Akumulujący się błąd w czasie. Konieczna kalibracja.
+    </div>
+
+    <div class="callout warning">
+      <strong>4) Warunek początkowy $\psi_s(t_0)$.</strong>
+      Często nieznany — zazwyczaj przyjmuje się 0, ale to wprowadza stałe przesunięcie estymaty.
+    </div>
+  </section>
+
+  <section class="solution">
+    <h3>Estymator z członem inercyjnym (lepsza wersja)</h3>
+    <div class="math-block">$$\hat{\psi}_s = \frac{1}{s+\omega_c}\hat{u}_{emf} + \frac{\omega_c}{s+\omega_c}\hat{\psi}_s$$</div>
+    <p>Częstotliwość $\omega_c$ ustala kompromis: większa $\omega_c$ → szybsze tłumienie dryftu, ale większe opóźnienie fazowe przy niskich częstotliwościach.</p>
+  </section>
+</div>
+
+<!-- PANEL 7: Regulator położenia -->
+<div class="panel">
+  <div class="panel-head">
+    <span class="panel-num">[ 07 / 10 ]</span>
+    <span class="panel-source">kolos_2024 Q2</span>
+  </div>
+  <h2>Regulator dla położenia BLDC — jaki typ?</h2>
+  <div class="tag-row">
+    <span class="tag">BLDC</span>
+    <span class="tag">teoria układów</span>
+    <span class="tag">typ 1</span>
+  </div>
+
+  <div class="question-block">
+    <div class="label">Treść zadania</div>
+    <div class="text">
+      Podany jest schemat sterowania prędkością w napędzie z silnikiem BLDC. Należy zaproponować strukturę
+      sterowania umożliwiającą sterowanie położeniem wirnika. <strong>Jaki typ regulatora należy zastosować
+      aby uzyskać zerowy uchyb ustalony dla skokowej zmiany sygnału referencyjnego położenia?</strong>
+      Uzasadnić odpowiedź.
+    </div>
+  </div>
+
+  <section class="solution">
+    <h3>Odpowiedź</h3>
+    <div class="callout">
+      <strong>Wystarczy regulator P</strong> (proporcjonalny).
+    </div>
+  </section>
+
+  <section class="solution">
+    <h3>Uzasadnienie</h3>
+    <p>Pełna struktura kaskadowa wygląda tak:</p>
+    <div class="svg-scheme"><svg viewBox="0 0 880 220" xmlns="http://www.w3.org/2000/svg" class="diagram">
+      <defs>
+        <marker id="arr-pos" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="#7a8090"/></marker>
+        <marker id="arr-pos-acc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="#f59e0b"/></marker>
+        <marker id="arr-pos-fb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="#4f8ef7"/></marker>
+      </defs>
+
+      <text x="440" y="22" text-anchor="middle" class="diag-title">KASKADA REGULACJI POŁOŻENIA — REGULATOR P + PI ω + PI i</text>
+
+      <!-- Input α_m^ref -->
+      <text x="44" y="98" text-anchor="end" class="diag-label">α<tspan baseline-shift="sub" font-size="10">m</tspan><tspan baseline-shift="super" font-size="10">ref</tspan></text>
+      <line x1="56" y1="93" x2="100" y2="93" class="diag-line" marker-end="url(#arr-pos)"/>
+
+      <!-- Σ_α -->
+      <circle cx="115" cy="93" r="13" class="diag-sum"/>
+      <text x="115" y="98" text-anchor="middle" class="diag-text">Σ</text>
+      <text x="103" y="84" class="diag-sign">+</text>
+      <text x="103" y="111" class="diag-sign">−</text>
+
+      <line x1="128" y1="93" x2="160" y2="93" class="diag-line" marker-end="url(#arr-pos)"/>
+
+      <!-- Regulator P (highlighted!) -->
+      <rect x="160" y="73" width="60" height="40" rx="4" class="diag-box-accent"/>
+      <text x="190" y="91" text-anchor="middle" class="diag-text-pi">P</text>
+      <text x="190" y="105" text-anchor="middle" class="diag-label-small">α</text>
+
+      <line x1="220" y1="93" x2="265" y2="93" class="diag-line" marker-end="url(#arr-pos)"/>
+      <text x="242" y="85" text-anchor="middle" class="diag-label-small">ω<tspan baseline-shift="sub" font-size="9">m</tspan><tspan baseline-shift="super" font-size="9">ref</tspan></text>
+
+      <!-- Σ_ω -->
+      <circle cx="280" cy="93" r="13" class="diag-sum"/>
+      <text x="280" y="98" text-anchor="middle" class="diag-text">Σ</text>
+      <text x="268" y="84" class="diag-sign">+</text>
+      <text x="268" y="111" class="diag-sign">−</text>
+
+      <line x1="293" y1="93" x2="320" y2="93" class="diag-line" marker-end="url(#arr-pos)"/>
+      <rect x="320" y="76" width="60" height="34" rx="4" class="diag-box-pi"/>
+      <text x="350" y="98" text-anchor="middle" class="diag-text-pi">PI ω</text>
+
+      <line x1="380" y1="93" x2="425" y2="93" class="diag-line" marker-end="url(#arr-pos)"/>
+      <text x="402" y="85" text-anchor="middle" class="diag-label-small">i<tspan baseline-shift="super" font-size="9">ref</tspan></text>
+
+      <!-- Σ_i -->
+      <circle cx="440" cy="93" r="13" class="diag-sum"/>
+      <text x="440" y="98" text-anchor="middle" class="diag-text">Σ</text>
+      <text x="428" y="84" class="diag-sign">+</text>
+      <text x="428" y="111" class="diag-sign">−</text>
+
+      <line x1="453" y1="93" x2="480" y2="93" class="diag-line" marker-end="url(#arr-pos)"/>
+      <rect x="480" y="76" width="60" height="34" rx="4" class="diag-box-pi"/>
+      <text x="510" y="98" text-anchor="middle" class="diag-text-pi">PI i</text>
+
+      <line x1="540" y1="93" x2="580" y2="93" class="diag-line" marker-end="url(#arr-pos)"/>
+      <text x="560" y="85" text-anchor="middle" class="diag-label-small">u_s</text>
+
+      <!-- BLDC + DC/DC block -->
+      <rect x="580" y="73" width="120" height="42" rx="4" class="diag-box-power"/>
+      <text x="640" y="92" text-anchor="middle" class="diag-text-small">BLDC + falownik</text>
+      <text x="640" y="106" text-anchor="middle" class="diag-label-small">(integrator naturalny: ω→α)</text>
+
+      <!-- Output α_m -->
+      <line x1="700" y1="93" x2="780" y2="93" class="diag-line-accent" marker-end="url(#arr-pos-acc)"/>
+      <text x="790" y="97" class="diag-label-accent">α_m</text>
+
+      <!-- Feedback paths -->
+      <!-- α_m feedback -->
+      <polyline points="740,93 740,170 115,170 115,106" class="diag-line-fb" marker-end="url(#arr-pos-fb)"/>
+      <circle cx="740" cy="93" r="2.5" class="diag-junction"/>
+      <text x="125" y="167" class="diag-label-blue">α_mx</text>
+
+      <!-- ω_m feedback -->
+      <polyline points="660,115 660,150 280,150 280,106" class="diag-line-fb" marker-end="url(#arr-pos-fb)"/>
+      <text x="290" y="147" class="diag-label-blue">ω_mx</text>
+
+      <!-- i feedback -->
+      <polyline points="620,115 620,135 440,135 440,106" class="diag-line-fb" marker-end="url(#arr-pos-fb)"/>
+      <text x="450" y="132" class="diag-label-blue">i_ax</text>
+
+      <!-- Annotation: KEY INSIGHT -->
+      <text x="190" y="65" text-anchor="middle" class="diag-section-label">★ regulator P wystarczy ★</text>
+      <text x="190" y="135" text-anchor="middle" class="diag-label-small">(typ 1 — uchyb = 0)</text>
+
+      <!-- LEGEND -->
+      <line x1="38" y1="200" x2="68" y2="200" class="diag-line-accent"/>
+      <text x="74" y="204" class="diag-legend-text">tor sterowania</text>
+      <line x1="200" y1="200" x2="230" y2="200" class="diag-line-fb"/>
+      <text x="236" y="204" class="diag-legend-text">sprzężenia zwrotne</text>
+      <rect x="380" y="194" width="14" height="12" rx="2" class="diag-box-accent"/>
+      <text x="400" y="204" class="diag-legend-text">kluczowy element</text>
+      <rect x="520" y="194" width="14" height="12" rx="2" class="diag-box-power"/>
+      <text x="540" y="204" class="diag-legend-text">tor mocy + silnik</text>
+    </svg></div>
+
+    <p>Pętla prędkości w stanie zamkniętym (z regulatorem PI) ma zachowanie inercji I rzędu:</p>
+    <div class="math-block">$$G_x(s) \approx \frac{1}{2\tau_p s + 1}$$</div>
+    <p>A obiekt regulacji położenia (po dołączeniu zamkniętej pętli prędkości) zawiera <strong>integrator naturalny</strong>
+    ($\omega_m \to \alpha_m$ jest całkowaniem):</p>
+    <div class="math-block highlight">$$G_{o\alpha}(s) = \frac{G_x(s)}{s} = \frac{1}{s(2\tau_p s + 1)}$$</div>
+    <p>To jest układ <strong>typu 1</strong> w pętli otwartej.</p>
+  </section>
+
+  <section class="solution">
+    <h3>Wniosek z teorii układów regulacji</h3>
+    <table>
+      <tr><th>Typ układu otwartego</th><th>Uchyb ustalony przy skoku</th><th>Uchyb przy rampie</th></tr>
+      <tr><td>0 (bez integratora)</td><td>$e_{ss} = \frac{1}{1+K_p}$</td><td>$\infty$</td></tr>
+      <tr style="background: var(--accent-soft);"><td><strong>1 (jeden integrator)</strong></td><td><strong>$e_{ss} = 0$</strong> ← ten przypadek!</td><td>$1/K_v$</td></tr>
+      <tr><td>2 (dwa integratory)</td><td>$e_{ss} = 0$</td><td>$0$</td></tr>
+    </table>
+  </section>
+
+  <section class="solution">
+    <h3>Komentarz finałowy</h3>
+    <div class="callout">
+      Ponieważ obiekt regulacji położenia zawiera już naturalny integrator (przejście od prędkości do położenia),
+      do uzyskania zerowego uchybu ustalonego przy skokowej zmianie referencji położenia <strong>wystarczy regulator P</strong>.
+      Dla zerowego uchybu przy zmianach typu rampa (stała prędkość referencyjna) trzeba by zastosować PI w pętli położenia.
+    </div>
+  </section>
+</div>
+
+<!-- PANEL 8: Transmitancja zastępcza -->
+<div class="panel">
+  <div class="panel-head">
+    <span class="panel-num">[ 08 / 10 ]</span>
+    <span class="panel-source">kolokwium_2023 Q1</span>
+  </div>
+  <h2>Transmitancja zastępcza obiektu do projektowania regulatora prądu</h2>
+  <div class="tag-row">
+    <span class="tag">uproszczenie</span>
+    <span class="tag">modułowe optimum</span>
+  </div>
+
+  <div class="question-block">
+    <div class="label">Treść zadania</div>
+    <div class="text">
+      Podać transmitancję zastępczą tego układu do zbudowania regulatora prądu.
+      (Schemat zawiera przekształtnik, model silnika z $\psi$-mnożnikiem, integratorem i sprzężeniem od prędkości.)
+    </div>
+  </div>
+
+  <section class="solution">
+    <h3>Pełna transmitancja (drugiego rzędu)</h3>
+    <div class="math-block">$$G_{oId}(s) = \frac{\tau_t s + 1}{R_a \tau_e \tau_t s^2 + R_a(\tau_e + \tau_t)s + \frac{\psi^2}{c_t}}$$</div>
+    <div class="callout warning">
+      Ten obiekt <strong>nie spełnia warunku Kesslera</strong> ($\tau_1 \gg \tau_\Sigma$) — nie da się bezpośrednio
+      zastosować modułowego optimum.
+    </div>
+  </section>
+
+  <section class="solution">
+    <h3>Uproszczenia (zaznaczyć ✗ na schemacie)</h3>
+    <ol>
+      <li>$\tau_p \ll \tau_e$ — przekształtnik impulsowy z f_PWM kHz</li>
+      <li><strong>Szybkość zmian prądu ≫ prędkości</strong> → przerywamy sprzężenie od $\psi\omega_m$ (✗)</li>
+      <li>Zaniedbujemy moment obciążenia $m_o$ (✗)</li>
+    </ol>
+  </section>
+
+  <section class="solution">
+    <h3>Otrzymany uproszczony obiekt</h3>
+    <div class="math-block highlight">$$G_{oI}(s) = \frac{\frac{k_p}{R_a} k_i}{(\tau_p s + 1)(\tau_e s + 1)}$$</div>
+    <p>Schemat uproszczonego obiektu:</p>
+    <div class="scheme-flow">
+      <div class="box">$u_s$</div>
+      <div class="arrow">→</div>
+      <div class="box accent">$\frac{k_p}{\tau_p s + 1}$</div>
+      <div class="arrow">→</div>
+      <div class="box">$u_a$</div>
+      <div class="arrow">→</div>
+      <div class="box accent">$\frac{1/R_a}{\tau_e s + 1}$</div>
+      <div class="arrow">→</div>
+      <div class="box">$i_a$</div>
+      <div class="arrow">→</div>
+      <div class="box accent">$k_i$</div>
+      <div class="arrow">→</div>
+      <div class="box">$i_{ax}$</div>
+    </div>
+  </section>
+
+  <section class="solution">
+    <h3>Stosujemy modułowe optimum — regulator PI</h3>
+    <div class="math-block">$$G_{Ri}(s) = \frac{k_{Ri}(\tau_{Ri} s + 1)}{s}$$</div>
+    <p>Nastawy:</p>
+    <div class="math-block highlight">$$k_{Ri} = \frac{R_a}{2 k_p \tau_p k_i}, \qquad \tau_{Ri} = \tau_e$$</div>
+    <p>Kompensator $\tau_{Ri} = \tau_e$ likwiduje dominującą inercję silnika.</p>
+  </section>
+</div>
+
+<!-- PANEL 9: Modułowe vs symetryczne -->
+<div class="panel">
+  <div class="panel-head">
+    <span class="panel-num">[ 09 / 10 ]</span>
+    <span class="panel-source">notatki własne · pytanie pomocnicze</span>
+  </div>
+  <h2>Modułowe vs symetryczne optimum — porównanie</h2>
+  <div class="tag-row">
+    <span class="tag">teoria</span>
+    <span class="tag">kryteria Kesslera</span>
+  </div>
+
+  <div class="question-block">
+    <div class="label">Pytanie pomocnicze</div>
+    <div class="text">
+      Podać kryteria doboru nastaw regulatora dla modułowego i symetrycznego optimum. Kiedy stosować które?
+    </div>
+  </div>
+
+  <section class="solution">
+    <h3>Tabela porównawcza</h3>
+    <table>
+      <tr>
+        <th>Cecha</th>
+        <th>Modułowe optimum</th>
+        <th>Symetryczne optimum</th>
+      </tr>
+      <tr>
+        <td>Postać obiektu</td>
+        <td>$\tau_1 \gg \tau_\Sigma$</td>
+        <td>$\tau_1 \approx \tau_2$</td>
+      </tr>
+      <tr>
+        <td>Postać regulatora</td>
+        <td colspan="2" style="text-align:center;">$G_R(s) = \dfrac{k_R(\tau_R s + 1)}{s}$ (PI)</td>
+      </tr>
+      <tr>
+        <td>Wzmocnienie $k_R$</td>
+        <td><code>1/(2 k_o τ_Σ)</code></td>
+        <td><code>τ_1/(8 k_o τ_Σ²)</code></td>
+      </tr>
+      <tr>
+        <td>Stała czasowa $\tau_R$</td>
+        <td>$\tau_R = \tau_1$ <span class="muted">(kompensacja)</span></td>
+        <td>$\tau_R = 4\tau_\Sigma$</td>
+      </tr>
+      <tr>
+        <td>Przeregulowanie</td>
+        <td><span style="color:var(--green)">~4.3%</span></td>
+        <td><span style="color:var(--red)">~43%</span></td>
+      </tr>
+      <tr>
+        <td>Charakter</td>
+        <td>Reference tracking</td>
+        <td>Disturbance rejection</td>
+      </tr>
+      <tr>
+        <td>Filtr wstępny</td>
+        <td>nie wymagany</td>
+        <td>$G_F = \frac{1}{2\tau_x s + 1}$ <strong>konieczny!</strong></td>
+      </tr>
+      <tr>
+        <td>Typowe zastosowanie</td>
+        <td>regulator <strong>prądu</strong></td>
+        <td>regulator <strong>prędkości</strong></td>
+      </tr>
+    </table>
+  </section>
+
+  <section class="solution">
+    <h3>Konkretne nastawy dla regulatora prądu (modułowe)</h3>
+    <div class="math-block highlight">$$k_{Ri} = \frac{R_a}{2 k_p \tau_p k_i}, \qquad \tau_{Ri} = \tau_e$$</div>
+  </section>
+
+  <section class="solution">
+    <h3>Konkretne nastawy dla regulatora prędkości (symetryczne)</h3>
+    <p>Obiekt po dołączeniu pętli prądu: $\tau_x = 2\tau_p$.</p>
+    <div class="math-block highlight">$$k_{R\omega} = \frac{J_z k_i}{8 \psi \tau_x k_\omega}, \qquad \tau_{R\omega} = 4\tau_x$$</div>
+  </section>
+
+  <section class="solution">
+    <h3>Co się dzieje przy złym doborze?</h3>
+    <ul>
+      <li><strong>Modułowe na obiekt z $\tau_1 \approx \tau_2$</strong> → wolne odpowiedzi, słabe tłumienie zaburzeń</li>
+      <li><strong>Symetryczne bez filtra</strong> → 43% przeregulowanie, niedopuszczalne dla zadawania referencji</li>
+    </ul>
+  </section>
+</div>
+
+<!-- PANEL 10: Założenia AC -->
+<div class="panel">
+  <div class="panel-head">
+    <span class="panel-num">[ 10 / 10 ]</span>
+    <span class="panel-source">notatki własne · pytanie pomocnicze</span>
+  </div>
+  <h2>Założenia upraszczające do opisu silników AC</h2>
+  <div class="tag-row">
+    <span class="tag">silniki AC</span>
+    <span class="tag">model matematyczny</span>
+  </div>
+
+  <div class="question-block">
+    <div class="label">Pytanie pomocnicze</div>
+    <div class="text">
+      Wymienić założenia upraszczające stosowane przy formułowaniu modelu matematycznego silnika
+      indukcyjnego klatkowego (lub PMSM).
+    </div>
+  </div>
+
+  <section class="solution">
+    <h3>Lista 7 założeń</h3>
+    <ol>
+      <li><strong>Silnik 3-fazowy symetryczny</strong></li>
+      <li><strong>Pominięcie anizotropii</strong>, nasycenia magnetycznego, histerezy i prądów wirowych</li>
+      <li><strong>Pominięcie wyższych harmonicznych</strong> w szczelinie powietrznej</li>
+      <li><strong>$R$ i $L$ stojana stałe</strong> (nie zmieniają się ze stanem pracy)</li>
+      <li><strong>Rozłożone pasmowo uzwojenia</strong> stojana i wirnika zastępcze przez koncentryczne (skupione)</li>
+      <li><strong>Brak przewodu zerowego N</strong>: $i_{sa} + i_{sb} + i_{sc} = 0$</li>
+      <li><strong>Sinusoidalny rozkład pola</strong> magnetycznego w szczelinie</li>
+    </ol>
+  </section>
+
+  <section class="solution">
+    <h3>Definicja wektora przestrzennego (przy okazji)</h3>
+    <div class="math-block highlight">$$\underline{x}(t) = \frac{2}{3}\left(x_a(t) \cdot 1 + x_b(t) \cdot \underline{a} + x_c(t) \cdot \underline{a}^2\right)$$</div>
+    <p>gdzie $\underline{a} = e^{j 2\pi/3}$ — wersor w płaszczyźnie zespolonej.</p>
+  </section>
+
+  <section class="solution">
+    <h3>Bonus: równania silnika klatkowego (najważniejsze)</h3>
+    <p>W stacjonarnym układzie odniesienia ($\omega_{frame}=0$):</p>
+    <div class="math-block">$$\underline{u}_s = R_s \underline{i}_s + \frac{d\underline{\psi}_s}{dt}$$</div>
+    <div class="math-block">$$0 = R_r \underline{i}_r + \frac{d\underline{\psi}_r}{dt} - jp_b\omega_m\underline{\psi}_r$$</div>
+    <div class="math-block">$$\underline{\psi}_s = L_s \underline{i}_s + L_M \underline{i}_r, \quad \underline{\psi}_r = L_r \underline{i}_r + L_M \underline{i}_s$$</div>
+    <p>Moment elektromagnetyczny:</p>
+    <div class="math-block">$$m_e = \frac{3}{2}p_b\,\mathfrak{Im}(\underline{\psi}_s^* \underline{i}_s)$$</div>
+  </section>
+</div>
+
+</main>
+
+<footer>
+  <span>Sterowanie napędów elektrycznych · 6 sem AiR · ISEP PW</span>
+  <span class="accent-text">Powodzenia jutro 💪</span>
+</footer>
+
+<script>
+  function showPanel(i) {
+    document.querySelectorAll('.panel').forEach((p, j) => p.classList.toggle('active', j === i));
+    document.querySelectorAll('.topic-pill').forEach((t, j) => t.classList.toggle('active', j === i));
+    window.scrollTo({ top: document.querySelector('main').offsetTop - 140, behavior: 'smooth' });
+  }
+
+  // Re-render math when switching panels (KaTeX)
+  const observer = new MutationObserver(() => {
+    if (window.renderMathInElement) {
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '$', right: '$', display: false}
+        ],
+        throwOnError: false
+      });
+    }
+  });
+  observer.observe(document.body, { attributes: true, subtree: true, attributeFilter: ['class'] });
+
+  // Keyboard navigation: 1-9, 0
+  document.addEventListener('keydown', (e) => {
+    if (e.key >= '1' && e.key <= '9') showPanel(parseInt(e.key) - 1);
+    if (e.key === '0') showPanel(9);
+  });
+</script>
+
+</body>
+</html>
