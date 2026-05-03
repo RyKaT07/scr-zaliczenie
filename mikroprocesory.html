@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mikroprocesory — Kolos</title>
+<title>Mikroprocesory — Notatki</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap');
 
@@ -11,44 +11,39 @@
     --bg: #0a0a0f;
     --surface: #111118;
     --surface2: #18181f;
+    --surface3: #1f1f2a;
     --border: #2a2a38;
     --accent: #7c6aff;
     --accent2: #ff6a6a;
     --accent3: #6aff9e;
     --accent4: #ffb86a;
+    --accent5: #6ad4ff;
+    --accent6: #ff7ec8;
     --text: #e8e8f0;
     --muted: #6b6b80;
     --mono: 'IBM Plex Mono', monospace;
     --sans: 'IBM Plex Sans', sans-serif;
   }
-
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: var(--sans);
-    min-height: 100vh;
-    line-height: 1.6;
+    background: var(--bg); color: var(--text);
+    font-family: var(--sans); min-height: 100vh; line-height: 1.6;
   }
 
-  /* HEADER */
   header {
-    padding: 2rem 2rem 0;
-    border-bottom: 1px solid var(--border);
+    padding: 1.5rem 1.5rem 0; border-bottom: 1px solid var(--border);
     position: sticky; top: 0; z-index: 100;
-    background: rgba(10,10,15,0.92);
-    backdrop-filter: blur(12px);
+    background: rgba(10,10,15,.95); backdrop-filter: blur(12px);
   }
   .header-top {
     display: flex; align-items: center; justify-content: space-between;
-    flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem;
+    flex-wrap: wrap; gap: 1rem; margin-bottom: 1.2rem;
   }
-  .title-block h1 {
-    font-size: 1.6rem; font-weight: 800; letter-spacing: -0.02em;
-    color: var(--text);
+  h1 {
+    font-size: 1.5rem; font-weight: 800; letter-spacing: -.02em;
   }
-  .title-block h1 span { color: var(--accent); }
+  h1 span { color: var(--accent); }
   .badge {
     display: inline-flex; align-items: center; gap: .4rem;
     background: var(--accent2); color: #fff;
@@ -56,17 +51,16 @@
     padding: .25rem .7rem; border-radius: 99px;
     animation: pulse 2s ease-in-out infinite;
   }
-  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.6} }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.65} }
 
-  /* TABS */
   nav {
     display: flex; gap: 0; overflow-x: auto;
     scrollbar-width: none;
   }
   nav::-webkit-scrollbar { display: none; }
   .tab {
-    padding: .7rem 1.3rem;
-    font-family: var(--mono); font-size: .8rem; font-weight: 600;
+    padding: .65rem 1.1rem;
+    font-family: var(--mono); font-size: .77rem; font-weight: 600;
     color: var(--muted); cursor: pointer;
     border-bottom: 2px solid transparent;
     white-space: nowrap; transition: all .2s;
@@ -75,132 +69,114 @@
   .tab:hover { color: var(--text); }
   .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
 
-  /* MAIN */
-  main { padding: 2rem; max-width: 1100px; margin: 0 auto; }
-
-  .section { display: none; animation: fadeIn .3s ease; }
+  main { padding: 1.8rem 1.2rem; max-width: 1100px; margin: 0 auto; }
+  .section { display: none; animation: fadeIn .25s ease; }
   .section.active { display: block; }
   @keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:none} }
 
-  /* CARDS */
+  h2 {
+    font-size: 1.35rem; font-weight: 800; margin-bottom: 1.2rem;
+    color: var(--text); letter-spacing: -.01em;
+  }
+  h2 span { color: var(--accent4); }
+  h3 { font-size: .95rem; font-weight: 600; margin: 1rem 0 .5rem; color: var(--accent3); }
+
   .card {
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: 12px;
-    padding: 1.5rem;
-    margin-bottom: 1.2rem;
+    padding: 1.3rem;
+    margin-bottom: 1rem;
   }
   .card-title {
-    font-family: var(--mono); font-size: .75rem; font-weight: 700;
+    font-family: var(--mono); font-size: .73rem; font-weight: 700;
     color: var(--accent); text-transform: uppercase; letter-spacing: .1em;
     margin-bottom: .8rem;
   }
+  .card.green { border-color: rgba(106,255,158,.25); }
+  .card.green .card-title { color: var(--accent3); }
+  .card.red { border-color: rgba(255,106,106,.25); }
+  .card.red .card-title { color: var(--accent2); }
+  .card.orange { border-color: rgba(255,184,106,.25); }
+  .card.orange .card-title { color: var(--accent4); }
+  .card.blue { border-color: rgba(106,212,255,.25); }
+  .card.blue .card-title { color: var(--accent5); }
+  .card.pink { border-color: rgba(255,126,200,.25); }
+  .card.pink .card-title { color: var(--accent6); }
 
-  h2 {
-    font-size: 1.3rem; font-weight: 800; margin-bottom: 1.2rem;
-    color: var(--text); letter-spacing: -.01em;
-  }
-  h2 span { color: var(--accent4); }
-
-  h3 { font-size: 1rem; font-weight: 600; margin: 1rem 0 .5rem; color: var(--accent3); }
-
-  p { color: #b8b8cc; margin-bottom: .6rem; font-size: .95rem; }
-  ul { padding-left: 1.2rem; color: #b8b8cc; font-size: .95rem; }
-  li { margin-bottom: .35rem; }
+  p { color: #b8b8cc; margin-bottom: .55rem; font-size: .92rem; }
+  ul, ol { padding-left: 1.2rem; color: #b8b8cc; font-size: .92rem; }
+  li { margin-bottom: .3rem; }
   li strong { color: var(--text); }
 
-  /* TWO-COL */
   .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-  @media(max-width:700px){ .grid2{ grid-template-columns:1fr; } }
+  .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+  @media(max-width:700px) { .grid2,.grid3 { grid-template-columns: 1fr; } }
 
-  /* TABLE */
-  table { width: 100%; border-collapse: collapse; font-size: .88rem; }
+  table { width: 100%; border-collapse: collapse; font-size: .85rem; }
   th {
     background: var(--surface2); color: var(--accent);
-    font-family: var(--mono); font-size: .75rem; text-transform: uppercase; letter-spacing: .08em;
-    padding: .6rem .8rem; text-align: left; border-bottom: 1px solid var(--border);
+    font-family: var(--mono); font-size: .72rem; text-transform: uppercase; letter-spacing: .08em;
+    padding: .55rem .8rem; text-align: left; border-bottom: 1px solid var(--border);
   }
-  td { padding: .55rem .8rem; border-bottom: 1px solid var(--border); color: #b8b8cc; }
+  td { padding: .5rem .8rem; border-bottom: 1px solid var(--border); color: #b8b8cc; }
   tr:hover td { background: var(--surface2); color: var(--text); }
   td:first-child { font-family: var(--mono); font-weight: 600; color: var(--accent4); }
+  td.normal { font-family: var(--sans); color: #b8b8cc; font-weight: normal; }
 
-  /* CODE */
   code {
-    font-family: var(--mono);
-    background: var(--surface2); color: var(--accent3);
-    padding: .1em .4em; border-radius: 4px; font-size: .85em;
+    font-family: var(--mono); background: var(--surface2);
+    color: var(--accent3); padding: .1em .4em; border-radius: 4px; font-size: .85em;
   }
   pre {
-    font-family: var(--mono); font-size: .82rem;
+    font-family: var(--mono); font-size: .8rem;
     background: var(--surface2); border: 1px solid var(--border);
-    border-radius: 8px; padding: 1rem; overflow-x: auto;
-    color: var(--accent3); line-height: 1.7;
-    margin: .6rem 0;
+    border-radius: 8px; padding: .9rem 1rem; overflow-x: auto;
+    color: var(--accent3); line-height: 1.55;
+    margin: .5rem 0;
   }
 
-  /* COMPARE BOX */
   .compare {
     display: grid; grid-template-columns: 1fr 1fr; gap: 1px;
     background: var(--border); border-radius: 10px; overflow: hidden;
+    margin: 1rem 0;
   }
-  .compare-col { background: var(--surface); padding: 1.2rem; }
+  @media(max-width:700px) { .compare { grid-template-columns: 1fr; } }
+  .compare-col { background: var(--surface); padding: 1.1rem; }
   .compare-col h3 { margin-top: 0; }
-  .compare-col.risc h3 { color: var(--accent3); }
-  .compare-col.cisc h3 { color: var(--accent2); }
+  .compare-col.green h3 { color: var(--accent3); }
+  .compare-col.red h3 { color: var(--accent2); }
+  .compare-col.orange h3 { color: var(--accent4); }
+  .compare-col.blue h3 { color: var(--accent5); }
 
-  /* EQUATION */
   .eq {
-    font-family: var(--mono); font-size: 1.05rem;
+    font-family: var(--mono); font-size: 1rem;
     background: var(--surface2); border-left: 3px solid var(--accent);
-    padding: .8rem 1.2rem; border-radius: 0 8px 8px 0; margin: 1rem 0;
+    padding: .7rem 1.1rem; border-radius: 0 8px 8px 0; margin: .8rem 0;
     color: var(--accent4);
   }
 
-  /* FLASHCARDS */
-  .flashcard-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px,1fr)); gap: 1rem; }
-  .flashcard {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    cursor: pointer;
-    perspective: 600px;
-    height: 160px;
-    transition: border-color .2s;
+  .chip {
+    display: inline-block;
+    padding: .2rem .55rem; border-radius: 99px;
+    font-family: var(--mono); font-size: .7rem; font-weight: 600;
+    margin: .15rem;
   }
-  .flashcard:hover { border-color: var(--accent); }
-  .flashcard-inner {
-    position: relative; width: 100%; height: 100%;
-    transform-style: preserve-3d;
-    transition: transform .5s ease;
-  }
-  .flashcard.flipped .flashcard-inner { transform: rotateY(180deg); }
-  .fc-front, .fc-back {
-    position: absolute; inset: 0;
-    backface-visibility: hidden;
-    display: flex; flex-direction: column; justify-content: center;
-    padding: 1.2rem; border-radius: 12px;
-  }
-  .fc-front { background: var(--surface); }
-  .fc-back { background: var(--surface2); transform: rotateY(180deg); }
-  .fc-q {
-    font-family: var(--mono); font-size: .75rem; color: var(--muted);
-    text-transform: uppercase; letter-spacing: .08em; margin-bottom: .5rem;
-  }
-  .fc-text { font-size: .95rem; font-weight: 600; color: var(--text); }
-  .fc-ans { font-size: .85rem; color: #b8b8cc; line-height: 1.5; }
-  .fc-hint { font-size: .72rem; color: var(--muted); margin-top: .5rem; }
+  .chip-m { background: rgba(106,212,255,.15); color: var(--accent5); }
+  .chip-r { background: rgba(106,255,158,.15); color: var(--accent3); }
+  .chip-a { background: rgba(255,106,106,.15); color: var(--accent2); }
+  .chip-o { background: rgba(255,184,106,.15); color: var(--accent4); }
 
-  /* PIPELINE VIZ */
   .pipeline {
     display: grid;
-    font-family: var(--mono); font-size: .75rem;
+    font-family: var(--mono); font-size: .73rem;
     gap: 2px; margin: 1rem 0;
   }
   .pl-row { display: flex; align-items: center; gap: 2px; }
-  .pl-label { width: 80px; color: var(--muted); font-size: .72rem; flex-shrink: 0; }
+  .pl-label { width: 80px; color: var(--muted); font-size: .7rem; flex-shrink: 0; }
   .pl-cell {
-    padding: .3rem .5rem; border-radius: 4px; min-width: 44px; text-align: center;
-    font-weight: 600; font-size: .7rem;
+    padding: .25rem .45rem; border-radius: 4px; min-width: 40px; text-align: center;
+    font-weight: 600; font-size: .68rem;
   }
   .pl-fe { background: #2a1a4a; color: #a78bfa; }
   .pl-de { background: #1a2a3a; color: #60a5fa; }
@@ -209,68 +185,137 @@
   .pl-wr { background: #3a1a2a; color: #f472b6; }
   .pl-empty { background: transparent; }
 
-  /* BADGE CHIPS */
-  .chip {
-    display: inline-block;
-    padding: .2rem .6rem; border-radius: 99px;
-    font-family: var(--mono); font-size: .72rem; font-weight: 600;
-    margin: .15rem;
-  }
-  .chip-m { background: #1a2a4a; color: #60a5fa; }
-  .chip-r { background: #1a3a1a; color: #34d399; }
-  .chip-a { background: #3a1a1a; color: #f87171; }
-  .chip-o { background: #3a2a1a; color: #fb923c; }
-
-  /* EXAM TOPICS */
   .exam-item {
     display: flex; gap: 1rem; align-items: flex-start;
-    padding: .8rem 1rem; border-radius: 8px;
-    border: 1px solid var(--border); margin-bottom: .6rem;
+    padding: .75rem 1rem; border-radius: 8px;
+    border: 1px solid var(--border); margin-bottom: .55rem;
     background: var(--surface);
-    transition: border-color .2s, background .2s;
+    transition: border-color .15s, background .15s;
     cursor: pointer;
   }
   .exam-item:hover { border-color: var(--accent); background: var(--surface2); }
   .exam-num {
-    font-family: var(--mono); font-size: .8rem; font-weight: 700;
+    font-family: var(--mono); font-size: .78rem; font-weight: 700;
     color: var(--accent); background: rgba(124,106,255,.15);
     padding: .2rem .5rem; border-radius: 6px; flex-shrink: 0;
   }
   .exam-desc { font-size: .9rem; color: var(--text); }
-  .exam-sub { font-size: .8rem; color: var(--muted); margin-top: .2rem; }
+  .exam-sub { font-size: .78rem; color: var(--muted); margin-top: .2rem; }
 
-  /* PROGRESS */
+  .syllabus-item {
+    display: flex; gap: 1rem; padding: .8rem 1rem;
+    background: var(--surface2); border-radius: 8px;
+    margin-bottom: .5rem; align-items: flex-start;
+  }
+  .syllabus-num {
+    font-family: var(--mono); font-weight: 700; color: var(--accent4);
+    background: var(--surface3); padding: .25rem .55rem;
+    border-radius: 6px; font-size: .8rem; flex-shrink: 0;
+  }
+  .syllabus-text { font-size: .9rem; color: var(--text); }
+  .syllabus-text .h { font-size: .8rem; color: var(--muted); margin-top: .2rem; }
+
+  /* Flashcards */
+  .flashcard-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px,1fr)); gap: .9rem; }
+  .flashcard {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; cursor: pointer; perspective: 600px;
+    height: 170px; transition: border-color .2s;
+  }
+  .flashcard:hover { border-color: var(--accent); }
+  .flashcard-inner {
+    position: relative; width: 100%; height: 100%;
+    transform-style: preserve-3d; transition: transform .5s ease;
+  }
+  .flashcard.flipped .flashcard-inner { transform: rotateY(180deg); }
+  .fc-front, .fc-back {
+    position: absolute; inset: 0;
+    backface-visibility: hidden;
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 1.1rem; border-radius: 12px;
+  }
+  .fc-front { background: var(--surface); }
+  .fc-back { background: var(--surface2); transform: rotateY(180deg); overflow: auto; }
+  .fc-q {
+    font-family: var(--mono); font-size: .7rem; color: var(--muted);
+    text-transform: uppercase; letter-spacing: .08em; margin-bottom: .4rem;
+  }
+  .fc-text { font-size: .92rem; font-weight: 600; color: var(--text); }
+  .fc-ans { font-size: .82rem; color: #b8b8cc; line-height: 1.5; }
+  .fc-hint { font-size: .68rem; color: var(--muted); margin-top: .4rem; }
+
   .progress-bar {
     width: 100%; height: 4px; background: var(--border);
-    border-radius: 99px; margin-bottom: 1.5rem; overflow: hidden;
+    border-radius: 99px; margin-bottom: 1rem; overflow: hidden;
   }
   .progress-fill {
     height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent3));
     border-radius: 99px; transition: width .4s ease;
   }
-
   .flip-hint {
     text-align: center; font-family: var(--mono); font-size: .72rem;
     color: var(--muted); margin-bottom: 1rem;
   }
+
+  /* Polynomial visualization */
+  .poly-bits {
+    display: flex; gap: 3px; margin: .8rem 0;
+    font-family: var(--mono); font-size: .7rem;
+  }
+  .poly-bit {
+    width: 26px; height: 26px; border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; flex-shrink: 0;
+  }
+  .poly-bit.set { background: var(--accent); color: white; }
+  .poly-bit.unset { background: var(--surface3); color: var(--muted); }
+
+  .pill {
+    display: inline-block;
+    padding: .15rem .5rem; background: var(--surface3);
+    border-radius: 99px; font-family: var(--mono); font-size: .7rem;
+    color: var(--accent3); margin-right: .3rem;
+  }
+
+  .tip {
+    background: rgba(255,184,106,.07); border-left: 3px solid var(--accent4);
+    padding: .8rem 1rem; border-radius: 0 8px 8px 0;
+    margin: 1rem 0; font-size: .87rem;
+  }
+  .tip strong { color: var(--accent4); }
+
+  .key { color: var(--accent3); font-weight: 700; }
+  .neg { color: var(--accent2); }
+  .pos { color: var(--accent3); }
+
+  .info-strip {
+    display: flex; gap: .5rem; margin: 1rem 0;
+    flex-wrap: wrap;
+  }
+  .info-strip-item {
+    background: var(--surface2); padding: .4rem .8rem;
+    border-radius: 8px; font-size: .82rem;
+    color: var(--muted); font-family: var(--mono);
+  }
+  .info-strip-item strong { color: var(--text); }
 </style>
 </head>
 <body>
 
 <header>
   <div class="header-top">
-    <div class="title-block">
-      <h1>Mikro<span>procesory</span> — Kolos</h1>
-    </div>
-    <div class="badge">⚡ Poniedziałek 13.04</div>
+    <h1>Mikro<span>procesory</span> — Notatki</h1>
+    <div class="badge">⚡ Jutro · Poniedziałek 04.05</div>
   </div>
   <nav>
-    <button class="tab active" onclick="show('start')">📋 Tematy</button>
-    <button class="tab" onclick="show('basics')">🖥️ Podstawy</button>
-    <button class="tab" onclick="show('cisc')">⚖️ CISC vs RISC</button>
-    <button class="tab" onclick="show('arm')">🦾 ARM</button>
-    <button class="tab" onclick="show('versions')">📈 Wersje</button>
+    <button class="tab active" onclick="show('start')">📋 Start</button>
     <button class="tab" onclick="show('tools')">🔧 Narzędzia</button>
+    <button class="tab" onclick="show('signature')">📊 Sygnatury</button>
+    <button class="tab" onclick="show('cisc')">⚖️ CISC vs RISC</button>
+    <button class="tab" onclick="show('m8051')">🎯 8051</button>
+    <button class="tab" onclick="show('avr')">🦅 AVR</button>
+    <button class="tab" onclick="show('progr')">💻 Programowanie</button>
+    <button class="tab" onclick="show('arm')">🦾 ARM</button>
     <button class="tab" onclick="show('flash')">🃏 Fiszki</button>
     <a href="mikroprocesory-test.html" class="tab" style="text-decoration:none;color:var(--accent)">📝 Test →</a>
   </nav>
@@ -278,150 +323,491 @@
 
 <main>
 
-<!-- TEMATY Z KOLOSA -->
+<!-- ═══════════════════ START ═══════════════════ -->
 <div id="start" class="section active">
-  <h2>🎯 Tematy z <span>poprzedniego kolosa</span></h2>
-  <p style="margin-bottom:1.2rem">To zdjęcia z egzaminu sprzed ~2 lat. Mocno pokrywa się z aktualnym materiałem.</p>
+  <h2>🎯 Kolokwium z <span>Mikroprocesorów</span></h2>
+
+  <div class="info-strip">
+    <div class="info-strip-item">📅 <strong>04.05.2026</strong> (jutro)</div>
+    <div class="info-strip-item">👨‍🏫 dr inż. Andrzej Kalicki</div>
+    <div class="info-strip-item">📝 Pytania otwarte</div>
+    <div class="info-strip-item">🚫 Bez materiałów</div>
+    <div class="info-strip-item">📊 30 pkt</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📚 Pełny syllabus kursu (1DR1621-A)</div>
+
+    <div class="syllabus-item">
+      <span class="syllabus-num">1</span>
+      <div class="syllabus-text">
+        <strong>Sprzęt i oprogramowanie wspomagające uruchamianie programów</strong> (~4h)
+        <div class="h">1.1 Symulator pamięci programu · 1.2 Program zdalnego ładowania · 1.3 Emulator wewnątrz-układowy (ICE) · 1.4 Łącze JTAG · 1.5 Analiza sygnatur</div>
+      </div>
+    </div>
+
+    <div class="syllabus-item">
+      <span class="syllabus-num">2</span>
+      <div class="syllabus-text">
+        <strong>Mikrokomputery 8-bitowe 8051</strong> (~2h)
+        <div class="h">2.1 Własności 8051 · 2.2 DS80C450 (Maxim) · 2.3 AT89LP (Atmel) · 2.4 C8051 (Silicon Labs) · 2.5 DQ8051 (DCD)</div>
+      </div>
+    </div>
+
+    <div class="syllabus-item">
+      <span class="syllabus-num">3</span>
+      <div class="syllabus-text">
+        <strong>Mikrokomputery 8-bitowe ATMega</strong> (~2h)
+        <div class="h">AVR ATmega32A, RISC, AVR vs 8051</div>
+      </div>
+    </div>
+
+    <div class="syllabus-item">
+      <span class="syllabus-num">4</span>
+      <div class="syllabus-text">
+        <strong>Zaawansowane programowanie 8051</strong> (~2h)
+        <div class="h">Przekazywanie parametrów · Asm/C/hybryda · Modele pamięci · cstartup · Segmenty</div>
+      </div>
+    </div>
+
+    <div class="syllabus-item">
+      <span class="syllabus-num">5</span>
+      <div class="syllabus-text">
+        <strong>Mikrokomputery 32 i 64-bitowe ARM</strong> (~4h)
+        <div class="h">Cechy ARM · Wersje v4-v8 · Thumb/Thumb-2 · Rodziny Cortex</div>
+      </div>
+    </div>
+  </div>
+
+  <h2 style="margin-top:1.5rem">📖 Tematy z <span>poprzedniego kolosa</span> (sprzed 2 lat)</h2>
+  <p style="margin-bottom:1rem">100% pytań było z sekcji 1 (Narzędzia) i 5 (ARM). Aktualny kurs ma wszystkie 5 sekcji — przygotuj się szeroko.</p>
 
   <div class="exam-item" onclick="show('tools')">
     <div class="exam-num">Nr 3</div>
     <div>
-      <div class="exam-desc">Przechwytywanie danych z magistrali (ICE)</div>
-      <div class="exam-sub">Proces 6-krokowy, typy linii magistrali → zakładka Narzędzia</div>
+      <div class="exam-desc">Przechwytywanie danych z magistrali (ICE) — 6 kroków</div>
+      <div class="exam-sub">→ zakładka Narzędzia</div>
     </div>
   </div>
   <div class="exam-item" onclick="show('tools')">
     <div class="exam-num">Nr 4</div>
     <div>
-      <div class="exam-desc">Zdalne ładowanie kodu wykonywalnego</div>
-      <div class="exam-sub">Format INTELA, organizacja pamięci, sygnał PSEN → zakładka Narzędzia</div>
-    </div>
-  </div>
-  <div class="exam-item" onclick="show('tools')">
-    <div class="exam-num">Nr 4b</div>
-    <div>
-      <div class="exam-desc">Interfejs JTAG — TAP controller, sygnały</div>
-      <div class="exam-sub">TMS, TDI, TDO, TCK, RTCK, nSRST, nTRST → zakładka Narzędzia</div>
+      <div class="exam-desc">Zdalne ładowanie kodu — format INTELA, JTAG diagram, PSEN</div>
+      <div class="exam-sub">→ zakładka Narzędzia</div>
     </div>
   </div>
   <div class="exam-item" onclick="show('cisc')">
     <div class="exam-num">Nr 5</div>
     <div>
-      <div class="exam-desc">Porównanie procesorów CISC i RISC</div>
-      <div class="exam-sub">Schemat blokowy, równanie czasu, tabela porównawcza → zakładka CISC vs RISC</div>
+      <div class="exam-desc">Porównanie CISC i RISC — schemat, równanie, tabela</div>
+      <div class="exam-sub">→ zakładka CISC vs RISC</div>
     </div>
   </div>
   <div class="exam-item" onclick="show('arm')">
     <div class="exam-num">Nr 6</div>
     <div>
-      <div class="exam-desc">Lista cech architektury ARM</div>
-      <div class="exam-sub">RISC, load/store, rejestry, potok, wykonanie warunkowe → zakładka ARM</div>
+      <div class="exam-desc">Lista cech architektury ARM ⭐</div>
+      <div class="exam-sub">→ zakładka ARM (sekcja 6 cech)</div>
     </div>
   </div>
-  <div class="exam-item" onclick="show('versions')">
+  <div class="exam-item" onclick="show('arm')">
     <div class="exam-num">Nr 7</div>
     <div>
       <div class="exam-desc">Thumb i Thumb-2 — lista ulepszeń</div>
-      <div class="exam-sub">IT instruction, CBZ, 32-bit opcodes → zakładka Wersje</div>
+      <div class="exam-sub">→ zakładka ARM</div>
     </div>
   </div>
-  <div class="exam-item" onclick="show('versions')">
+  <div class="exam-item" onclick="show('arm')">
     <div class="exam-num">Nr 8</div>
     <div>
-      <div class="exam-desc">Rodziny procesorów ARM i ich zastosowania</div>
-      <div class="exam-sub">Cortex-M/R/A, Neoverse, SecurCore, Ethos → zakładka Wersje</div>
+      <div class="exam-desc">Rodziny ARM Cortex i ich zastosowania</div>
+      <div class="exam-sub">→ zakładka ARM</div>
     </div>
   </div>
 
-  <div class="card" style="margin-top:1.5rem; border-color: var(--accent4);">
-    <div class="card-title">💡 Strategia powtórki</div>
+  <div class="tip" style="margin-top:1.5rem">
+    <strong>💡 Strategia:</strong> Zacznij od ARM (60% prawdopodobieństwo trafienia bo z poprzedniego kolosa) →
+    potem analiza sygnatur (sekcja syllabusa nieobecna na poprzednim kolosie — może się pojawić) →
+    potem 8051 i AVR. Programowanie 8051 to długie pytania ale technika jest powtarzalna.
+  </div>
+</div>
+
+<!-- ═══════════════════ NARZĘDZIA ═══════════════════ -->
+<div id="tools" class="section">
+  <h2>🔧 Narzędzia <span>uruchomieniowe</span></h2>
+
+  <div class="card">
+    <div class="card-title">Klasyfikacja narzędzi</div>
+    <div class="grid3">
+      <div>
+        <h3>Software</h3>
+        <ul>
+          <li>Asembler / makro-asembler</li>
+          <li>Kompilator</li>
+          <li>Linker (konsolidator)</li>
+          <li>Bibliotekarz</li>
+          <li>Symulator</li>
+          <li>Debugger</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Hardware</h3>
+        <ul>
+          <li>Płytka komputerowa</li>
+          <li>Płytka uruchomieniowa (development board)</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Hardware control</h3>
+        <ul>
+          <li>Symulator pamięci programu (ROM)</li>
+          <li>Program zdalnego ładowania</li>
+          <li>Emulator wewnątrz-układowy (ICE)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="card blue">
+    <div class="card-title">1.1 Symulator pamięci programu (ROM simulator)</div>
+    <p>Urządzenie zastępujące fizyczną pamięć ROM w prototypie. Podłączane w miejsce pamięci programu — zachowuje się jak ROM, ale jego zawartość można zmieniać przez interfejs (zwykle z PC).</p>
+    <h3>Zalety:</h3>
     <ul>
-      <li>Zacznij od <strong>CISC vs RISC</strong> — to pojawia się wszędzie jako fundament</li>
-      <li>Naucz się <strong>6 cech ARM</strong> na pamięć (load/store, 16 rej., 32-bit instr., potok, warunkowe, 1 cykl)</li>
-      <li>Zapamiętaj <strong>tabelkę rodzin Cortex</strong> (M/R/A + Neoverse/SecurCore/Ethos)</li>
-      <li>Wersje ARMv4→v8: każda ma 1-2 kluczowe nowości (Thumb, DSP, Thumb-2, SIMD, 64-bit)</li>
-      <li>ICE i JTAG — rozumiej co robią sygnały, nie zakuwaj na pamięć</li>
+      <li>Szybkie przeładowanie programu bez wymiany ROM</li>
+      <li>Eliminuje cykl programowania pamięci EPROM/FLASH</li>
+      <li>Skraca czas debugowania (sekundy zamiast minut/godzin)</li>
+      <li>Daje dostęp do podglądu wykonywanego kodu</li>
+    </ul>
+    <p style="margin-top:.6rem;color:var(--muted);font-size:.85rem">Główna metoda przed pojawieniem się MCU z FLASH/JTAG.</p>
+  </div>
+
+  <div class="card blue">
+    <div class="card-title">1.2 Program zdalnego ładowania kodu wykonywalnego</div>
+    <p>Kod przesyłany z PC do mikrokomputera przez interfejs I/O. Program zdalnego ładowania (w ROM) odbiera kod i zapisuje do RAM (do przestrzeni programu).</p>
+
+    <h3>Format INTELA (Intel HEX) — ⭐ Pyt. 4 z kolosa</h3>
+    <p>Wiadomość tekstowa heks. Każdy rekord poprzedzony dwukropkiem ":". Struktura:</p>
+    <ul>
+      <li><strong>2 znaki</strong> — długość danych (w bajtach)</li>
+      <li><strong>4 znaki</strong> — adres ładowania (load address)</li>
+      <li><strong>2 znaki</strong> — typ rekordu</li>
+      <li><strong>N znaków</strong> = 2 × długość — same dane</li>
+      <li><strong>2 znaki</strong> — suma kontrolna (checksum)</li>
+    </ul>
+    <p>Ostatnia linia (EOF marker): <code>:00000001FF</code></p>
+
+    <h3>Organizacja pamięci 8051 przy zdalnym ładowaniu:</h3>
+    <table>
+      <tr><th>Adres</th><th>CODE</th><th>XDATA</th><th>Sygnał</th></tr>
+      <tr><td>0x0000–0x0FFF</td><td class="normal">ROM (program)</td><td class="normal">RAM (dane)</td><td class="normal"><code>PSEN</code> dla ROM, <code>RD/WR</code> dla RAM</td></tr>
+      <tr><td>0x1000–0xFFFF</td><td class="normal">RAM</td><td class="normal">RAM</td><td class="normal">tylko <code>RD/WR</code></td></tr>
+    </table>
+    <div class="tip">
+      <strong>PSEN (Program Store Enable)</strong> = sygnał odczytu z zewnętrznej pamięci programu (ROM). Aktywny gdy CPU pobiera instrukcję. Powyżej 0x1000 program leży w RAM (załadowany z zewnątrz) i jest dostępny przez RD/WR.
+    </div>
+  </div>
+
+  <div class="card green">
+    <div class="card-title">1.3 ICE — In-Circuit Emulator ⭐ Pyt. 3 z kolosa</div>
+    <p>Niezastąpione narzędzie do debugowania systemów wbudowanych. Pozwala precyzyjnie monitorować, analizować i modyfikować przepływ danych na magistrali.</p>
+
+    <h3>Magistrala mikrokomputera = 3 typy linii:</h3>
+    <ul>
+      <li><strong>Linie danych (data)</strong> — transportują dane między komponentami</li>
+      <li><strong>Linie adresowe (address)</strong> — wskazują miejsce docelowe danych</li>
+      <li><strong>Linie kontrolne (control)</strong> — sterują przepływem i sygnałami niemodyfikującymi pamięci</li>
+    </ul>
+
+    <h3>6-krokowy proces przechwytywania:</h3>
+    <ol>
+      <li><strong>Podłączenie</strong> — fizyczne podłączenie emulatora do magistrali przez złącze i interfejs</li>
+      <li><strong>Przechwytywanie danych</strong> — emulator monitoruje sygnały na liniach magistrali; gdy CPU lub inne urządzenie przesyła dane, ICE je przechwytuje</li>
+      <li><strong>Analiza danych</strong> — sprawdzenie poprawności, diagnoza błędów, monitorowanie transferów</li>
+      <li><strong>Modyfikowanie danych</strong> — ICE może wstrzykiwać zmiany na danych, adresach lub sygnałach kontrolnych</li>
+      <li><strong>Sterowanie przerwaniami</strong> — emulator zarządza sygnałami przenoszeń, symuluje zdarzenia</li>
+      <li><strong>Rejestrowanie danych</strong> — log wartości danych, adresów i sygnałów kontrolnych do późniejszej analizy</li>
+    </ol>
+  </div>
+
+  <div class="card orange">
+    <div class="card-title">1.4 JTAG — Łącze diagnostyczne (IEEE 1149.1)</div>
+    <p>Standard interfejsu do komunikacji z emulatorem wewnątrz-układowym oraz do programowania pamięci. Wbudowany blok <strong>EmbeddedICE</strong> w procesorze daje pełen dostęp.</p>
+
+    <div class="grid2">
+      <div>
+        <h3>Sygnały TAP controller:</h3>
+        <ul>
+          <li><code>TMS</code> — Test Mode Select (wybór trybu)</li>
+          <li><code>TDI</code> — Test Data Input</li>
+          <li><code>TDO</code> — Test Data Output</li>
+          <li><code>TCK</code> — Test Clock (sygnał zegarowy)</li>
+          <li><code>RTCK</code> — Return TCK (zwrotny zegar)</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Sygnały reset:</h3>
+        <ul>
+          <li><code>nSRST</code> — System Reset (aktywny niski)</li>
+          <li><code>nTRST</code> — Test Reset</li>
+        </ul>
+        <h3>EmbeddedICE wewnątrz CPU:</h3>
+        <ul>
+          <li><code>DBGRQ</code> — debug request</li>
+          <li><code>DBGACK</code> — debug acknowledge</li>
+        </ul>
+      </div>
+    </div>
+
+    <p style="margin-top:.6rem"><strong>Zastosowania:</strong> boundary scan, debugowanie, programowanie flash, testowanie połączeń między układami.</p>
+  </div>
+</div>
+
+<!-- ═══════════════════ ANALIZA SYGNATUR ═══════════════════ -->
+<div id="signature" class="section">
+  <h2>📊 Analiza <span>sygnatur</span></h2>
+
+  <div class="card pink">
+    <div class="card-title">Idea — Co to jest?</div>
+    <p>Metoda <strong>kompresji długich strumieni danych</strong> do krótkich "podpisów" (signature) w celu wykrywania błędów. Stosowana w testowaniu układów cyfrowych — porównuje się signature wzorcowy z otrzymanym po teście.</p>
+
+    <div class="eq">strumień t(x) → LFSR (rejestr przesuwny + XOR feedback) → po m taktach: signature S(x)</div>
+
+    <p>S(x) jest typowo <strong>16-bitowy</strong> (4 znaki heksadecymalne). Algorytm wykorzystuje <strong>liniowy rejestr przesuwny ze sprzężeniem zwrotnym (LFSR)</strong> z określonym wielomianem charakterystycznym.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Wielomian charakterystyczny (16-bit)</div>
+    <div class="eq">G(x) = x¹⁶ + x¹² + x⁹ + x⁷ + 1</div>
+    <p>Reprezentacja bitowa współczynników (od x¹⁶ do x⁰):</p>
+    <div class="poly-bits">
+      <div class="poly-bit set">16</div>
+      <div class="poly-bit unset">15</div>
+      <div class="poly-bit unset">14</div>
+      <div class="poly-bit unset">13</div>
+      <div class="poly-bit set">12</div>
+      <div class="poly-bit unset">11</div>
+      <div class="poly-bit unset">10</div>
+      <div class="poly-bit set">9</div>
+      <div class="poly-bit unset">8</div>
+      <div class="poly-bit set">7</div>
+      <div class="poly-bit unset">6</div>
+      <div class="poly-bit unset">5</div>
+      <div class="poly-bit unset">4</div>
+      <div class="poly-bit unset">3</div>
+      <div class="poly-bit unset">2</div>
+      <div class="poly-bit unset">1</div>
+      <div class="poly-bit set">0</div>
+    </div>
+
+    <h3>Wielomian dualny (od końca, służy do analizy):</h3>
+    <div class="eq">Ψ(x) = x¹⁶ · G(1/x) = x¹⁶ + x⁹ + x⁷ + x⁴ + 1</div>
+
+    <h3>Signature jako reszta z dzielenia:</h3>
+    <div class="eq">S(x) = rem( t(x) / G(x) )</div>
+  </div>
+
+  <div class="card green">
+    <div class="card-title">Jakość detekcji błędów</div>
+    <p>Kluczowe zmienne: <strong>n</strong> = długość rejestru (zwykle 16), <strong>m</strong> = długość strumienia danych.</p>
+
+    <h3>Warunki błędu:</h3>
+    <ul>
+      <li><strong class="pos">m ≤ n</strong>: WSZYSTKIE niezerowe error series są wykrywane (Q(x)=0, więc R(x)=E(x)≠0)</li>
+      <li><strong class="neg">m &gt; n</strong>: niektóre error series mogą dawać R(x)=0 (niewykryte): E(x) = Q(x)·2ⁿ·G(x)</li>
+    </ul>
+
+    <h3>Pe (prawdopodobieństwo błędu niewykrytego) dla n=16:</h3>
+    <table>
+      <tr><th>m</th><th>Me (niewykryte)</th><th>M (wszystkie)</th><th>Pe</th><th>P (wykryte)</th></tr>
+      <tr><td>≤ 16</td><td class="normal">0</td><td class="normal">2^m - 1</td><td class="normal" style="color:var(--accent3)">0</td><td class="normal" style="color:var(--accent3)">1.000000</td></tr>
+      <tr><td>17</td><td class="normal">1</td><td class="normal">131 071</td><td class="normal">0.000008</td><td class="normal">0.999992</td></tr>
+      <tr><td>18</td><td class="normal">3</td><td class="normal">262 143</td><td class="normal">0.000011</td><td class="normal">0.999989</td></tr>
+      <tr><td>20</td><td class="normal">15</td><td class="normal">1 048 575</td><td class="normal">0.000014</td><td class="normal">0.999986</td></tr>
+      <tr><td>→ ∞</td><td class="normal">~2^(m-n)</td><td class="normal">~2^m</td><td class="normal">1/2¹⁶ ≈ 0.000015</td><td class="normal">≈ 0.999985</td></tr>
+    </table>
+
+    <h3>Wpływ długości rejestru n (przy m → ∞):</h3>
+    <table>
+      <tr><th>n</th><th>Pe</th><th>P</th></tr>
+      <tr><td>16</td><td class="normal">1.5 · 10⁻⁵</td><td class="normal">0.999985</td></tr>
+      <tr><td>32</td><td class="normal">2.3 · 10⁻¹⁰</td><td class="normal">0.99999999977</td></tr>
+      <tr><td>48</td><td class="normal">3.6 · 10⁻¹⁵</td><td class="normal">0.9999999999999965</td></tr>
+      <tr><td>64</td><td class="normal">5.4 · 10⁻²⁰</td><td class="normal">0.999999999999999999946</td></tr>
+    </table>
+
+    <div class="tip">
+      <strong>Kluczowy wniosek:</strong> dla rejestru 16-bit prawdopodobieństwo wykrycia błędu zawsze ≥ 99.998%, niezależnie od długości strumienia. <strong class="key">Pojedyncze błędy bitowe są ZAWSZE wykrywane.</strong>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Wyświetlanie signature na 7-segmencie</div>
+    <p>Signature 16-bit = 4 znaki, ale alfabet różni się od standardowego heks. Użyto: <strong>0–9, A, C, F, H, P, U</strong> zamiast 0–9, A–F.</p>
+    <p>Powód: lepsza czytelność na wyświetlaczu LED. Litery B, D, E mogą być mylone z 8, 0, 6.</p>
+
+    <table>
+      <tr><th>Bity Q3..Q0</th><th>Znak</th><th>Bity Q3..Q0</th><th>Znak</th></tr>
+      <tr><td class="normal">0000</td><td>0</td><td class="normal">1000</td><td>8</td></tr>
+      <tr><td class="normal">0001</td><td>1</td><td class="normal">1001</td><td>9</td></tr>
+      <tr><td class="normal">0010</td><td>2</td><td class="normal">1010</td><td>A</td></tr>
+      <tr><td class="normal">0011</td><td>3</td><td class="normal">1011</td><td>C</td></tr>
+      <tr><td class="normal">0100</td><td>4</td><td class="normal">1100</td><td>F</td></tr>
+      <tr><td class="normal">0101</td><td>5</td><td class="normal">1101</td><td>H</td></tr>
+      <tr><td class="normal">0110</td><td>6</td><td class="normal">1110</td><td>P</td></tr>
+      <tr><td class="normal">0111</td><td>7</td><td class="normal">1111</td><td>U</td></tr>
+    </table>
+  </div>
+
+  <div class="card orange">
+    <div class="card-title">Porównanie z transition counting</div>
+    <div class="compare">
+      <div class="compare-col green">
+        <h3>Signature Analysis</h3>
+        <p>LFSR z wielomianem G(x)</p>
+        <ul>
+          <li><span class="pos">✓</span> Pe stałe ~ 2⁻ⁿ niezależnie od m</li>
+          <li><span class="pos">✓</span> Wykrywa <strong>100% błędów pojedynczych</strong></li>
+          <li><span class="pos">✓</span> P ≥ 99.998% nawet dla bardzo długich strumieni</li>
+        </ul>
+      </div>
+      <div class="compare-col red">
+        <h3>Transition Counting</h3>
+        <p>Licznik zmian stanu (0→1, 1→0)</p>
+        <ul>
+          <li><span class="neg">✗</span> Gubi (m-1)/2^m błędów</li>
+          <li><span class="neg">✗</span> Dla dużych m → ~50% błędów</li>
+          <li><span class="neg">✗</span> Słaba detekcja podstawowych błędów</li>
+        </ul>
+      </div>
+    </div>
+    <p style="margin-top:.6rem">Wniosek: signature analysis znacznie lepsza, zwłaszcza dla długich strumieni. Wykres Pe wymaga skali logarytmicznej, żeby pokazać przewagę.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Tryby pracy i algorytmy</div>
+    <h3>Tryby:</h3>
+    <ul>
+      <li><strong>Free-running (open loop)</strong> — pętla feedback CPU otwierana, instrukcje NOP wymuszane na CPU</li>
+      <li><strong>Program-driven</strong> — analyzer dołączony do działającego programu</li>
+    </ul>
+    <h3>Algorytmy implementacji:</h3>
+    <ul>
+      <li><strong>Serial</strong> — bit po bicie przez LFSR</li>
+      <li><strong>Parallel</strong> — bajtowa procedura: <code>temp = b ^ (l&lt;&lt;1) ^ (h&lt;&lt;7) ^ (l&gt;&gt;1) ^ (h&lt;&lt;4) ^ (l&gt;&gt;4) ^ h</code></li>
+      <li><strong>Table</strong> — tablica precomputed dla l i h, najszybsza</li>
     </ul>
   </div>
 </div>
 
-<!-- PODSTAWY -->
-<div id="basics" class="section">
-  <h2>🖥️ <span>Podstawy</span> mikrokomputera</h2>
+<!-- ═══════════════════ CISC vs RISC ═══════════════════ -->
+<div id="cisc" class="section">
+  <h2>⚖️ CISC <span>vs RISC</span></h2>
 
   <div class="card">
-    <div class="card-title">Schemat blokowy mikrokomputera</div>
-    <div class="grid2">
-      <ul>
-        <li><strong>CPU</strong> — central processing unit</li>
-        <li><strong>NC</strong> — koprocesor numeryczny</li>
-        <li><strong>ROM</strong> — pamięć programu (read only)</li>
-        <li><strong>RAM</strong> — pamięć danych (random access)</li>
-        <li><strong>I/O</strong> — układy wejścia/wyjścia</li>
-      </ul>
-      <ul>
-        <li><strong>PIC</strong> — priority interrupt controller</li>
-        <li><strong>DMAC</strong> — direct memory access controller</li>
-        <li><strong>MMU</strong> — memory management unit</li>
-        <li><strong>ICE</strong> — in-circuit emulator</li>
-      </ul>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-title">Magistrala (bus) — 3 szyny</div>
-    <table>
-      <tr><th>Szyna</th><th>Funkcja</th></tr>
-      <tr><td>Danych (data bus)</td><td>Przesyła dane między komponentami</td></tr>
-      <tr><td>Adresowa (address bus)</td><td>Wskazuje miejsce docelowe danych</td></tr>
-      <tr><td>Sterująca (control bus)</td><td>Zarządza przepływem, sygnały non-memory</td></tr>
-    </table>
-    <h3 style="margin-top:1rem">Szerokość szyny adresowej → rozmiar pamięci</h3>
-    <table>
-      <tr><th>Bity</th><th>Adresowana pamięć</th></tr>
-      <tr><td>16</td><td>64 KB</td></tr>
-      <tr><td>20</td><td>1 MB</td></tr>
-      <tr><td>24</td><td>16 MB</td></tr>
-      <tr><td>32</td><td>4 GB</td></tr>
-      <tr><td>64</td><td>16 EB</td></tr>
-    </table>
-  </div>
-
-  <div class="grid2">
-    <div class="card">
-      <div class="card-title">Architektura Harvarda</div>
-      <p><strong>Oddzielne</strong> przestrzenie adresowe dla pamięci programu i danych.</p>
-      <ul>
-        <li>✅ Jednoczesny dostęp do obu pamięci</li>
-        <li>❌ Różne instrukcje dla każdej z pamięci</li>
-      </ul>
-    </div>
-    <div class="card">
-      <div class="card-title">Architektura von Neumanna</div>
-      <p><strong>Wspólna</strong> przestrzeń adresowa dla programu i danych.</p>
-      <ul>
-        <li>✅ Te same instrukcje dla obu pamięci</li>
-        <li>❌ Niejednoczesny dostęp (bottleneck)</li>
-      </ul>
-      <p style="margin-top:.6rem; font-size:.8rem; color:var(--muted)">ARM używa von Neumanna (wspólna magistrala 32-bit)</p>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-title">Fazy wykonania instrukcji (cykle maszynowe)</div>
+    <div class="card-title">⭐ Pyt. 5 z poprzedniego kolosa</div>
+    <div class="eq">czas/program = (czas/cykl) × (cykle/instrukcja) × (instrukcje/program)</div>
+    <p>Aby zmniejszyć czas wykonania, można zmniejszyć dowolny czynnik:</p>
     <ul>
-      <li><code>FE</code> — fetch: pobranie kodu operacji</li>
-      <li><code>DE</code> — decode: dekodowanie kodu operacji</li>
-      <li><code>RD</code> — read: odczyt danych</li>
-      <li><code>PR</code> — process: przetwarzanie danych</li>
-      <li><code>WR</code> — write: zapis danych</li>
+      <li><strong class="key">RISC</strong> redukuje <strong>cykle/instrukcję</strong> (każda instrukcja prosta, 1 cykl)</li>
+      <li><strong class="key">CISC</strong> redukuje <strong>instrukcje/program</strong> (jedna instrukcja robi więcej)</li>
     </ul>
   </div>
 
+  <div class="compare">
+    <div class="compare-col red">
+      <h3>CISC</h3>
+      <p style="font-size:.8rem;color:var(--muted);margin-bottom:.6rem">Complex Instruction Set Computing</p>
+      <ul>
+        <li>ALU ↔ pamięć <strong>lub</strong> rejestry (z zapisem zwrotnym)</li>
+        <li>Wiele trybów adresowania danych</li>
+        <li>Adresowanie: reg1 = reg1 <em>op</em> reg2</li>
+        <li>Wykonanie <strong>szeregowe</strong></li>
+        <li>Mało rejestrów</li>
+        <li>Dużo instrukcji (złożone)</li>
+        <li>Złożona budowa</li>
+        <li>Większy pobór mocy</li>
+        <li>Większy koszt</li>
+        <li>Mniejsza szybkość</li>
+      </ul>
+    </div>
+    <div class="compare-col green">
+      <h3>RISC</h3>
+      <p style="font-size:.8rem;color:var(--muted);margin-bottom:.6rem">Reduced Instruction Set Computing</p>
+      <ul>
+        <li>ALU ↔ <strong>tylko rejestry</strong> (load/store dla pamięci)</li>
+        <li>Mało trybów adresowania</li>
+        <li>Adresowanie: reg3 = reg1 <em>op</em> reg2</li>
+        <li>Wykonanie <strong>potokowe</strong></li>
+        <li>Dużo rejestrów</li>
+        <li>Mało instrukcji (proste, 1 cykl)</li>
+        <li>Prosta budowa</li>
+        <li>Mniejszy pobór mocy</li>
+        <li>Mniejszy koszt</li>
+        <li>Większa szybkość</li>
+      </ul>
+    </div>
+  </div>
+
   <div class="card">
-    <div class="card-title">Przetwarzanie potokowe (pipeline) vs szeregowe</div>
-    <p><strong>Szeregowe:</strong> każda instrukcja przechodzi wszystkie 5 faz zanim zacznie się kolejna.</p>
-    <p><strong>Potokowe:</strong> 5 instrukcji przetwarzanych jednocześnie (jedna per faza) → ~5× wydajność.</p>
+    <div class="card-title">Schemat blokowy</div>
+    <div class="grid2">
+      <div>
+        <h3>CISC</h3>
+        <pre>     ┌───────┐
+     │  ALU  │
+     └─┬───┬─┘
+       │   │
+   ┌───┘   └───┐
+┌──▼───┐  ┌────▼────┐
+│Pamięć│  │Rejestry │
+└──┬───┘  └────┬────┘
+   └──────────┘</pre>
+        <p style="font-size:.85rem">ALU operuje i na pamięci, i na rejestrach</p>
+      </div>
+      <div>
+        <h3>RISC</h3>
+        <pre>     ┌───────┐
+     │  ALU  │
+     └───┬───┘
+         │
+    ┌────▼────┐
+    │Rejestry │←─┐
+    └─────────┘  │
+                 │ load/store
+              ┌──▼───┐
+              │Pamięć│
+              └──────┘</pre>
+        <p style="font-size:.85rem">ALU tylko na rejestrach, pamięć przez LDR/STR</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card blue">
+    <div class="card-title">Benchmark — ARM/MIPS vs x86</div>
+    <table>
+      <tr><th>Cecha</th><th>ARM/MIPS (RISC)</th><th>Intel x86 (CISC)</th></tr>
+      <tr><td>Szybkość (CoreMark/MHz)</td><td class="normal">~2.88</td><td class="normal">~3.19 (+4–8%)</td></tr>
+      <tr><td>Pobór mocy (mW/MHz)</td><td class="normal" style="color:var(--accent3)">~0.4 (40–50% mniej)</td><td class="normal">~0.56</td></tr>
+      <tr><td>Powierzchnia krzemu</td><td class="normal" style="color:var(--accent3)">~1.4 mm² (3–4× mniej)</td><td class="normal">~6 mm²</td></tr>
+    </table>
+    <div class="tip">
+      <strong>Dlaczego x86 ma większy pobór mocy?</strong> Procesory CISC wewnętrznie <strong>przekodowują instrukcje na RISC micro-ops</strong> — ta dodatkowa logika dekodująca podnosi pobór mocy.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Pipeline (potok) — wizualizacja</div>
+    <p><strong>Szeregowe (CISC):</strong> każda instrukcja przechodzi wszystkie 5 faz zanim zacznie się następna.</p>
+    <p><strong>Potokowe (RISC):</strong> 5 instrukcji jednocześnie (jedna na fazę) → ~5× wzrost przepustowości.</p>
+
+    <h3>Fazy instrukcji:</h3>
+    <ul style="font-family:var(--mono);font-size:.85rem">
+      <li><code>FE</code> — fetch (pobranie kodu operacji)</li>
+      <li><code>DE</code> — decode (dekodowanie)</li>
+      <li><code>RD</code> — read data (odczyt danych)</li>
+      <li><code>PR</code> — process (przetwarzanie)</li>
+      <li><code>WR</code> — write (zapis)</li>
+    </ul>
 
     <div class="pipeline" style="margin-top:1rem">
       <div class="pl-row">
@@ -451,194 +837,554 @@
         <div class="pl-cell pl-pr">PR</div>
         <div class="pl-cell pl-wr">WR</div>
       </div>
+      <div class="pl-row">
+        <div class="pl-label">Instr. 4</div>
+        <div class="pl-cell pl-empty"></div>
+        <div class="pl-cell pl-empty"></div>
+        <div class="pl-cell pl-empty"></div>
+        <div class="pl-cell pl-fe">FE</div>
+        <div class="pl-cell pl-de">DE</div>
+        <div class="pl-cell pl-rd">RD</div>
+        <div class="pl-cell pl-pr">PR</div>
+        <div class="pl-cell pl-wr">WR</div>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- CISC vs RISC -->
-<div id="cisc" class="section">
-  <h2>⚖️ CISC <span>vs</span> RISC</h2>
+<!-- ═══════════════════ 8051 ═══════════════════ -->
+<div id="m8051" class="section">
+  <h2>🎯 Mikrokomputer <span>8051</span></h2>
 
-  <div class="eq">czas/program = (czas/cykl) × (cykle/instrukcja) × (instrukcje/program)</div>
-  <p>RISC zmniejsza <strong>cykle/instrukcję</strong>. CISC zmniejsza <strong>instrukcje/program</strong>.</p>
-
-  <div class="compare" style="margin: 1.2rem 0;">
-    <div class="compare-col cisc">
-      <h3>CISC</h3>
-      <p style="font-size:.8rem;color:var(--muted);margin-bottom:.6rem">Complex Instruction Set Computing</p>
-      <ul>
-        <li>ALU ← pamięć lub rejestry</li>
-        <li>Wiele trybów adresowania</li>
-        <li>reg1 = reg1 <em>op</em> reg2</li>
-        <li>Przetwarzanie <strong>szeregowe</strong></li>
-        <li>Mało rejestrów</li>
-        <li>Dużo instrukcji</li>
-        <li>Złożona budowa</li>
-        <li>Większy pobór mocy</li>
-        <li>Większy koszt</li>
-        <li>Mniejsza szybkość</li>
-      </ul>
-    </div>
-    <div class="compare-col risc">
-      <h3>RISC</h3>
-      <p style="font-size:.8rem;color:var(--muted);margin-bottom:.6rem">Reduced Instruction Set Computing</p>
-      <ul>
-        <li>ALU ← tylko rejestry</li>
-        <li>Mało trybów adresowania</li>
-        <li>reg3 = reg1 <em>op</em> reg2</li>
-        <li>Przetwarzanie <strong>potokowe</strong></li>
-        <li>Dużo rejestrów</li>
-        <li>Mało instrukcji</li>
-        <li>Prosta budowa</li>
-        <li>Mniejszy pobór mocy</li>
-        <li>Mniejszy koszt</li>
-        <li>Większa szybkość</li>
-      </ul>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-title">Benchmark — ARM/MIPS vs x86</div>
-    <table>
-      <tr><th>Cecha</th><th>ARM/MIPS (RISC)</th><th>Intel x86 (CISC)</th></tr>
-      <tr><td>Szybkość (CoreMark/MHz)</td><td>~2.88</td><td>~3.19 (+4–8%)</td></tr>
-      <tr><td>Pobór mocy (mW/MHz)</td><td>~0.4 (40–50% mniej)</td><td>~0.56</td></tr>
-      <tr><td>Powierzchnia krzemu</td><td>~1.4 mm² (3–4× mniej)</td><td>~6 mm²</td></tr>
-    </table>
-    <p style="margin-top:.8rem;font-size:.85rem;color:var(--muted)">x86 wyższy pobór mocy wynika z wewnętrznego przekodowania instrukcji CISC → RISC micro-ops.</p>
-  </div>
-</div>
-
-<!-- ARM -->
-<div id="arm" class="section">
-  <h2>🦾 Architektura <span>ARM</span></h2>
-
-  <div class="card" style="border-color:var(--accent)">
-    <div class="card-title">⭐ 6 podstawowych cech ARM (likely pytanie na kolosie)</div>
-    <ol style="padding-left:1.2rem;color:#b8b8cc;font-size:.95rem">
-      <li style="margin-bottom:.5rem"><strong>Load/store</strong> — jedyne instrukcje komunikujące rejestry z pamięcią (LDR/STR). ALU operuje tylko na rejestrach.</li>
-      <li style="margin-bottom:.5rem"><strong>Wyrównanie pamięci</strong> — słowo na adresie ×4, półsłowo ×2, bajt dowolnie.</li>
-      <li style="margin-bottom:.5rem"><strong>16 rejestrów 32-bitowych</strong> (R0–R15), jednolity zestaw.</li>
-      <li style="margin-bottom:.5rem"><strong>Stała długość instrukcji = 32 bity</strong> → ułatwia dekodowanie i potok, kosztem gęstości kodu.</li>
-      <li style="margin-bottom:.5rem"><strong>Większość instrukcji wykonuje się w 1 cyklu maszynowym.</strong></li>
-      <li style="margin-bottom:.5rem"><strong>Przetwarzanie potokowe</strong> — ARM7: 3-stopniowy (FE/DE/EX), ARM9: 5-stopniowy.</li>
-    </ol>
-  </div>
-
-  <div class="card">
-    <div class="card-title">Kompensacja ograniczeń RISC w ARM</div>
+  <div class="card orange">
+    <div class="card-title">Własności 8051 (Intel oryginał)</div>
     <ul>
-      <li><strong>Warunkowe wykonanie instrukcji</strong> — redukuje skoki (brak kary za branch prediction)</li>
-      <li><strong>Flagi CPSR aktualizowane tylko gdy potrzeba</strong> — sufiks S: <code>ADDS R2,R1,R0</code></li>
-      <li><strong>Barrel shifter 32-bit</strong> — wbudowany przesuwnik, dostępny dla większości instrukcji</li>
-      <li><strong>Rozbudowane tryby adresowania indeksowego</strong></li>
-      <li><strong>Link register R14/LR</strong> — szybkie wywołania funkcji</li>
-      <li><strong>Podsystem przerwań 2-poziomowy</strong> z przełączanymi zestawami rejestrów</li>
+      <li><strong>8-bitowy mikrokomputer</strong>, większość instrukcji 8-bit (niektóre 1- i 16-bit)</li>
+      <li><strong>Złożona lista rozkazów</strong> (CISC), 1-bajtowy kod operacji = 255 instrukcji</li>
+      <li><strong>Architektura Harvarda</strong> — oddzielne przestrzenie: pamięć programu i pamięć danych</li>
+      <li>16-bit szyna adresowa → <strong>64 KB programu + 64 KB zewn. danych</strong></li>
+      <li>128 lub 256 B wewn. pamięci danych</li>
+      <li><strong>4 zestawy po 8 rejestrów 1-bajtowych</strong> (R0–R7), banki przełączane przez RS0/RS1 w PSW</li>
+      <li>8-bit ALU + akumulator, 1-bit LU + akumulator logiczny</li>
+      <li>8-bit szyna danych współdzielona z młodszym bajtem szyny adresowej</li>
+      <li><strong>Priorytetowy podsystem przerwań na 2 poziomach</strong> ⭐</li>
+      <li>Mała zwłoka w obsłudze przerwań (kontekst w rejestrach + na stosie)</li>
+      <li>4 bajtowe 2-kierunkowe równoległe porty I/O</li>
+      <li>Kanał szeregowy (UART) + 2 liczniki/czasomierze 16-bit</li>
+      <li>2 tryby oszczędności energii</li>
+    </ul>
+    <p style="margin-top:.8rem"><strong>Producenci:</strong> Infineon, Silicon Labs, Maxim Integrated, Microchip, Megawin, DCD i inni.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Słowo stanu PSW (adres D0H)</div>
+    <table style="font-size:.78rem;text-align:center">
+      <tr><th>Bit 7</th><th>6</th><th>5</th><th>4</th><th>3</th><th>2</th><th>1</th><th>0</th></tr>
+      <tr><td class="normal" style="color:var(--accent4)">C</td><td class="normal" style="color:var(--accent4)">AC</td><td class="normal" style="color:var(--accent4)">F0</td><td class="normal" style="color:var(--accent4)">RS1</td><td class="normal" style="color:var(--accent4)">RS0</td><td class="normal" style="color:var(--accent4)">V</td><td class="normal" style="color:var(--muted)">-</td><td class="normal" style="color:var(--accent4)">P</td></tr>
+    </table>
+    <ul style="margin-top:.6rem">
+      <li><strong>C</strong> — carry (przeniesienie)</li>
+      <li><strong>AC</strong> — auxiliary carry (przeniesienie pomocnicze, dla BCD)</li>
+      <li><strong>F0</strong> — user flag (dostępna dla programu)</li>
+      <li><strong>RS1, RS0</strong> — register select (wybór banku rejestrów: 00→0, 01→1, 10→2, 11→3)</li>
+      <li><strong>V</strong> — overflow</li>
+      <li><strong>P</strong> — parity</li>
     </ul>
   </div>
 
   <div class="card">
-    <div class="card-title">Rejestry ARM</div>
+    <div class="card-title">Adresowanie danych — sposoby</div>
     <table>
-      <tr><th>Rejestr</th><th>Nazwa</th><th>Funkcja</th></tr>
-      <tr><td>R0–R12</td><td>GPR</td><td>Ogólnego przeznaczenia</td></tr>
-      <tr><td>R13</td><td>SP</td><td>Stack Pointer — wskaźnik stosu</td></tr>
-      <tr><td>R14</td><td>LR</td><td>Link Register — adres powrotu (BL/BLX)</td></tr>
-      <tr><td>R15</td><td>PC</td><td>Program Counter — następna instrukcja</td></tr>
-      <tr><td>CPSR</td><td>—</td><td>Current PSR — flagi N,Z,C,V + tryb pracy</td></tr>
-      <tr><td>SPSR</td><td>—</td><td>Saved PSR — zapisuje CPSR przy wyjątku</td></tr>
+      <tr><th>Pamięć</th><th>Tryb</th><th>Przykład</th></tr>
+      <tr><td class="normal">Wewn. word</td><td class="normal">Domyślne</td><td class="normal"><code>inc dptr</code></td></tr>
+      <tr><td class="normal">Wewn. word</td><td class="normal">Natychmiastowe</td><td class="normal"><code>mov dptr, #data16</code></td></tr>
+      <tr><td class="normal">Wewn. byte</td><td class="normal">Domyślne</td><td class="normal"><code>clr a</code></td></tr>
+      <tr><td class="normal">Wewn. byte</td><td class="normal">Rejestrowe</td><td class="normal"><code>inc Rn</code></td></tr>
+      <tr><td class="normal">Wewn. byte</td><td class="normal">Bezpośrednie</td><td class="normal"><code>mov a, byte</code></td></tr>
+      <tr><td class="normal">Wewn. byte</td><td class="normal">Rejestr. pośrednie</td><td class="normal"><code>mov a, @Ri</code></td></tr>
+      <tr><td class="normal">Wewn. byte</td><td class="normal">Natychmiastowe</td><td class="normal"><code>mov a, #data</code></td></tr>
+      <tr><td class="normal">Zewn. byte</td><td class="normal">Rejestr. pośrednie</td><td class="normal"><code>movx a, @dptr</code></td></tr>
+      <tr><td class="normal">Wewn. bit</td><td class="normal">Bezpośrednie</td><td class="normal"><code>setb bit</code></td></tr>
     </table>
-    <p style="margin-top:.8rem;font-size:.85rem;color:var(--muted)">Łącznie 37 rejestrów 32-bitowych (31 GPR + 6 statusowych), częściowo bankowalnych wg trybu.</p>
+    <h3>Oznaczenia operandów:</h3>
+    <ul>
+      <li><strong>bit</strong> — adres bitu (0÷127 RAM lub 128÷255 SFR)</li>
+      <li><strong>Rn</strong> — rejestr R0÷R7 w aktualnym banku</li>
+      <li><strong>byte</strong> — adres bajtu w wewn. pam. danych</li>
+      <li><strong>@Ri</strong> — pośrednie przez R0/R1</li>
+      <li><strong>#data, #data16</strong> — stała 8/16-bit</li>
+    </ul>
   </div>
 
   <div class="card">
-    <div class="card-title">Tryby pracy procesora</div>
+    <div class="card-title">Klasyczny 8051 vs nowoczesne implementacje (DMIPS)</div>
     <table>
-      <tr><th>Tryb</th><th>Opis</th><th>Wejście</th></tr>
-      <tr><td>User</td><td>Normalny program</td><td>—</td></tr>
-      <tr><td>System</td><td>Uprzywilejowane OS</td><td>Modyfikacja CPSR</td></tr>
-      <tr><td>FIQ</td><td>Szybkie przerwanie (bankowal. R8–R14)</td><td>Sygnał FIQ</td></tr>
-      <tr><td>IRQ</td><td>Ogólne przerwanie</td><td>Sygnał IRQ</td></tr>
-      <tr><td>SVC</td><td>Tryb nadzorcy OS</td><td>Instrukcja SWI</td></tr>
-      <tr><td>ABT</td><td>Błąd pamięci (Abort)</td><td>Błąd prefetch/data</td></tr>
-      <tr><td>UND</td><td>Niezdefiniowana instrukcja</td><td>Brak instrukcji</td></tr>
+      <tr><th>Procesor</th><th>Bramki</th><th>Razy szybszy</th><th>DMIPS</th><th>Pamięć kodu</th></tr>
+      <tr><td class="normal">8051 (klasyk)</td><td class="normal">-</td><td class="normal">1×</td><td class="normal">0.094</td><td class="normal">64 KB</td></tr>
+      <tr><td class="normal">DQ8051 (FPGA)</td><td class="normal">9 900</td><td class="normal">29×</td><td class="normal">0.273</td><td class="normal">64 KB</td></tr>
+      <tr><td class="normal">DQ80251 (FPGA)</td><td class="normal">13 500</td><td class="normal">75×</td><td class="normal">0.706</td><td class="normal">8 MB</td></tr>
     </table>
+    <p style="font-size:.82rem;color:var(--muted);margin-top:.5rem">DMIPS = Dhrystone MIPS, miara wydajności względem VAX 11/780 (1977). Ulepszone wersje IC mają max 50% szybkości DQ8051.</p>
+  </div>
+
+  <h3 style="margin-top:1.5rem">Warianty 8051 — sekcje 2.2-2.5 syllabusa</h3>
+
+  <div class="card blue">
+    <div class="card-title">2.2 DS89C430/DS89C450 (Maxim Integrated)</div>
+    <p>"Najwyższa wydajność wśród 8051-kompatybilnych" — drop-in replacement dla 8xC51.</p>
+    <ul>
+      <li>Wykonuje instrukcje <strong class="key">do 12× szybciej</strong> niż klasyk przy tej samej f</li>
+      <li><strong>1 MIPS/MHz</strong>, 33 MIPS przy 33 MHz</li>
+      <li><strong>Cykl maszynowy = 1 takt</strong> (zamiast 12 w klasyku)</li>
+      <li>Czas instrukcji od 30 ns</li>
+      <li>INC dptr aż 24× szybsza</li>
+      <li>256 B direct RAM + 1 kB MOVX RAM</li>
+      <li>3 × 16-bit timer/counter, 2 full-duplex serial</li>
+      <li>Liczniki domyślnie w trybie 12 taktów (zgodność), ale każdy programowo w 1 takt</li>
+      <li>Dual data pointer — usuwa zbędne instrukcje przy kopiowaniu pamięci</li>
+    </ul>
+  </div>
+
+  <div class="card green">
+    <div class="card-title">2.3 AT89LP (Atmel/Microchip)</div>
+    <p>"Wysokowydajne i energooszczędne mikrokontrolery Flash" — rdzeń 8051 z <strong>pojedynczym cyklem maszynowym</strong>.</p>
+    <ul>
+      <li>Klasyk: 12 taktów/bajt; AT89LP: <strong class="key">1 takt/bajt</strong> (12× przepustowości)</li>
+      <li>Instrukcje wykonują się w 1–4 taktach</li>
+      <li>70% instrukcji: liczba taktów = liczba pobieranych bajtów</li>
+      <li><strong>20 MIPS przy 20 MHz</strong> (klasyk: &lt;2 MIPS)</li>
+      <li>Vcc do 2,0 V</li>
+      <li>Pobór: 1.1 mA @ 3.6V/1MHz aktywnie; &lt;1 µA power-down</li>
+    </ul>
+  </div>
+
+  <div class="card pink">
+    <div class="card-title">2.4 C8051 / CIP-51 (Silicon Laboratories)</div>
+    <p>Modernizowany rdzeń 8051 z potokiem dla mixed-signal MCU.</p>
+    <ul>
+      <li><strong>Architektura CIP-51</strong> — pipeline Fetch / Decode / Execute</li>
+      <li>Zachowuje zgodność kodu z oryginalnym Intelem</li>
+      <li>Bazowa architektura niemal identyczna z 8051 (kompatybilność wsteczna)</li>
+      <li>Operacje logiczne mogą być wykonywane na rejestrach (nie tylko przez ALU) — szybsza obsługa I/O</li>
+      <li>Sterowanie portami I/O w 2 cyklach (test linii + zapis stanu)</li>
+      <li>Bankowane 32 rejestry dla wielowątkowości i szybkiej obsługi przerwań</li>
+    </ul>
+  </div>
+
+  <div class="card red">
+    <div class="card-title">2.5 DQ8051 / DQ80251 (Digital Core Design — DCD)</div>
+    <p>Implementacje rdzenia 8051 / 80251 jako <strong>IP core w FPGA</strong>.</p>
+    <table>
+      <tr><th>Rdzeń</th><th>Bramki</th><th>Szybciej niż 8051</th><th>DMIPS</th><th>Kod</th><th>Instrukcje</th></tr>
+      <tr><td class="normal">DQ8051</td><td class="normal">9 900</td><td class="normal">29×</td><td class="normal">0.237</td><td class="normal">64 KB</td><td class="normal">8051</td></tr>
+      <tr><td class="normal">DQ80251</td><td class="normal">13 500</td><td class="normal">75×</td><td class="normal">0.706</td><td class="normal">8 MB</td><td class="normal">8051+80251</td></tr>
+    </table>
+    <p style="margin-top:.6rem"><span class="key">Kluczowa cecha:</span> oba zawierają <strong>wbudowany emulator wewnątrz-układowy (ICE)</strong>.</p>
+    <div class="tip">
+      <strong>Argument biznesowy DCD:</strong> 8-bit FPGA może wykonać te same funkcje co 32-bit przy mniejszym poborze i mniejszej powierzchni ASIC.
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ AVR ═══════════════════ -->
+<div id="avr" class="section">
+  <h2>🦅 AVR <span>ATmega32A</span></h2>
+
+  <div class="card green">
+    <div class="card-title">Kluczowe parametry</div>
+    <ul>
+      <li><strong>8-bit RISC</strong> Microchip/Atmel</li>
+      <li><strong>131 instrukcji</strong>, większość w 1 cyklu zegarowym</li>
+      <li><strong>32 × 8-bit rejestry GP (R0–R31)</strong></li>
+      <li>Do <strong>16 MIPS przy 16 MHz</strong> (1 MIPS/MHz)</li>
+      <li>Multiplier 2-cycle on-chip</li>
+      <li>32 KB Flash, 1 KB EEPROM, 2 KB SRAM</li>
+      <li>10 000 cykli zapisu Flash, 100 000 EEPROM</li>
+      <li>4 PWM channels, 10-bit ADC (8 kanałów)</li>
+      <li>JTAG (boundary scan + debug + programowanie)</li>
+      <li>32 programowalne linie I/O</li>
+      <li>Vcc: 2.7–5.5 V, 0–16 MHz</li>
+    </ul>
   </div>
 
   <div class="card">
-    <div class="card-title">Wektory wyjątków (tabela priorytetów)</div>
-    <table>
-      <tr><th>Wyjątek</th><th>Priorytet</th><th>Adres wektora</th></tr>
-      <tr><td>Reset</td><td>1 (najwyższy)</td><td>0x00000000</td></tr>
-      <tr><td>Data Abort</td><td>2</td><td>0x00000010</td></tr>
-      <tr><td>FIQ</td><td>3</td><td>0x0000001C</td></tr>
-      <tr><td>IRQ</td><td>4</td><td>0x00000018</td></tr>
-      <tr><td>Prefetch Abort</td><td>5</td><td>0x0000000C</td></tr>
-      <tr><td>Undefined</td><td>6 (najniższy)</td><td>0x00000004</td></tr>
-      <tr><td>SWI</td><td>6 (najniższy)</td><td>0x00000008</td></tr>
+    <div class="card-title">Architektura AVR</div>
+    <ul>
+      <li><strong>Harvard</strong> (oddzielne pamięć programu i danych)</li>
+      <li>32 rejestry → 4 schematy I/O: 1×8→1×8, 2×8→1×8, 2×8→1×16, 1×16→1×16</li>
+      <li>R26-R31 → wskaźniki adresowe (16-bit) dla adresowania pośredniego:
+        <ul>
+          <li><strong>X</strong> = R27:R26</li>
+          <li><strong>Y</strong> = R29:R28</li>
+          <li><strong>Z</strong> = R31:R30</li>
+        </ul>
+      </li>
+      <li><strong>Stack rośnie w dół</strong> (od high → low). Stack Pointer = SPH:SPL w I/O space, PUSH dekrementuje SP</li>
+      <li><strong>Instrukcje 16 lub 32-bit</strong> → Flash organizowany jako 16K × 16</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Status Register (SREG) — 8-bit</div>
+    <table style="font-size:.78rem;text-align:center">
+      <tr><th>Bit 7</th><th>6</th><th>5</th><th>4</th><th>3</th><th>2</th><th>1</th><th>0</th></tr>
+      <tr><td class="normal" style="color:var(--accent4)">I</td><td class="normal" style="color:var(--accent4)">T</td><td class="normal" style="color:var(--accent4)">H</td><td class="normal" style="color:var(--accent4)">S</td><td class="normal" style="color:var(--accent4)">V</td><td class="normal" style="color:var(--accent4)">N</td><td class="normal" style="color:var(--accent4)">Z</td><td class="normal" style="color:var(--accent4)">C</td></tr>
     </table>
-    <h3>Kroki wejścia w wyjątek:</h3>
-    <ol style="padding-left:1.2rem;color:#b8b8cc;font-size:.9rem">
-      <li>PC → LR (R14)</li>
-      <li>CPSR → SPSR nowego trybu</li>
-      <li>Ustaw bity trybu w CPSR</li>
-      <li>Wyłącz przerwania niższego priorytetu</li>
-      <li>Załaduj wektor wyjątku do PC</li>
+    <ul style="margin-top:.6rem">
+      <li><strong>I</strong> — Global Interrupt Enable</li>
+      <li><strong>T</strong> — Bit storage (Transfer)</li>
+      <li><strong>H</strong> — Half Carry (dla BCD)</li>
+      <li><strong>S</strong> — Sign (N⊕V)</li>
+      <li><strong>V</strong> — Overflow, <strong>N</strong> — Negative, <strong>Z</strong> — Zero, <strong>C</strong> — Carry</li>
+    </ul>
+  </div>
+
+  <div class="card blue">
+    <div class="card-title">5 trybów adresowania pamięci danych</div>
+    <ol>
+      <li><strong>Direct</strong> — bezpośredni adres</li>
+      <li><strong>Indirect</strong> — przez wskaźnik X, Y lub Z</li>
+      <li><strong>Indirect with Displacement</strong> — Y/Z + offset (max 63)</li>
+      <li><strong>Indirect with Pre-decrement</strong> — najpierw zmniejsz wskaźnik, potem dostęp</li>
+      <li><strong>Indirect with Post-increment</strong> — najpierw dostęp, potem zwiększ wskaźnik</li>
+    </ol>
+    <div class="tip">
+      <strong>Pre-/post-increment</strong> jest charakterystyczne dla AVR i ułatwia iterację po tablicach.<br>
+      W 8051 trzeba ręcznie INC dptr.
+    </div>
+  </div>
+
+  <div class="card orange">
+    <div class="card-title">6 trybów uśpienia (sleep modes)</div>
+    <p>Wejście: <code>SE=1</code> w MCUCR + instrukcja <code>SLEEP</code>. Wybór trybu: bity SM2/SM1/SM0.</p>
+    <ol>
+      <li><strong>Idle</strong> — CPU stop, peryferia działają</li>
+      <li><strong>ADC Noise Reduction</strong> — minimalizuje zakłócenia ADC</li>
+      <li><strong>Power-down</strong> — wszystko stop, tylko external IRQ wybudza</li>
+      <li><strong>Power-save</strong> — power-down + asynchroniczny timer</li>
+      <li><strong>Standby</strong> — power-down + oscillator running (szybki wakeup)</li>
+      <li><strong>Extended Standby</strong> — Standby + asynchroniczny timer</li>
     </ol>
   </div>
 
   <div class="card">
-    <div class="card-title">Kluczowe instrukcje ARM (mnemoniK)</div>
-    <div class="grid2">
-      <div>
-        <h3>Arytmetyczne</h3>
-        <code>ADD ADC SUB SBC RSB RSC CMP CMN</code>
-        <h3>Logiczne</h3>
-        <code>AND BIC OR EOR TST TEQ</code>
-        <h3>Mnożenia</h3>
-        <code>MUL MLA UMULL SMULL UMLAL SMLAL</code>
-      </div>
-      <div>
-        <h3>Skoki</h3>
-        <code>B BL BX</code>
-        <p style="font-size:.82rem;color:var(--muted)">BL zapisuje adres powrotu w LR; BX przełącza ARM↔Thumb</p>
-        <h3>Przesłania</h3>
-        <code>MOV MVN LDR STR LDM STM SWP</code>
-        <h3>System</h3>
-        <code>MRS MSR SWI MRC MCR LDC STC CDP</code>
-      </div>
+    <div class="card-title">Rodziny AVR</div>
+    <table>
+      <tr><th>Rodzina</th><th>Flash</th><th>Pinout</th><th>Charakterystyka</th></tr>
+      <tr><td>tinyAVR</td><td class="normal">1–16 KB</td><td class="normal">8–32 pin</td><td class="normal">Najmniejsze, GP</td></tr>
+      <tr><td>megaAVR</td><td class="normal">4–256 KB</td><td class="normal">28–100 pin</td><td class="normal">Hardware multiplier, ATmega</td></tr>
+      <tr><td>AVR XMEGA</td><td class="normal">16–384 KB</td><td class="normal">44–100 pin</td><td class="normal">DMA, Event System, 16-bit</td></tr>
+      <tr><td>AVR32 UC3</td><td class="normal">16–512 KB</td><td class="normal">48–144 pin</td><td class="normal">32-bit (deprecated)</td></tr>
+    </table>
+  </div>
+
+  <h3 style="margin-top:1.5rem">⚖️ AVR vs 8051 — kluczowe porównanie</h3>
+
+  <div class="compare">
+    <div class="compare-col green">
+      <h3>✓ Zalety AVR</h3>
+      <ul>
+        <li><strong>Cykl = 1 takt</strong> (8051: 12) → wielokrotnie szybsze instrukcje</li>
+        <li><strong>EEPROM</strong> — 8051 nie ma</li>
+        <li><strong>Wewn. RC + POR</strong> — komputer bez zewn. elementów</li>
+        <li><strong>Watchdog</strong> — niezawodność</li>
+        <li><strong>Obie zmiany IRQ</strong> (8051: tylko opadająca)</li>
+        <li>Zoptymalizowany pod programowanie w C</li>
+      </ul>
     </div>
-    <h3>Wykonanie warunkowe — sufiks 2-literowy:</h3>
-    <p>
-      <code>EQ</code> Z=1 &nbsp; <code>NE</code> Z=0 &nbsp; <code>MI</code> N=1 &nbsp; <code>PL</code> N=0 &nbsp;
-      <code>GE</code> N=V &nbsp; <code>LT</code> N≠V &nbsp; <code>GT</code> Z=0,N=V &nbsp; <code>LE</code> Z=1 or N≠V
-    </p>
-    <pre>ADDEQ R2,R1,R0   ; R2 = R1+R0 tylko gdy Z=1
-STRGT R0,[R1]    ; zapisz do pamięci tylko gdy GT</pre>
+    <div class="compare-col red">
+      <h3>✗ Wady AVR</h3>
+      <ul>
+        <li><strong>Większy kod</strong> (RISC) — 20–50% więcej pamięci niż 8051</li>
+        <li><strong>1 poziom IRQ</strong> (8051: 2 poziomy)</li>
+        <li><strong>Trudna obsługa IRQ</strong> — ręczny SREG na stos (8 B)</li>
+        <li>Tylko <strong>3 wskaźniki pamięci</strong> (X,Y,Z); 8051: 9 (DPTR + R0/R1×4)</li>
+        <li>Brak instrukcji wymiany bez wyłączania IRQ (8051: JBC, XCH)</li>
+        <li>Mniejszy podział wstępny UART (28 vs 217)</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="tip">
+    <strong>Wniosek:</strong> AVR potrzebuje 20–50% więcej pamięci programu, ale daje <strong class="key">5–10× większą szybkość</strong>. Generalna zasada: <em>"binarny program RISC jest większy niż CISC"</em>.<br>
+    Większość niedogodności AVR można skompensować dodatkowym oprogramowaniem.
+  </div>
+
+  <div class="card">
+    <div class="card-title">Wspólne cechy AVR i 8051</div>
+    <ul>
+      <li><strong>Wyprowadzenia kompatybilne:</strong> AT89C2051 → ATtiny2313A; AT89C51/52 → ATmega8515</li>
+      <li>Dostępne z pamięcią <strong>FLASH</strong> (łatwa i tania programistyka)</li>
+      <li>Wyjątek: aktywny poziom logiczny RESET (rozwiązywalny przez POR)</li>
+    </ul>
   </div>
 </div>
 
-<!-- WERSJE -->
-<div id="versions" class="section">
-  <h2>📈 Wersje <span>architektury ARM</span></h2>
+<!-- ═══════════════════ PROGRAMOWANIE ═══════════════════ -->
+<div id="progr" class="section">
+  <h2>💻 Zaawansowane <span>programowanie 8051</span></h2>
 
   <div class="card">
-    <div class="card-title">Ewolucja ARMv4 → v8</div>
+    <div class="card-title">Łańcuch tworzenia oprogramowania</div>
+    <h3>Program w asemblerze:</h3>
+    <pre>Edytor → Asembler → Kod obiektowy → Linker → Executable → MCU</pre>
+    <h3>Program w języku C:</h3>
+    <pre>Edytor → Kompilator → Kod obiektowy → Linker → Executable → MCU</pre>
+    <h3>Program hybrydowy:</h3>
+    <pre>.c → Kompilator ─┐
+                  ├→ Linker → Executable → MCU
+.s03 → Asembler ─┘</pre>
+    <p style="font-size:.85rem;color:var(--muted)">Dodatkowe narzędzie: <strong>Bibliotekarz</strong> zarządza bibliotekami kodu obiektowego.</p>
+  </div>
+
+  <div class="card pink">
+    <div class="card-title">Metody przekazywania parametrów do podprogramów</div>
     <table>
-      <tr><th>Wersja</th><th>Kluczowe nowości</th></tr>
-      <tr><td>ARMv4</td><td>Baseline: 32-bit, mnożenie, JTAG (ext. D), ICE (ext. I), AMBA</td></tr>
-      <tr><td>ARMv4T</td><td>+ <strong>Thumb</strong> (16-bit): 65% rozmiaru kodu ARM, 160% wydajności na 16-bit pamięci</td></tr>
-      <tr><td>ARMv5</td><td>+ lepsza kooperacja ARM/Thumb, <strong>DSP</strong> (32×16, 16×16 w 1 takcie), <strong>VFPv2</strong> (IEEE 754), Jazelle (8× Java)</td></tr>
-      <tr><td>ARMv6</td><td>+ wyrównany dostęp do pamięci, <strong>SIMD</strong> multimedia (4× kodeki), <strong>Thumb-2</strong>, TrustZone</td></tr>
-      <tr><td>ARMv7</td><td>+ rodzina <strong>Cortex</strong> (3 profile: M/R/A), wszyscy używają Thumb-2, <strong>VFPv3</strong>, <strong>NEON</strong> (400%+ DSP)</td></tr>
-      <tr><td>ARMv8-A</td><td>+ <strong>AArch64</strong> (64-bit), 31 GPR × 64-bit, 32 rej. wektorowych 128-bit, nowy A64 ISA</td></tr>
+      <tr><th>Metoda</th><th>Zalety</th><th>Wady</th></tr>
+      <tr><td class="normal">1. Rejestry</td><td class="normal" style="color:var(--accent3)">Szybka i prosta</td><td class="normal" style="color:var(--accent2)">Ograniczona liczba rejestrów</td></tr>
+      <tr><td class="normal">2. Zmienne globalne</td><td class="normal" style="color:var(--accent3)">Nieograniczona liczba param.</td><td class="normal" style="color:var(--accent2)">Rezerwacja pamięci, złożona init</td></tr>
+      <tr><td class="normal">3. Tablica sterująca</td><td class="normal" style="color:var(--accent3)">Wiele param. przez 1 wskaźnik</td><td class="normal" style="color:var(--accent2)">Rezerwacja pamięci</td></tr>
+      <tr><td class="normal">4. Stos</td><td class="normal" style="color:var(--accent3)">Pozwala na rekurencję</td><td class="normal" style="color:var(--accent2)">Większy narzut na stos</td></tr>
+      <tr><td class="normal">5. In-line code</td><td class="normal" style="color:var(--accent3)">Param. tuż za CALL</td><td class="normal" style="color:var(--accent2)">Wymaga przesunięcia PC</td></tr>
+    </table>
+    <p style="margin-top:.6rem"><strong>Metody zwracania wyników</strong> — takie same minus in-line code (nie ma sensu dla return).</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Segmenty dla programu w asemblerze 8051</div>
+    <pre>name PROG          ; nagłówek modułu
+extern _R          ; symbole zewnętrzne
+equ buflen 16      ; stałe
+
+rseg CODE          ; segment pamięci programu
+mov  PSW, #_R      ; ustawienie banku rejestrów
+mov  SP, #BSTACK-1 ; init stosu
+...
+dw   12H, 34H      ; dane stałe
+db   'ABCD', 0
+
+rseg ISTACK        ; segment dla stosu (internal data)
+BSTACK: ds 16
+
+rseg BYTES         ; bajtowe dane (internal)
+buf:    ds buflen
+
+end</pre>
+    <h3>Kluczowe segmenty:</h3>
+    <ul>
+      <li><strong>CODE</strong> — pamięć programu</li>
+      <li><strong>ISTACK</strong> — internal stack</li>
+      <li><strong>BYTES</strong> — bajtowe dane wewnętrzne</li>
+      <li><strong>XDATA</strong> — bajtowe dane zewnętrzne</li>
+    </ul>
+  </div>
+
+  <div class="card blue">
+    <div class="card-title">Modele pamięci dla programu w języku C</div>
+    <p>Model pamięci określa sposób wykorzystania zasobów pamięci. <strong>Trade-off:</strong> szybkość vs rozmiar pamięci danych.</p>
+    <table>
+      <tr><th>Model</th><th>Pamięć danych</th><th>Adresowanie</th><th>Rozmiar</th><th>Szybkość</th></tr>
+      <tr><td>tiny</td><td class="normal">internal direct</td><td class="normal">bezpośrednie</td><td class="normal">128 B</td><td class="normal" style="color:var(--accent3)">szybkie</td></tr>
+      <tr><td>small</td><td class="normal">internal indirect</td><td class="normal">@Ri</td><td class="normal">256 B</td><td class="normal" style="color:var(--accent4)">średnie</td></tr>
+      <tr><td>large</td><td class="normal">external XDATA</td><td class="normal">DPTR</td><td class="normal">64 KB</td><td class="normal" style="color:var(--accent2)">wolne</td></tr>
+    </table>
+
+    <h3>Porównanie kosztów dostępu (8051):</h3>
+    <table>
+      <tr><th>Tryb</th><th>Przykład</th><th>Bajtów</th><th>Cykli</th></tr>
+      <tr><td class="normal">Bezp. wewn.</td><td class="normal"><code>mov a, 20</code></td><td class="normal">2</td><td class="normal">1</td></tr>
+      <tr><td class="normal">Pośr. wewn.</td><td class="normal"><code>mov r0, #20; mov a, @r0</code></td><td class="normal">3</td><td class="normal">2</td></tr>
+      <tr><td class="normal">Zewn. (XDATA)</td><td class="normal"><code>mov dptr, #20; movx a, @dptr</code></td><td class="normal">4</td><td class="normal">4</td></tr>
+    </table>
+  </div>
+
+  <div class="card orange">
+    <div class="card-title">Moduł cstartup dla programu w języku C</div>
+    <p><code>cstartup.s03</code> — moduł asemblerowy wykonywany <strong>przed</strong> wywołaniem funkcji main(). Łączy świat asemblera (gdzie wszystko trzeba zrobić ręcznie) ze światem C (gdzie main() oczekuje gotowego środowiska).</p>
+    <h3>Co robi cstartup:</h3>
+    <ol>
+      <li>Inicjalizacja stosu C (CSTACK) — do LCALL i tymczasowych danych</li>
+      <li>Inicjalizacja stosu asemblerowego (ISTACK) — do RET</li>
+      <li>Ustawienie banku rejestrów (RS1/RS0 w PSW)</li>
+      <li>Skok z reset interrupt vector do init</li>
+      <li>Wywołanie <code>main()</code> przez LCALL</li>
+      <li>Po powrocie: skok do <code>?C_EXIT</code></li>
+    </ol>
+    <pre>NAME       CSTARTUP
+$defmodel.inc
+EXTERN     ?C_EXIT, _R, main
+RSEG       CSTACK
+stack_begin: DS 30          ; rezerwacja stosu C
+RSEG       ISTACK
+istack:      DS 16
+RSEG       RCODE
+mov        PSW, #_R         ; bank rejestrów
+mov        SP, #istack-1
+mov        sp_C, #stack_begin
+LCALL      main             ; wywołanie main()
+LJMP       ?C_EXIT
+END</pre>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Programowanie hybrydowe C + ASM</div>
+    <h3>Funkcja w asemblerze wywoływana z C:</h3>
+    <pre>// w pliku C
+extern int my_asm_func(int x, int y);</pre>
+    <p>Asm musi:</p>
+    <ul>
+      <li>Zachować konwencje wywołania kompilatora (rejestry/stos)</li>
+      <li>Zwrócić wynik przez konwencję (np. R6/R7 = LSB/MSB w IAR)</li>
+      <li>Mieć nazwę z prefiksem <code>_</code> (zwykle)</li>
+      <li>Być w segmencie zgodnym z modelem pamięci wywołującego programu</li>
+    </ul>
+    <h3>Kategorie dyrektyw asemblera 8051:</h3>
+    <ul>
+      <li><strong>Module control:</strong> NAME, MODULE, ENDMOD, END</li>
+      <li><strong>Symbol control:</strong> PUBLIC, EXTERN, EQU, SET</li>
+      <li><strong>Segment control:</strong> RSEG, CSEG, DSEG, BSEG, XSEG</li>
+      <li><strong>Conditional assembly:</strong> IF, ELSE, ENDIF</li>
+      <li><strong>Data definition:</strong> DB (byte), DW (word), DS (storage)</li>
+      <li><strong>Assembler control:</strong> ORG, USING</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ═══════════════════ ARM ═══════════════════ -->
+<div id="arm" class="section">
+  <h2>🦾 Architektura <span>ARM</span></h2>
+
+  <div class="card green">
+    <div class="card-title">⭐ 6 podstawowych cech ARM (Pyt. 6 z kolosa)</div>
+    <ol>
+      <li><strong>Load/Store</strong> — jedyne instrukcje komunikujące rejestry z pamięcią (LDR/STR). ALU operuje tylko na rejestrach.</li>
+      <li><strong>Wyrównanie pamięci</strong> — słowo na adresie ÷4, półsłowo ÷2, bajt dowolnie</li>
+      <li><strong>16 rejestrów 32-bitowych</strong> (R0–R15), jednolity zestaw</li>
+      <li><strong>Stała długość instrukcji = 32 bity</strong> → ułatwia dekodowanie i pipeline (kosztem gęstości kodu)</li>
+      <li><strong>Większość instrukcji wykonuje się w 1 cyklu maszynowym</strong></li>
+      <li><strong>Przetwarzanie potokowe</strong> — ARM7: 3-stop (FE/DE/EX), ARM9: 5-stop</li>
+    </ol>
+  </div>
+
+  <div class="card pink">
+    <div class="card-title">Kompensacja stałej długości 32-bit</div>
+    <p>Stała długość ułatwia procesor, ale obniża gęstość kodu. Dodano:</p>
+    <ul>
+      <li><strong>Wykonanie warunkowe</strong> niemal każdej instrukcji → redukuje skoki (brak kary za branch prediction)</li>
+      <li><strong>Sufiks S</strong> — flagi CPSR aktualizowane tylko gdy potrzeba: <code>ADDS R2,R1,R0</code></li>
+      <li><strong>Barrel shifter 32-bit</strong> — wbudowany w większości instrukcji arytm./logicznych: <code>ADD R2,R1,R0,LSL 2</code></li>
+      <li><strong>Rozbudowane tryby adresowania indeksowego</strong></li>
+      <li><strong>Link Register R14/LR</strong> — szybkie wywołania funkcji</li>
+      <li><strong>2-poziomowy podsystem przerwań</strong> z bankowanymi rejestrami</li>
+    </ul>
+  </div>
+
+  <div class="card orange">
+    <div class="card-title">Rejestry ARM</div>
+    <table>
+      <tr><th>Rejestr</th><th>Nazwa</th><th>Funkcja</th></tr>
+      <tr><td>R0–R12</td><td class="normal">GPR</td><td class="normal">Ogólnego przeznaczenia</td></tr>
+      <tr><td>R13</td><td class="normal">SP</td><td class="normal">Stack Pointer — wskaźnik stosu</td></tr>
+      <tr><td>R14</td><td class="normal">LR</td><td class="normal">Link Register — adres powrotu (BL/BLX)</td></tr>
+      <tr><td>R15</td><td class="normal">PC</td><td class="normal">Program Counter — następna instrukcja</td></tr>
+      <tr><td>CPSR</td><td class="normal">—</td><td class="normal">Current PSR — flagi N,Z,C,V + tryb pracy</td></tr>
+      <tr><td>SPSR</td><td class="normal">—</td><td class="normal">Saved PSR — kopia CPSR przy wyjątku</td></tr>
+    </table>
+    <p style="margin-top:.8rem;font-size:.85rem;color:var(--muted)">Łącznie <strong>37 fizycznych rejestrów 32-bit</strong> (31 GPR + 6 statusowych), częściowo bankowanych wg trybu pracy.</p>
+  </div>
+
+  <div class="card red">
+    <div class="card-title">Tryby pracy procesora ARM</div>
+    <table>
+      <tr><th>Tryb</th><th>Opis</th><th>Wejście</th></tr>
+      <tr><td>User</td><td class="normal">Normalny program</td><td class="normal">—</td></tr>
+      <tr><td>System</td><td class="normal">Uprzywilejowane OS</td><td class="normal">Modyfikacja CPSR</td></tr>
+      <tr><td>FIQ</td><td class="normal">Szybkie przerwanie (banked R8–R14)</td><td class="normal">Sygnał FIQ</td></tr>
+      <tr><td>IRQ</td><td class="normal">Ogólne przerwanie</td><td class="normal">Sygnał IRQ</td></tr>
+      <tr><td>SVC</td><td class="normal">Tryb nadzorcy OS</td><td class="normal">Instrukcja SWI</td></tr>
+      <tr><td>ABT</td><td class="normal">Błąd pamięci (Abort)</td><td class="normal">Błąd prefetch/data</td></tr>
+      <tr><td>UND</td><td class="normal">Niezdefiniowana instrukcja</td><td class="normal">Brak instrukcji</td></tr>
+    </table>
+
+    <h3>Wejście w wyjątek — 5 kroków:</h3>
+    <ol>
+      <li>Zapisz <code>PC → LR (R14)</code> — adres powrotu</li>
+      <li>Zapisz <code>CPSR → SPSR</code> nowego trybu</li>
+      <li>Ustaw bity trybu w CPSR odpowiadające wyjątkowi</li>
+      <li>Wyłącz przerwania niższego priorytetu</li>
+      <li>Załaduj wektor wyjątku do PC</li>
+    </ol>
+
+    <h3>Wektory wyjątków (ARM7TDMI):</h3>
+    <table>
+      <tr><th>Priorytet</th><th>Wyjątek</th><th>Adres wektora</th></tr>
+      <tr><td>1 (najwyższy)</td><td class="normal">Reset</td><td class="normal"><code>0x00000000</code></td></tr>
+      <tr><td>2</td><td class="normal">Data Abort</td><td class="normal"><code>0x00000010</code></td></tr>
+      <tr><td>3</td><td class="normal">FIQ</td><td class="normal"><code>0x0000001C</code></td></tr>
+      <tr><td>4</td><td class="normal">IRQ</td><td class="normal"><code>0x00000018</code></td></tr>
+      <tr><td>5</td><td class="normal">Prefetch Abort</td><td class="normal"><code>0x0000000C</code></td></tr>
+      <tr><td>6 (najniższy)</td><td class="normal">Undefined / SWI</td><td class="normal"><code>0x00000004 / 0x00000008</code></td></tr>
     </table>
   </div>
 
   <div class="card">
-    <div class="card-title">Thumb-2 — główne ulepszenia (z kolosa!)</div>
-    <ul>
-      <li><strong>32-bitowe instrukcje dodane do zestawu Thumb</strong> dla:
+    <div class="card-title">Instrukcje ARM (mnemoniki)</div>
+    <div class="grid2">
+      <div>
+        <h3>Arytmetyczne</h3>
+        <p><code>ADD ADC SUB SBC RSB RSC CMP CMN</code></p>
+        <h3>Logiczne</h3>
+        <p><code>AND BIC OR EOR TST TEQ</code></p>
+        <h3>Mnożenia</h3>
+        <p><code>MUL MLA UMULL SMULL UMLAL SMLAL</code></p>
+      </div>
+      <div>
+        <h3>Skoki</h3>
+        <p><code>B BL BX</code></p>
+        <p style="font-size:.82rem;color:var(--muted)">BL zapisuje adres powrotu w LR; BX przełącza ARM↔Thumb</p>
+        <h3>Przesłania</h3>
+        <p><code>MOV MVN LDR STR LDM STM SWP</code></p>
+        <h3>System</h3>
+        <p><code>MRS MSR SWI MRC MCR LDC STC CDP</code></p>
+      </div>
+    </div>
+
+    <h3>Wykonanie warunkowe — sufiks 2-literowy:</h3>
+    <p>
+      <span class="pill">EQ</span> Z=1 &nbsp;
+      <span class="pill">NE</span> Z=0 &nbsp;
+      <span class="pill">MI</span> N=1 &nbsp;
+      <span class="pill">PL</span> N=0 &nbsp;
+      <span class="pill">CS</span> C=1 &nbsp;
+      <span class="pill">CC</span> C=0
+    </p>
+    <p>
+      <span class="pill">GE</span> N=V &nbsp;
+      <span class="pill">LT</span> N≠V &nbsp;
+      <span class="pill">GT</span> Z=0,N=V &nbsp;
+      <span class="pill">LE</span> Z=1 lub N≠V
+    </p>
+    <pre>ADDEQ R2,R1,R0   ; R2 = R1+R0 tylko gdy Z=1
+STRGT R0,[R1]    ; zapisz tylko gdy GT</pre>
+  </div>
+
+  <div class="card blue">
+    <div class="card-title">Wersje architektury ARMv4 → v8</div>
+    <table>
+      <tr><th>Wersja</th><th>Kluczowe nowości</th></tr>
+      <tr><td>ARMv4</td><td class="normal">Baseline: 32-bit, mnożenie, JTAG (D), ICE (I), AMBA</td></tr>
+      <tr><td>ARMv4T</td><td class="normal">+ <strong>Thumb</strong> (16-bit): 65% rozm. ARM, 160% wyd. na 16-bit pam.</td></tr>
+      <tr><td>ARMv5</td><td class="normal">+ DSP (32×16, 16×16 w 1 cyklu), VFPv2 (IEEE 754), Jazelle (8× Java)</td></tr>
+      <tr><td>ARMv6</td><td class="normal">+ unaligned access, SIMD multimedia (4× kodeki), <strong>Thumb-2</strong>, TrustZone</td></tr>
+      <tr><td>ARMv7</td><td class="normal">+ rodzina <strong>Cortex</strong> (M/R/A), Thumb-2 wszędzie, VFPv3, NEON (400% DSP)</td></tr>
+      <tr><td>ARMv8-A</td><td class="normal">+ <strong>AArch64</strong> (64-bit), 31 GPR × 64-bit, A64 ISA</td></tr>
+    </table>
+  </div>
+
+  <div class="card green">
+    <div class="card-title">⭐ Thumb-2 — kluczowe ulepszenia (Pyt. 7 z kolosa)</div>
+    <ol>
+      <li><strong>Instrukcje 32-bitowe dodane do zestawu Thumb</strong> dla:
         <ul style="margin-top:.3rem">
           <li>obsługi wyjątków w stanie Thumb</li>
           <li>dostępu do koprocesorów</li>
@@ -646,241 +1392,224 @@ STRGT R0,[R1]    ; zapisz do pamięci tylko gdy GT</pre>
           <li>wydajności gdy 16-bit instrukcja jest bottleneckiem</li>
         </ul>
       </li>
-      <li><strong>Instrukcja IT (If-Then)</strong> — 16-bit, warunkowe wykonanie bloku 1–4 instrukcji Thumb</li>
-      <li><strong>CBZ/CBNZ</strong> — 16-bit Compare and Branch on Zero/NonZero, zastępuje 2 instrukcje jedną</li>
-    </ul>
-    <p style="margin-top:.8rem">Wynik: <strong>31% mniej pamięci</strong> niż ARM, <strong>38% więcej wydajności</strong> niż Thumb</p>
+      <li><strong>Instrukcja IT (If-Then) — 16-bit</strong>: warunkowe wykonanie bloku 1–4 instrukcji Thumb</li>
+      <li><strong>CBZ/CBNZ — 16-bit Compare and Branch on Zero/NonZero</strong>: zastępuje 2 instrukcje jedną</li>
+    </ol>
+    <p style="margin-top:.8rem">Wynik: <strong class="key">31% mniej pamięci</strong> niż ARM, <strong class="key">38% więcej wydajności</strong> niż Thumb</p>
+
+    <table style="margin-top:1rem">
+      <tr><th></th><th>ARM</th><th>Thumb</th><th>Thumb-2</th></tr>
+      <tr><td>Szerokość instrukcji</td><td class="normal">32-bit</td><td class="normal">16-bit</td><td class="normal">16+32 mixed</td></tr>
+      <tr><td>Gęstość kodu</td><td class="normal">niska</td><td class="normal">wysoka</td><td class="normal">średnio-wysoka</td></tr>
+      <tr><td>Wydajność</td><td class="normal">wysoka</td><td class="normal">niższa</td><td class="normal">blisko ARM</td></tr>
+      <tr><td>Wykonanie warunkowe</td><td class="normal">prawie wszystko</td><td class="normal">tylko skoki</td><td class="normal">blok IT</td></tr>
+    </table>
   </div>
 
   <div class="card">
-    <div class="card-title">Rodziny procesorów ARM — tabela (z kolosa!)</div>
+    <div class="card-title">⭐ Rodziny ARM Cortex (Pyt. 8 z kolosa)</div>
     <table>
       <tr><th>Rodzina</th><th>Profil</th><th>Zastosowanie</th></tr>
-      <tr><td><span class="chip chip-m">Cortex-M</span></td><td>M</td><td>Najbardziej energooszczędne urządzenia wbudowane (MCU, IoT)</td></tr>
-      <tr><td><span class="chip chip-r">Cortex-R</span></td><td>R</td><td>Niezawodna wydajność dla misji krytycznych (automotive, real-time)</td></tr>
-      <tr><td><span class="chip chip-a">Cortex-A</span></td><td>A</td><td>Najwyższa wydajność przy optymalnej mocy (Linux, Android)</td></tr>
-      <tr><td><span class="chip chip-o">Neoverse</span></td><td>—</td><td>Skalowalność dla infrastruktury (chmura → edge)</td></tr>
-      <tr><td><span class="chip chip-o">SecurCore</span></td><td>—</td><td>Silne rozwiązania bezpieczeństwa fizycznego (smart cards)</td></tr>
-      <tr><td><span class="chip chip-o">Ethos</span></td><td>—</td><td>Najwyższa wydajność ML inference</td></tr>
+      <tr><td><span class="chip chip-m">Cortex-M</span></td><td class="normal">M (Microcontroller)</td><td class="normal">Najbardziej energooszczędne MCU (IoT, sensory). Thumb-only.</td></tr>
+      <tr><td><span class="chip chip-r">Cortex-R</span></td><td class="normal">R (Real-time)</td><td class="normal">Real-time, safety-critical (automotive, storage). ARM + Thumb.</td></tr>
+      <tr><td><span class="chip chip-a">Cortex-A</span></td><td class="normal">A (Application OS)</td><td class="normal">Linux/Windows. ARM + Thumb + Thumb-2. 32 i 64-bit.</td></tr>
+      <tr><td><span class="chip chip-o">Neoverse</span></td><td class="normal">—</td><td class="normal">Skalowalna infrastruktura (chmura → edge)</td></tr>
+      <tr><td><span class="chip chip-o">SecurCore</span></td><td class="normal">—</td><td class="normal">Bezpieczeństwo fizyczne (smart cards, payment)</td></tr>
+      <tr><td><span class="chip chip-o">Ethos</span></td><td class="normal">—</td><td class="normal">ML inference (neural processing)</td></tr>
     </table>
-  </div>
 
-  <div class="card">
-    <div class="card-title">Cortex-M — przegląd podtypów</div>
+    <h3>Cortex-M — sub-warianty:</h3>
     <table>
-      <tr><th>Model</th><th>Archit.</th><th>Charakterystyka</th></tr>
-      <tr><td>M0 / M0+</td><td>ARMv6-M</td><td>Najmniejszy, ultra-low power, IoT, sensory</td></tr>
-      <tr><td>M1</td><td>ARMv6-M</td><td>Dla FPGA</td></tr>
-      <tr><td>M3</td><td>ARMv7-M</td><td>Low latency IRQ, automotive/industrial</td></tr>
-      <tr><td>M4 (F)</td><td>ARMv7E-M</td><td>DSP + opcjonalne FPU — sygnały cyfrowe</td></tr>
-      <tr><td>M7</td><td>ARMv7E-M</td><td>Najwyższa wydajność Cortex-M, SIMD</td></tr>
-      <tr><td>M23</td><td>ARMv8-M</td><td>Najmniejszy z TrustZone, IoT z bezpieczeństwem</td></tr>
-      <tr><td>M33</td><td>ARMv8-M</td><td>Real-time + TrustZone + DSP</td></tr>
-      <tr><td>M55</td><td>ARMv8.1-M</td><td>Najlepszy AI/ML, technologia Helium</td></tr>
+      <tr><th>Model</th><th>Architektura</th><th>Charakterystyka</th></tr>
+      <tr><td>M0 / M0+</td><td class="normal">ARMv6-M</td><td class="normal">Najmniejszy gate count, ultra-low power, IoT</td></tr>
+      <tr><td>M1</td><td class="normal">ARMv6-M</td><td class="normal">Dla FPGA</td></tr>
+      <tr><td>M3</td><td class="normal">ARMv7-M</td><td class="normal">Low latency IRQ, automotive/industrial</td></tr>
+      <tr><td>M4 (F)</td><td class="normal">ARMv7E-M</td><td class="normal">DSP + opcjonalne FPU</td></tr>
+      <tr><td>M7</td><td class="normal">ARMv7E-M</td><td class="normal">Najwyższa wydajność, SIMD DSP</td></tr>
+      <tr><td>M23 / M33</td><td class="normal">ARMv8-M</td><td class="normal">+ TrustZone (M33 też + DSP)</td></tr>
+      <tr><td>M55</td><td class="normal">ARMv8.1-M</td><td class="normal">AI/ML, technologia Helium</td></tr>
     </table>
-    <p style="margin-top:.8rem;font-size:.85rem;color:var(--muted)">Wszystkie Cortex-M kompatybilne w górę — ponowne użycie oprogramowania między generacjami.</p>
+    <p style="margin-top:.6rem;font-size:.85rem;color:var(--muted)">Wszystkie Cortex-M kompatybilne w górę — software reuse między generacjami.</p>
   </div>
 </div>
 
-<!-- NARZĘDZIA DEWELOPERSKIE -->
-<div id="tools" class="section">
-  <h2>🔧 Narzędzia <span>deweloperskie</span></h2>
-
-  <div class="card" style="border-color:var(--accent2)">
-    <div class="card-title">ICE — Przechwytywanie danych z magistrali (Pytanie Nr 3)</div>
-    <p>ICE (In-Circuit Emulator) podłącza się do magistrali mikrokomputera przez złącze i interfejs, umożliwiając precyzyjne monitorowanie, analizowanie i modyfikowanie przepływu danych.</p>
-    <h3>6-krokowy proces:</h3>
-    <ol style="padding-left:1.2rem;color:#b8b8cc;font-size:.9rem;line-height:1.8">
-      <li><strong>Podłączenie</strong> — fizyczne podłączenie emulatora do magistrali przez złącze i interfejs</li>
-      <li><strong>Przechwytywanie danych</strong> — emulator monitoruje sygnały; linia danych = dane, adresowa = adres docelowy/źródłowy, kontrolna = operacje</li>
-      <li><strong>Analiza danych</strong> — sprawdzenie poprawności, diagnoza błędów, monitorowanie transferów</li>
-      <li><strong>Modyfikowanie danych</strong> — emulator może wstrzykiwać zmiany w danych lub na adresach/sygnałach kontrolnych</li>
-      <li><strong>Sterowanie przerwaniami</strong> — emulator zarządza sygnałami przenoszeń, symuluje zdarzenia</li>
-      <li><strong>Rejestrowanie danych</strong> — zapisuje wartości danych, adresy i sygnały kontrolne do późniejszej analizy</li>
-    </ol>
-  </div>
-
-  <div class="card" style="border-color:var(--accent4)">
-    <div class="card-title">JTAG — Interfejs debugowania (Pytanie Nr 4b)</div>
-    <p>Standard IEEE 1149.1 — interfejs do komunikacji z emulatorem wewnątrz-układowym.</p>
-    <div class="grid2">
-      <div>
-        <h3>Sygnały TAP controller:</h3>
-        <ul>
-          <li><code>TMS</code> — Test Mode Select (wybór trybu)</li>
-          <li><code>TDI</code> — Test Data Input</li>
-          <li><code>TDO</code> — Test Data Output</li>
-          <li><code>TCK</code> — Test Clock (sygnał zegarowy)</li>
-          <li><code>RTCK</code> — Return TCK (zwrotny zegar)</li>
-        </ul>
-      </div>
-      <div>
-        <h3>Sygnały reset:</h3>
-        <ul>
-          <li><code>nSRST</code> — System Reset (aktywny niski)</li>
-          <li><code>nTRST</code> — Test Reset (aktywny niski)</li>
-        </ul>
-        <h3>Bloki wewnątrz procesora:</h3>
-        <ul>
-          <li><code>EmbeddedICE</code> — kontroler debugowania</li>
-          <li><code>DBGRQ</code> — debug request</li>
-          <li><code>DBGACK</code> — debug acknowledge</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-title">Zdalne ładowanie kodu wykonywalnego (Pytanie Nr 4)</div>
-    <div class="grid2">
-      <div>
-        <p>Kod przesyłany z PC do mikrokomputera przez interfejs I/O. Program zdalnego ładowania (w ROM) zapisuje odebrany kod do RAM.</p>
-        <h3>Format INTELA (Intel HEX):</h3>
-        <p>Każdy rekord danych zawiera:</p>
-        <ul style="font-size:.85rem">
-          <li>2 znaki — długość danych</li>
-          <li>4 znaki — load address</li>
-          <li>2 znaki — typ danych</li>
-          <li>N znaków — dane</li>
-          <li>2 znaki — checksum</li>
-        </ul>
-        <p style="margin-top:.5rem">Ostatnia linia (EOF): <code>:00000001FF</code></p>
-      </div>
-      <div>
-        <h3>Organizacja pamięci:</h3>
-        <table style="font-size:.82rem">
-          <tr><th>Adres</th><th>CODE</th><th>XDATA</th></tr>
-          <tr><td>0x0000–0x0FFF</td><td>ROM (PSEN)</td><td>RAM</td></tr>
-          <tr><td>0x1000–0xFFFF</td><td>RAM</td><td>RAM</td></tr>
-        </table>
-        <p style="margin-top:.6rem;font-size:.82rem;color:var(--muted)"><code>PSEN</code> = Program Store Enable — sygnał odczytu z zewnętrznej pamięci programu (ROM).</p>
-        <p style="font-size:.82rem;color:var(--muted)">Program załadowany przez I/O (np. port RS-232) trafia do RAM (0x1000+) i tam jest wykonywany.</p>
-      </div>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-title">Łańcuch tworzenia oprogramowania</div>
-    <table>
-      <tr><th>Narzędzie</th><th>Opis</th></tr>
-      <tr><td>Asembler</td><td>Tłumaczy kod asemblera → kod obiektowy</td></tr>
-      <tr><td>Kompilator</td><td>Tłumaczy C → kod obiektowy</td></tr>
-      <tr><td>Konsolidator (linker)</td><td>Łączy pliki obiektowe → executable</td></tr>
-      <tr><td>Bibliotekarz</td><td>Zarządza bibliotekami kodu obiektowego</td></tr>
-      <tr><td>Symulator</td><td>Emuluje procesor na PC</td></tr>
-      <tr><td>Debugger</td><td>Usuwanie błędów z programu</td></tr>
-      <tr><td>IDE</td><td>Zintegrowane środowisko programistyczne</td></tr>
-    </table>
-  </div>
-</div>
-
-<!-- FISZKI -->
+<!-- ═══════════════════ FISZKI ═══════════════════ -->
 <div id="flash" class="section">
-  <h2>🃏 <span>Fiszki</span></h2>
+  <h2>🃏 <span>Fiszki</span> z całego materiału</h2>
   <p class="flip-hint">Kliknij kartę żeby zobaczyć odpowiedź</p>
 
   <div class="progress-bar">
     <div class="progress-fill" id="progressFill" style="width:0%"></div>
   </div>
-  <p style="text-align:center;font-family:var(--mono);font-size:.78rem;color:var(--muted);margin-bottom:1.2rem" id="progressText">0 / 14 kart odkrytych</p>
+  <p style="text-align:center;font-family:var(--mono);font-size:.78rem;color:var(--muted);margin-bottom:1.2rem" id="progressText">0 / 24 kart odkrytych</p>
 
   <div class="flashcard-grid" id="flashcards">
 
     <div class="flashcard" onclick="flip(this)">
       <div class="flashcard-inner">
-        <div class="fc-front"><div class="fc-q">Pytanie</div><div class="fc-text">Co to jest Load/Store Architecture w ARM?</div><div class="fc-hint">Kliknij aby zobaczyć</div></div>
-        <div class="fc-back"><div class="fc-q">Odpowiedź</div><div class="fc-ans">Tylko instrukcje LDR i STR mogą komunikować się między rejestrami a pamięcią. ALU operuje wyłącznie na rejestrach — nie ma instrukcji, które jednocześnie czytają pamięć i wykonują operację.</div></div>
+        <div class="fc-front"><div class="fc-q">Narzędzia</div><div class="fc-text">Co to jest Load/Store w ARM?</div><div class="fc-hint">Kliknij</div></div>
+        <div class="fc-back"><div class="fc-q">Odpowiedź</div><div class="fc-ans">Tylko instrukcje LDR i STR mogą komunikować się między rejestrami a pamięcią. ALU operuje wyłącznie na rejestrach.</div></div>
       </div>
     </div>
 
     <div class="flashcard" onclick="flip(this)">
       <div class="flashcard-inner">
-        <div class="fc-front"><div class="fc-q">Pytanie</div><div class="fc-text">Ile rejestrów ma ARM i jakie są specjalne?</div><div class="fc-hint">Kliknij aby zobaczyć</div></div>
-        <div class="fc-back"><div class="fc-q">Odpowiedź</div><div class="fc-ans">16 rejestrów 32-bitowych (R0–R15). Specjalne: R13=SP (wskaźnik stosu), R14=LR (adres powrotu), R15=PC (licznik rozkazów). Łącznie 37 fizycznych (bankowalność per tryb).</div></div>
+        <div class="fc-front"><div class="fc-q">Narzędzia</div><div class="fc-text">Wymień 6 sygnałów JTAG</div><div class="fc-hint">Kliknij</div></div>
+        <div class="fc-back"><div class="fc-q">Odpowiedź</div><div class="fc-ans">TMS (mode), TDI (data in), TDO (data out), TCK (clock), RTCK (return clock), nSRST (system reset), nTRST (test reset). EmbeddedICE: DBGRQ/DBGACK.</div></div>
       </div>
     </div>
 
     <div class="flashcard" onclick="flip(this)">
       <div class="flashcard-inner">
-        <div class="fc-front"><div class="fc-q">Pytanie</div><div class="fc-text">Co dodała architektura ARMv4T?</div><div class="fc-hint">Kliknij aby zobaczyć</div></div>
-        <div class="fc-back"><div class="fc-q">Odpowiedź</div><div class="fc-ans">Zestaw instrukcji Thumb (16-bitowy). Kod Thumb ≈ 65% rozmiaru kodu ARM, 160% wydajności vs ARM na 16-bitowej pamięci.</div></div>
+        <div class="fc-front"><div class="fc-q">Narzędzia</div><div class="fc-text">Co oznacza PSEN w 8051?</div><div class="fc-hint">Kliknij</div></div>
+        <div class="fc-back"><div class="fc-q">Odpowiedź</div><div class="fc-ans">Program Store Enable — sygnał odczytu z zewn. pamięci programu (ROM). Aktywny gdy CPU pobiera instrukcję z ROM.</div></div>
       </div>
     </div>
 
     <div class="flashcard" onclick="flip(this)">
       <div class="flashcard-inner">
-        <div class="fc-front"><div class="fc-q">Pytanie</div><div class="fc-text">Czym różni się Harvard od von Neumanna?</div><div class="fc-hint">Kliknij aby zobaczyć</div></div>
-        <div class="fc-back"><div class="fc-q">Odpowiedź</div><div class="fc-ans">Harvard: oddzielne przestrzenie adresowe dla programu i danych → jednoczesny dostęp, różne instrukcje. Von Neumann: wspólna przestrzeń → te same instrukcje, brak jednoczesnego dostępu. ARM używa von Neumanna.</div></div>
+        <div class="fc-front"><div class="fc-q">Sygnatury</div><div class="fc-text">Wielomian charakterystyczny analizy sygnatur (16-bit)</div><div class="fc-hint">Kliknij</div></div>
+        <div class="fc-back"><div class="fc-q">Odpowiedź</div><div class="fc-ans">G(x) = x¹⁶ + x¹² + x⁹ + x⁷ + 1. Dualny: Ψ(x) = x¹⁶ + x⁹ + x⁷ + x⁴ + 1. Signature S(x) = rem(t(x)/G(x)).</div></div>
       </div>
     </div>
 
     <div class="flashcard" onclick="flip(this)">
       <div class="flashcard-inner">
-        <div class="fc-front"><div class="fc-q">Pytanie</div><div class="fc-text">Jakie są główne ulepszenia Thumb-2 vs Thumb?</div><div class="fc-hint">Kliknij aby zobaczyć</div></div>
-        <div class="fc-back"><div class="fc-q">Odpowiedź</div><div class="fc-ans">1. Dodane 32-bit instrukcje (DSP, wyjątki, koprocesory, wydajność). 2. Instrukcja IT (If-Then): warunkowe wykonanie 1–4 instrukcji. 3. CBZ/CBNZ: porównanie z zerem i skok w 1 instrukcji.</div></div>
+        <div class="fc-front"><div class="fc-q">Sygnatury</div><div class="fc-text">Pe dla n=16, m→∞?</div><div class="fc-hint">Kliknij</div></div>
+        <div class="fc-back"><div class="fc-q">Odpowiedź</div><div class="fc-ans">Pe ≈ 1/2¹⁶ ≈ 0,000015. P ≈ 99,998%. Dla m ≤ n: Pe = 0 (wszystkie wykrywane). Pojedyncze błędy: zawsze wykrywane.</div></div>
       </div>
     </div>
 
     <div class="flashcard" onclick="flip(this)">
       <div class="flashcard-inner">
-        <div class="fc-front"><div class="fc-q">Pytanie</div><div class="fc-text">Wypisz 6 rodzin procesorów ARM z zastosowaniami</div><div class="fc-hint">Kliknij aby zobaczyć</div></div>
-        <div class="fc-back"><div class="fc-q">Odpowiedź</div><div class="fc-ans">Cortex-M: MCU/IoT. Cortex-R: systemy czasu rzeczywistego. Cortex-A: OS/aplikacje. Neoverse: infrastruktura chmura/edge. SecurCore: bezpieczeństwo fizyczne. Ethos: ML inference.</div></div>
+        <div class="fc-front"><div class="fc-q">Sygnatury</div><div class="fc-text">Dlaczego A,C,F,H,P,U a nie A-F na wyświetlaczu?</div><div class="fc-hint">Kliknij</div></div>
+        <div class="fc-back"><div class="fc-q">Odpowiedź</div><div class="fc-ans">Lepsza czytelność na 7-segmentowym wyświetlaczu LED. B/D/E mogą być mylone z 8/0/6.</div></div>
       </div>
     </div>
 
     <div class="flashcard" onclick="flip(this)">
       <div class="flashcard-inner">
-        <div class="fc-front"><div class="fc-q">Pytanie</div><div class="fc-text">Co to jest ICE i jakie ma zastosowanie?</div><div class="fc-hint">Kliknij aby zobaczyć</div></div>
-        <div class="fc-back"><div class="fc-q">Odpowiedź</div><div class="fc-ans">In-Circuit Emulator — podłącza się do magistrali systemu wbudowanego. Pozwala: przechwytywać, analizować, modyfikować dane na magistrali, sterować transferami i rejestrować ruch. Niezastąpiony przy debugowaniu systemów embedded.</div></div>
+        <div class="fc-front"><div class="fc-q">CISC vs RISC</div><div class="fc-text">Wzór czasu wykonania programu</div><div class="fc-hint">Kliknij</div></div>
+        <div class="fc-back"><div class="fc-q">Odpowiedź</div><div class="fc-ans">t/prog = (t/cykl) × (cykle/instr) × (instr/prog). RISC redukuje środkowy, CISC redukuje prawy.</div></div>
       </div>
     </div>
 
     <div class="flashcard" onclick="flip(this)">
       <div class="flashcard-inner">
-        <div class="fc-front"><div class="fc-q">Pytanie</div><div class="fc-text">Podaj równanie czasu wykonania programu</div><div class="fc-hint">Kliknij aby zobaczyć</div></div>
-        <div class="fc-back"><div class="fc-q">Odpowiedź</div><div class="fc-ans">czas/program = (czas/cykl) × (cykle/instrukcja) × (instrukcje/program). RISC zmniejsza cykle/instrukcję, CISC zmniejsza instrukcje/program.</div></div>
+        <div class="fc-front"><div class="fc-q">CISC vs RISC</div><div class="fc-text">Pobór mocy ARM vs x86</div><div class="fc-hint">Kliknij</div></div>
+        <div class="fc-back"><div class="fc-q">Odpowiedź</div><div class="fc-ans">ARM/MIPS: 40-50% mniej mocy/MHz, 3-4× mniejsza pow. niż x86. x86: +4-8% wyd./MHz. Dlaczego x86 więcej mocy: wewn. translacja CISC→RISC micro-ops.</div></div>
       </div>
     </div>
 
     <div class="flashcard" onclick="flip(this)">
       <div class="flashcard-inner">
-        <div class="fc-front"><div class="fc-q">Pytanie</div><div class="fc-text">Jakie sygnały ma interfejs JTAG?</div><div class="fc-hint">Kliknij aby zobaczyć</div></div>
-        <div class="fc-back"><div class="fc-q">Odpowiedź</div><div class="fc-ans">TMS (wybór trybu), TDI (dane wejście), TDO (dane wyjście), TCK (zegar), RTCK (zwrotny zegar), nSRST (reset systemu), nTRST (reset test). TAP controller zarządza komunikacją.</div></div>
+        <div class="fc-front"><div class="fc-q">8051</div><div class="fc-text">Architektura 8051</div><div class="fc-hint">Kliknij</div></div>
+        <div class="fc-back"><div class="fc-q">Odpowiedź</div><div class="fc-ans">8-bit CISC, Harvard. 64KB programu + 64KB ext. danych. 4 banki × 8 rej. 2 poziomy IRQ priority. ALU 8-bit + LU 1-bit.</div></div>
       </div>
     </div>
 
     <div class="flashcard" onclick="flip(this)">
       <div class="flashcard-inner">
-        <div class="fc-front"><div class="fc-q">Pytanie</div><div class="fc-text">Porównaj pobór mocy ARM vs x86</div><div class="fc-hint">Kliknij aby zobaczyć</div></div>
-        <div class="fc-back"><div class="fc-q">Odpowiedź</div><div class="fc-ans">ARM/MIPS zużywają 40–50% mniej mocy na MHz niż x86. Powierzchnia krzemu 3–4× mniejsza. x86 ma ~4–8% wyższą wydajność/MHz ale wyższy pobór wynikający z wewnętrznej translacji CISC→RISC.</div></div>
+        <div class="fc-front"><div class="fc-q">8051</div><div class="fc-text">Bity RS1/RS0 w PSW</div><div class="fc-hint">Kliknij</div></div>
+        <div class="fc-back"><div class="fc-q">Odpowiedź</div><div class="fc-ans">Wybór banku rejestrów: 00→bank 0, 01→bank 1, 10→bank 2, 11→bank 3. Każdy bank = R0–R7. PSW @ adres D0H.</div></div>
       </div>
     </div>
 
     <div class="flashcard" onclick="flip(this)">
       <div class="flashcard-inner">
-        <div class="fc-front"><div class="fc-q">Pytanie</div><div class="fc-text">Podaj 5 kroków wejścia ARM w obsługę wyjątku</div><div class="fc-hint">Kliknij aby zobaczyć</div></div>
-        <div class="fc-back"><div class="fc-q">Odpowiedź</div><div class="fc-ans">1. PC → LR. 2. CPSR → SPSR nowego trybu. 3. Ustaw tryb wyjątku w CPSR. 4. Wyłącz przerwania niższego priorytetu. 5. Załaduj wektor wyjątku do PC.</div></div>
+        <div class="fc-front"><div class="fc-q">8051</div><div class="fc-text">Co wyróżnia DS89C450 od klasyka?</div><div class="fc-hint">Kliknij</div></div>
+        <div class="fc-back"><div class="fc-q">Odpowiedź</div><div class="fc-ans">12× szybszy przy tej samej f. Cykl masz. = 1 takt (zamiast 12). 1 MIPS/MHz, 33 MIPS @ 33 MHz. Drop-in dla 8xC51.</div></div>
       </div>
     </div>
 
     <div class="flashcard" onclick="flip(this)">
       <div class="flashcard-inner">
-        <div class="fc-front"><div class="fc-q">Pytanie</div><div class="fc-text">Co to format INTELA (Intel HEX)?</div><div class="fc-hint">Kliknij aby zobaczyć</div></div>
-        <div class="fc-back"><div class="fc-q">Odpowiedź</div><div class="fc-ans">Format transmisji kodu wykonywalnego. Każdy rekord: 2 znaki długość | 4 znaki adres | 2 znaki typ | N dane | 2 checksum. Ostatnia linia EOF: :00000001FF.</div></div>
+        <div class="fc-front"><div class="fc-q">8051</div><div class="fc-text">Czym jest CIP-51?</div><div class="fc-hint">Kliknij</div></div>
+        <div class="fc-back"><div class="fc-q">Odpowiedź</div><div class="fc-ans">Rdzeń 8051 firmy Silicon Labs z potokiem Fetch/Decode/Execute. Mixed-signal MCU. Zachowuje zgodność kodu z Intelem. Op. logiczne na rejestrach (nie tylko ALU).</div></div>
       </div>
     </div>
 
     <div class="flashcard" onclick="flip(this)">
       <div class="flashcard-inner">
-        <div class="fc-front"><div class="fc-q">Pytanie</div><div class="fc-text">Co to jest potok (pipeline) i ile stopni ma ARM7 vs ARM9?</div><div class="fc-hint">Kliknij aby zobaczyć</div></div>
-        <div class="fc-back"><div class="fc-q">Odpowiedź</div><div class="fc-ans">Pipeline = nakładkowe wykonanie faz różnych instrukcji jednocześnie. ARM7: 3-stopniowy (Fetch/Decode/Execute). ARM9: 5-stopniowy (dodaje Memory Access i Write-Back). Proste instrukcje: 3× wydajność vs serial.</div></div>
+        <div class="fc-front"><div class="fc-q">8051</div><div class="fc-text">DQ8051/DQ80251 firmy DCD?</div><div class="fc-hint">Kliknij</div></div>
+        <div class="fc-back"><div class="fc-q">Odpowiedź</div><div class="fc-ans">IP core w FPGA. DQ8051: 9.9k bramek, 29× szybszy. DQ80251: 13.5k bramek, 75× szybszy. Mają wbudowany ICE.</div></div>
       </div>
     </div>
 
     <div class="flashcard" onclick="flip(this)">
       <div class="flashcard-inner">
-        <div class="fc-front"><div class="fc-q">Pytanie</div><div class="fc-text">Czym różni się tryb Thumb od ARM w kontekście rejestrów?</div><div class="fc-hint">Kliknij aby zobaczyć</div></div>
-        <div class="fc-back"><div class="fc-q">Odpowiedź</div><div class="fc-ans">Thumb: standardowo dostępne tylko R0–R7 (dolne rejestry). R8–R15 (górne) tylko przez specjalne warianty MOV/CMP/ADD. Brak pre/post-indeksacji w adresowaniu pamięci. Instrukcje warunkowe tylko skoki (brak IT jak w Thumb-2).</div></div>
+        <div class="fc-front"><div class="fc-q">AVR</div><div class="fc-text">Ile rejestrów ma ATmega32A?</div><div class="fc-hint">Kliknij</div></div>
+        <div class="fc-back"><div class="fc-q">Odpowiedź</div><div class="fc-ans">32 × 8-bit GP (R0-R31). R26-R31 to pary X (R27:R26), Y (R29:R28), Z (R31:R30) — 16-bit wskaźniki adresowe.</div></div>
+      </div>
+    </div>
+
+    <div class="flashcard" onclick="flip(this)">
+      <div class="flashcard-inner">
+        <div class="fc-front"><div class="fc-q">AVR</div><div class="fc-text">Wymień 5 trybów adresowania AVR</div><div class="fc-hint">Kliknij</div></div>
+        <div class="fc-back"><div class="fc-q">Odpowiedź</div><div class="fc-ans">1. Direct, 2. Indirect (X/Y/Z), 3. Indirect+Displacement (Y/Z+offset, max 63), 4. Pre-decrement, 5. Post-increment.</div></div>
+      </div>
+    </div>
+
+    <div class="flashcard" onclick="flip(this)">
+      <div class="flashcard-inner">
+        <div class="fc-front"><div class="fc-q">AVR</div><div class="fc-text">3 zalety AVR vs 8051</div><div class="fc-hint">Kliknij</div></div>
+        <div class="fc-back"><div class="fc-q">Odpowiedź</div><div class="fc-ans">1. Cykl = 1 takt (8051: 12), 2. EEPROM (8051 nie ma), 3. Wewn. RC + POR + Watchdog. + Obie zmiany IRQ.</div></div>
+      </div>
+    </div>
+
+    <div class="flashcard" onclick="flip(this)">
+      <div class="flashcard-inner">
+        <div class="fc-front"><div class="fc-q">Programowanie</div><div class="fc-text">5 metod przekazywania parametrów</div><div class="fc-hint">Kliknij</div></div>
+        <div class="fc-back"><div class="fc-q">Odpowiedź</div><div class="fc-ans">1. Rejestry, 2. Globalne, 3. Tablica sterująca, 4. Stos, 5. In-line code. Dla return: 1-4 (in-line nie ma sensu).</div></div>
+      </div>
+    </div>
+
+    <div class="flashcard" onclick="flip(this)">
+      <div class="flashcard-inner">
+        <div class="fc-front"><div class="fc-q">Programowanie</div><div class="fc-text">Modele pamięci C dla 8051</div><div class="fc-hint">Kliknij</div></div>
+        <div class="fc-back"><div class="fc-q">Odpowiedź</div><div class="fc-ans">tiny: internal direct (128B) — szybko. small: internal indirect (256B) — średnio. large: external XDATA (64KB) — wolno.</div></div>
+      </div>
+    </div>
+
+    <div class="flashcard" onclick="flip(this)">
+      <div class="flashcard-inner">
+        <div class="fc-front"><div class="fc-q">Programowanie</div><div class="fc-text">Co robi cstartup?</div><div class="fc-hint">Kliknij</div></div>
+        <div class="fc-back"><div class="fc-q">Odpowiedź</div><div class="fc-ans">Init przed main(): stos C (CSTACK), stos asm (ISTACK), bank rej., skok z reset vector, LCALL main, LJMP ?C_EXIT.</div></div>
+      </div>
+    </div>
+
+    <div class="flashcard" onclick="flip(this)">
+      <div class="flashcard-inner">
+        <div class="fc-front"><div class="fc-q">ARM</div><div class="fc-text">6 cech ARM (kluczowe!)</div><div class="fc-hint">Kliknij</div></div>
+        <div class="fc-back"><div class="fc-q">Odpowiedź</div><div class="fc-ans">1. Load/store, 2. Wyrównanie ÷4/÷2, 3. 16 rej. × 32-bit, 4. Stała dł. instr. = 32-bit, 5. Większość = 1 cykl, 6. Pipeline (ARM7: 3-stop, ARM9: 5-stop).</div></div>
+      </div>
+    </div>
+
+    <div class="flashcard" onclick="flip(this)">
+      <div class="flashcard-inner">
+        <div class="fc-front"><div class="fc-q">ARM</div><div class="fc-text">3 ulepszenia Thumb-2 vs Thumb</div><div class="fc-hint">Kliknij</div></div>
+        <div class="fc-back"><div class="fc-q">Odpowiedź</div><div class="fc-ans">1. Instr. 32-bit (DSP, wyjątki, koproc.). 2. IT (If-Then) blok 1-4 instr. 3. CBZ/CBNZ. Wynik: 31% mniej RAM niż ARM, 38% szybciej niż Thumb.</div></div>
+      </div>
+    </div>
+
+    <div class="flashcard" onclick="flip(this)">
+      <div class="flashcard-inner">
+        <div class="fc-front"><div class="fc-q">ARM</div><div class="fc-text">6 rodzin ARM Cortex</div><div class="fc-hint">Kliknij</div></div>
+        <div class="fc-back"><div class="fc-q">Odpowiedź</div><div class="fc-ans">Cortex-M (MCU/IoT), Cortex-R (real-time), Cortex-A (Linux/Android). Plus: Neoverse (chmura), SecurCore (bezpiecz.), Ethos (ML).</div></div>
+      </div>
+    </div>
+
+    <div class="flashcard" onclick="flip(this)">
+      <div class="flashcard-inner">
+        <div class="fc-front"><div class="fc-q">ARM</div><div class="fc-text">5 kroków wejścia w wyjątek ARM</div><div class="fc-hint">Kliknij</div></div>
+        <div class="fc-back"><div class="fc-q">Odpowiedź</div><div class="fc-ans">1. PC→LR. 2. CPSR→SPSR. 3. Bity trybu w CPSR. 4. Wyłącz niższe IRQ. 5. PC ← wektor wyjątku.</div></div>
+      </div>
+    </div>
+
+    <div class="flashcard" onclick="flip(this)">
+      <div class="flashcard-inner">
+        <div class="fc-front"><div class="fc-q">ARM</div><div class="fc-text">Co dodała ARMv4T?</div><div class="fc-hint">Kliknij</div></div>
+        <div class="fc-back"><div class="fc-q">Odpowiedź</div><div class="fc-ans">Thumb (16-bit). Kod ~65% rozmiaru ARM, 160% wydajności na 16-bit pamięci. T = Thumb.</div></div>
       </div>
     </div>
 
@@ -894,18 +1623,17 @@ STRGT R0,[R1]    ; zapisz do pamięci tylko gdy GT</pre>
     document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
     document.getElementById(id).classList.add('active');
-    const tabs = ['start','basics','cisc','arm','versions','tools','flash'];
+    const tabs = ['start','tools','signature','cisc','m8051','avr','progr','arm','flash'];
     const idx = tabs.indexOf(id);
     document.querySelectorAll('.tab')[idx].classList.add('active');
+    window.scrollTo({top:0, behavior:'smooth'});
   }
 
   let flipped = new Set();
   function flip(card) {
     card.classList.toggle('flipped');
     const id = Array.from(document.querySelectorAll('.flashcard')).indexOf(card);
-    if (card.classList.contains('flipped')) {
-      flipped.add(id);
-    }
+    if (card.classList.contains('flipped')) flipped.add(id);
     updateProgress();
   }
 
