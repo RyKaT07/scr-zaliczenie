@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mikroprocesory — Test</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap');
+
+  :root {
+    --bg: #0a0a0f;
+    --surface: #111118;
+    --surface2: #18181f;
+    --surface3: #1f1f2a;
+    --border: #2a2a38;
+    --accent: #7c6aff;
+    --accent2: #ff6a6a;
+    --accent3: #6aff9e;
+    --accent4: #ffb86a;
+    --accent5: #6ad4ff;
+    --text: #e8e8f0;
+    --muted: #6b6b80;
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'IBM Plex Sans', sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg); color: var(--text);
+    font-family: var(--sans); min-height: 100vh; line-height: 1.6;
+  }
+  header {
+    padding: 1.2rem 1.5rem .8rem; border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(10,10,15,.95); backdrop-filter: blur(12px);
+  }
+  .header-top {
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 1rem;
+  }
+  h1 {
+    font-size: 1.35rem; font-weight: 800; letter-spacing: -.02em;
+  }
+  h1 span { color: var(--accent); }
+  .stats {
+    display: flex; gap: .6rem; font-family: var(--mono); font-size: .82rem;
+  }
+  .stat {
+    background: var(--surface2); padding: .35rem .7rem; border-radius: 6px;
+  }
+  .stat.correct { color: var(--accent3); }
+  .stat.wrong { color: var(--accent2); }
+  .stat.remaining { color: var(--muted); }
+
+  .progress-bar {
+    width: 100%; height: 4px; background: var(--border);
+    border-radius: 99px; overflow: hidden; margin-top: .8rem;
+  }
+  .progress-fill {
+    height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent3));
+    transition: width .4s ease;
+  }
+
+  main { padding: 1.5rem 1.2rem; max-width: 800px; margin: 0 auto; }
+
+  .question-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.4rem 1.3rem;
+    margin-bottom: 1.2rem;
+    animation: slideIn .25s ease;
+  }
+  @keyframes slideIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:none} }
+
+  .q-tags {
+    display: flex; gap: .4rem; margin-bottom: .8rem;
+    flex-wrap: wrap;
+  }
+  .q-num, .q-type, .q-topic {
+    font-family: var(--mono); font-size: .68rem; font-weight: 700;
+    padding: .2rem .55rem; border-radius: 5px;
+  }
+  .q-num { color: var(--accent); background: rgba(124,106,255,.15); }
+  .q-type { color: var(--accent4); background: rgba(255,184,106,.12); }
+  .q-topic { color: var(--accent5); background: rgba(106,212,255,.12); }
+
+  .q-text {
+    font-size: 1.02rem; font-weight: 600; color: var(--text);
+    margin-bottom: 1rem; line-height: 1.5;
+  }
+
+  .options {
+    display: flex; flex-direction: column; gap: .5rem;
+  }
+  .option {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: .75rem 1rem;
+    cursor: pointer;
+    font-size: .92rem;
+    color: #b8b8cc;
+    transition: all .15s;
+    display: flex; align-items: flex-start; gap: .7rem;
+  }
+  .option:hover:not(.disabled) {
+    border-color: var(--accent); background: var(--surface3); color: var(--text);
+  }
+  .option-letter {
+    font-family: var(--mono); font-weight: 700; font-size: .82rem;
+    color: var(--accent); flex-shrink: 0; width: 1.1rem;
+  }
+  .option.correct {
+    border-color: var(--accent3); background: rgba(106,255,158,.08);
+    color: var(--accent3);
+  }
+  .option.correct .option-letter { color: var(--accent3); }
+  .option.wrong {
+    border-color: var(--accent2); background: rgba(255,106,106,.08);
+    color: var(--accent2);
+  }
+  .option.wrong .option-letter { color: var(--accent2); }
+  .option.disabled { cursor: default; }
+
+  .open-answer {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: .75rem 1rem;
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: .92rem;
+    resize: vertical; min-height: 100px;
+  }
+  .open-answer:focus { outline: none; border-color: var(--accent); }
+  .open-answer.disabled { pointer-events: none; opacity: .8; }
+
+  .reveal-btn {
+    margin-top: .7rem;
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: .55rem 1.1rem;
+    border-radius: 8px;
+    font-family: var(--mono); font-size: .8rem; font-weight: 600;
+    cursor: pointer;
+    transition: opacity .2s;
+  }
+  .reveal-btn:hover { opacity: .85; }
+  .reveal-btn:disabled { opacity: .4; cursor: default; }
+
+  .self-grade {
+    display: flex; gap: .5rem; margin-top: .7rem;
+  }
+  .self-grade button {
+    flex: 1; padding: .55rem 1rem; border: none; border-radius: 8px;
+    font-family: var(--mono); font-size: .8rem; font-weight: 600;
+    cursor: pointer; transition: opacity .2s;
+  }
+  .self-grade .btn-good { background: var(--accent3); color: var(--bg); }
+  .self-grade .btn-bad { background: var(--accent2); color: white; }
+  .self-grade button:hover { opacity: .85; }
+
+  .explanation {
+    margin-top: .9rem;
+    background: var(--surface2);
+    border-left: 3px solid var(--accent4);
+    border-radius: 0 8px 8px 0;
+    padding: .8rem .95rem;
+    font-size: .85rem;
+    color: #b8b8cc;
+    line-height: 1.55;
+  }
+  .explanation strong { color: var(--accent4); }
+  .explanation pre {
+    white-space: pre-wrap; font-family: inherit;
+    margin-top: .4rem; color: var(--text);
+  }
+  .explanation code {
+    font-family: var(--mono); background: var(--surface3);
+    color: var(--accent3); padding: .1em .35em; border-radius: 4px; font-size: .9em;
+  }
+
+  .start-screen, .end-screen { text-align: center; padding: 2.5rem 1rem; }
+  .start-screen h2, .end-screen h2 {
+    font-size: 1.7rem; font-weight: 800; margin-bottom: 1rem;
+    letter-spacing: -.02em;
+  }
+  .start-screen h2 span, .end-screen h2 span { color: var(--accent); }
+  .start-screen p, .end-screen p {
+    color: var(--muted); margin-bottom: 1.4rem; max-width: 500px; margin-left: auto; margin-right: auto;
+  }
+
+  .topic-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: .7rem; max-width: 600px; margin: 1.5rem auto;
+  }
+  .topic-pill {
+    background: var(--surface); border: 1px solid var(--border);
+    padding: .75rem .9rem; border-radius: 10px; cursor: pointer;
+    text-align: left; font-family: var(--mono); font-size: .8rem;
+    transition: all .15s;
+  }
+  .topic-pill:hover { border-color: var(--accent); background: var(--surface2); }
+  .topic-pill.active {
+    border-color: var(--accent); background: rgba(124,106,255,.1);
+    color: var(--accent);
+  }
+  .topic-pill .count {
+    color: var(--muted); font-size: .72rem;
+  }
+  .topic-pill.active .count { color: var(--accent); }
+
+  .big-btn {
+    background: var(--accent); color: white; border: none;
+    padding: .85rem 1.8rem; border-radius: 10px;
+    font-family: var(--mono); font-size: .9rem; font-weight: 700;
+    cursor: pointer; letter-spacing: .04em;
+  }
+  .big-btn:hover { opacity: .9; }
+  .big-btn.secondary {
+    background: transparent; border: 1px solid var(--border); color: var(--text);
+  }
+  .start-buttons { display: flex; gap: .6rem; justify-content: center; flex-wrap: wrap; }
+
+  .score-circle {
+    width: 130px; height: 130px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--mono); font-size: 1.7rem; font-weight: 700;
+    margin: 0 auto 1.2rem;
+    border: 4px solid var(--accent);
+    background: var(--surface);
+  }
+  .score-circle.green { border-color: var(--accent3); color: var(--accent3); }
+  .score-circle.yellow { border-color: var(--accent4); color: var(--accent4); }
+  .score-circle.red { border-color: var(--accent2); color: var(--accent2); }
+
+  .review-list {
+    text-align: left; margin-top: 2rem;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 1.2rem;
+  }
+  .review-list h3 {
+    font-size: .85rem; font-family: var(--mono); color: var(--muted);
+    margin-bottom: .6rem; letter-spacing: .08em; text-transform: uppercase;
+  }
+  .review-item {
+    padding: .5rem 0; border-bottom: 1px solid var(--border);
+    font-size: .88rem;
+    display: flex; gap: .8rem; align-items: flex-start;
+  }
+  .review-item:last-child { border-bottom: none; }
+  .review-item .num {
+    font-family: var(--mono); font-weight: 700; color: var(--accent2);
+    flex-shrink: 0;
+  }
+
+  code {
+    font-family: var(--mono); background: var(--surface3);
+    color: var(--accent3); padding: .1em .35em; border-radius: 4px; font-size: .88em;
+  }
+
+  .topic-filter {
+    margin: 1.2rem auto 0; max-width: 700px;
+    text-align: center;
+  }
+  .topic-filter h3 {
+    font-family: var(--mono); font-size: .82rem; color: var(--muted);
+    text-transform: uppercase; letter-spacing: .08em; margin-bottom: .8rem;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-top">
+    <h1>Mikro<span>procesory</span> · Test</h1>
+    <div class="stats">
+      <div class="stat correct">✓ <span id="statCorrect">0</span></div>
+      <div class="stat wrong">✗ <span id="statWrong">0</span></div>
+      <div class="stat remaining"><span id="statTotal">0</span>/<span id="statAll">0</span></div>
+    </div>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+</header>
+
+<main id="root"></main>
+
+<script>
+const TOPICS = {
+  'tools': '🔧 Narzędzia (ICE, JTAG, Loader)',
+  'sygnatur': '📊 Analiza sygnatur',
+  'cisc': '⚖️ CISC vs RISC',
+  '8051': '🎯 8051 (rodzina + warianty)',
+  'avr': '🦅 AVR ATmega',
+  'progr': '💻 Programowanie 8051',
+  'arm': '🦾 ARM',
+};
+
+const QUESTIONS = [
+  // ───────── NARZĘDZIA ─────────
+  {
+    topic: 'tools',
+    type: 'open',
+    q: 'Wymień 6 kroków procesu przechwytywania danych z magistrali przez emulator wewnątrz-układowy (ICE).',
+    answer: '1) Podłączenie — fizyczne podpięcie ICE do magistrali przez złącze i interfejs\n2) Przechwytywanie danych — monitorowanie sygnałów na liniach (data, address, control)\n3) Analiza danych — sprawdzenie poprawności, diagnoza błędów, monitorowanie transferów\n4) Modyfikowanie danych — wstrzykiwanie zmian na danych, adresach lub sygnałach kontrolnych\n5) Sterowanie przerwaniami — symulacja zdarzeń przez zarządzanie sygnałami przenoszeń\n6) Rejestrowanie danych — logowanie ruchu na magistrali (wartości, adresy, sygnały kontrolne)',
+    expl: 'Pyt. 3 z poprzedniego kolosa. ICE = In-Circuit Emulator. Magistrala = 3 linie: data (przesyła dane), address (wskazuje miejsce), control (zarządza operacjami).'
+  },
+  {
+    topic: 'tools',
+    type: 'mc',
+    q: 'Co oznacza sygnał PSEN w mikrokomputerze 8051?',
+    opts: [
+      'Power Save Enable — wprowadza CPU w sleep',
+      'Program Store Enable — sygnał odczytu z zewnętrznej pamięci programu',
+      'Peripheral Select Enable — wybór urządzenia I/O',
+      'Program Save Enable — zapisuje program do flash'
+    ],
+    correct: 1,
+    expl: 'PSEN aktywny gdy CPU pobiera instrukcję z zewnętrznej pamięci programu (ROM). Przy zdalnym ładowaniu kodu: 0x0000–0x0FFF aktywny PSEN (czyta ROM), 0x1000+ program leży w RAM (RD/WR).'
+  },
+  {
+    topic: 'tools',
+    type: 'open',
+    q: 'Opisz format INTELA (Intel HEX) używany do zdalnego ładowania kodu wykonywalnego.',
+    answer: 'Format wiadomości tekstowej (heksadecymalnej), każdy rekord zaczyna się dwukropkiem ":". Struktura rekordu:\n• 2 znaki — długość danych (w bajtach)\n• 4 znaki — adres ładowania (load address)\n• 2 znaki — typ rekordu\n• N znaków = 2 × długość — same dane\n• 2 znaki — suma kontrolna (checksum)\n\nOstatnia linia (EOF marker): :00000001FF\n— długość 0, adres 0000, typ 01 (EOF), brak danych, checksum FF',
+    expl: 'Pyt. 4 z poprzedniego kolosa. Kod sterowany przez program zdalnego ładowania zapisany w ROM, otrzymywany przez interfejs I/O i zapisywany do RAM.'
+  },
+  {
+    topic: 'tools',
+    type: 'mc',
+    q: 'Sygnał TMS w interfejsie JTAG odpowiada za:',
+    opts: [
+      'Test Data Input — dane wejściowe',
+      'Test Mode Select — wybór trybu',
+      'Test Master Synchronization',
+      'Test Memory Strobe'
+    ],
+    correct: 1,
+    expl: 'Pełen zestaw JTAG: TMS (tryb), TDI (data in), TDO (data out), TCK (zegar), RTCK (zwrotny zegar), nSRST (system reset), nTRST (test reset). EmbeddedICE używa DBGRQ/DBGACK.'
+  },
+  {
+    topic: 'tools',
+    type: 'open',
+    q: 'Co to jest symulator pamięci programu i do czego służy?',
+    answer: 'Symulator pamięci programu (ROM simulator) to urządzenie zastępujące fizyczną pamięć ROM w prototypie systemu mikrokomputerowego. Podłączany w miejsce pamięci programu — symuluje jej zachowanie, ale jego zawartość można zmieniać przez interfejs (zwykle z PC).\n\nZalety:\n- Szybkie przeładowanie programu bez konieczności wymiany ROM\n- Eliminuje cykl programowania pamięci EPROM/FLASH\n- Skraca czas debugowania (sekundy zamiast minut/godzin)\n- Daje dostęp do podglądu wykonywanego kodu',
+    expl: 'Symulator ROM był jedną z głównych metod przed pojawieniem się MCU z FLASH/JTAG, gdzie program można było ładować bez wyjmowania układu.'
+  },
+
+  // ───────── ANALIZA SYGNATUR ─────────
+  {
+    topic: 'sygnatur',
+    type: 'open',
+    q: 'Co to jest analiza sygnatur i jaki wielomian charakterystyczny jest standardowo używany?',
+    answer: 'Analiza sygnatur to metoda kompresji długich strumieni danych do krótkich "podpisów" (signatures) służąca do wykrywania błędów w testowaniu układów cyfrowych. Strumień danych t(x) jest podawany na rejestr przesuwny z liniowym sprzężeniem zwrotnym (LFSR). Po m taktach zegarowych zawartość rejestru = signature S(x).\n\nStandardowy wielomian charakterystyczny (16-bit):\nG(x) = x¹⁶ + x¹² + x⁹ + x⁷ + 1\n\nSignature = reszta z dzielenia: S(x) = rem(t(x) / G(x))\n\nDla porównania z wzorcem: jeśli signatures są identyczne, dane są poprawne (z prawdopodobieństwem 99.998%).',
+    expl: 'Wielomian dualny Ψ(x) = x¹⁶ + x⁹ + x⁷ + x⁴ + 1. To pytanie nie pojawiło się na poprzednim kolosie ale jest częścią programu (sekcja 1.5).'
+  },
+  {
+    topic: 'sygnatur',
+    type: 'mc',
+    q: 'Jakie jest prawdopodobieństwo wykrycia błędu w analizie sygnatur dla rejestru 16-bit i bardzo długiego strumienia (m → ∞)?',
+    opts: [
+      '50% — równe szanse wykrycia',
+      '~99.998% (1 - 1/2¹⁶)',
+      '100% — zawsze wykrywa',
+      '~75% — średnia jakość'
+    ],
+    correct: 1,
+    expl: 'Dla n=16 i m→∞: Pe = 1/2¹⁶ ≈ 0,000015 (15 błędów na milion). P = 1 - Pe ≈ 99,998%. Dla m ≤ n (krótkie strumienie): wszystkie błędy wykrywane (Pe = 0).'
+  },
+  {
+    topic: 'sygnatur',
+    type: 'mc',
+    q: 'W porównaniu z transition counting, analiza sygnatur:',
+    opts: [
+      'Ma gorszą detekcję błędów dla długich strumieni',
+      'Gubi (m-1)/2^m błędów dla długich strumieni',
+      'Zawsze wykrywa pojedyncze błędy bitowe',
+      'Wymaga większej pamięci niż transition counting'
+    ],
+    correct: 2,
+    expl: 'Signature analysis ZAWSZE wykrywa pojedyncze błędy bitowe. Transition counting gubi (m-1)/2^m błędów (dla dużych m to ~50%). To kluczowa przewaga analizy sygnatur.'
+  },
+  {
+    topic: 'sygnatur',
+    type: 'open',
+    q: 'Jakie znaki są używane do wyświetlania 16-bitowego signature i dlaczego nie standardowe heksadecymalne?',
+    answer: 'Signature 16-bit wyświetla się jako 4 znaki, ale alfabet różni się od standardowego heksadecymalnego:\n• 0–9 — bez zmian\n• A, C, F, H, P, U — zamiast standardowych A, B, C, D, E, F\n\nPowód: lepsza czytelność na 7-segmentowym wyświetlaczu LED. Litery B, D, E mogą być mylone z cyframi (8, 0, 6), więc zastąpiono je literami które są jednoznaczne wizualnie.',
+    expl: 'Mapowanie: 1010=A, 1011=C, 1100=F, 1101=H, 1110=P, 1111=U. Tak by każdy znak był wyraźnie odróżnialny od cyfr na wyświetlaczu kalkulatorowym.'
+  },
+
+  // ───────── CISC vs RISC ─────────
+  {
+    topic: 'cisc',
+    type: 'open',
+    q: 'Porównaj architektury CISC i RISC w 5 wymiarach: dostęp ALU, liczba rejestrów, liczba instrukcji, sposób wykonania, pobór mocy.',
+    answer: 'CISC:\n• ALU operuje na pamięci LUB rejestrach (z zapisem zwrotnym)\n• Mało rejestrów\n• Dużo instrukcji (złożone, różne tryby adresowania)\n• Wykonanie szeregowe\n• Większy pobór mocy (złożona logika)\n\nRISC:\n• ALU operuje TYLKO na rejestrach (komunikacja z pamięcią przez load/store)\n• Dużo rejestrów\n• Mało instrukcji (proste, każda 1 cykl)\n• Wykonanie potokowe (pipeline)\n• Mniejszy pobór mocy\n\nDodatkowy punkt: nowoczesne x86 (CISC) wewnętrznie tłumaczą instrukcje na RISC micro-ops, by zyskać efektywność RISC — kosztem dodatkowej logiki, która podnosi pobór mocy.',
+    expl: 'Pyt. 5 z poprzedniego kolosa. Można narysować schemat blokowy: CISC ma ALU połączone i z pamięcią, i z rejestrami; RISC ma ALU połączone tylko z rejestrami a pamięć przez LDR/STR.'
+  },
+  {
+    topic: 'cisc',
+    type: 'mc',
+    q: 'Wzór na czas wykonania programu to:',
+    opts: [
+      't/prog = (cykle/instr) ÷ (instr/prog)',
+      't/prog = (t/cykl) × (cykle/instr) × (instr/prog)',
+      't/prog = (t/cykl) + (instr/prog)',
+      't/prog = (instr/prog)² × (t/cykl)'
+    ],
+    correct: 1,
+    expl: 'Klasyczny wzór: czas/program = czas cyklu zegara × cykle/instrukcja × instrukcje/program. RISC zmniejsza środkowy czynnik, CISC zmniejsza prawy.'
+  },
+  {
+    topic: 'cisc',
+    type: 'mc',
+    q: 'O ile mniej mocy zużywa procesor ARM/MIPS w porównaniu z x86 (na 1 MHz)?',
+    opts: ['10–20%', '40–50%', '70–80%', 'Tyle samo, x86 jest tylko szybszy'],
+    correct: 1,
+    expl: 'ARM/MIPS zużywają 40–50% mniej mocy/MHz i mają 3–4× mniejszą powierzchnię krzemu niż x86. x86 ma ~4–8% wyższą wydajność/MHz, ale wyższy pobór wynika z wewnętrznego przekodowania CISC→RISC micro-ops.'
+  },
+
+  // ───────── 8051 ─────────
+  {
+    topic: '8051',
+    type: 'mc',
+    q: 'Architektura 8051 to:',
+    opts: [
+      'Von Neumann z wspólną przestrzenią pamięci',
+      'Harvard z oddzielnymi przestrzeniami pamięci programu i danych',
+      'Modyfikowany Harvard z cache L1',
+      'RISC z 32 rejestrami'
+    ],
+    correct: 1,
+    expl: '8051 = klasyczny Harvard, oddzielne przestrzenie 64 KB programu i 64 KB zewnętrznej pamięci danych. To CISC (a nie RISC), ma 4 zestawy po 8 rejestrów R0–R7.'
+  },
+  {
+    topic: '8051',
+    type: 'open',
+    q: 'Wymień 8 głównych własności mikrokomputera 8051 (Intel oryginał).',
+    answer: '1) 8-bitowy mikrokomputer (większość instrukcji 8-bit)\n2) Złożona lista rozkazów (CISC), 1-bajtowy kod operacji = 255 instrukcji\n3) Architektura Harvarda — oddzielne przestrzenie pamięci programu i danych\n4) 16-bit szyna adresowa → 64 KB programu + 64 KB zewn. danych\n5) 128 lub 256 B wewnętrznej pamięci danych\n6) 4 zestawy po 8 rejestrów 1-bajtowych (R0–R7), banki przełączane przez RS0/RS1 w PSW\n7) 8-bit ALU + akumulator, 1-bit LU + akumulator logiczny\n8) Priorytetowy podsystem przerwań na 2 poziomach\n\nDodatkowo: szeregowe wykonanie, 4 porty I/O, kanał szeregowy, 2 liczniki 16-bit, 2 tryby oszczędności.',
+    expl: 'Klasyczne pytanie egzaminacyjne. Kluczowe: Harvard, CISC, 4 banki rejestrów × 8, 2 poziomy priorytetów (przewaga nad AVR).'
+  },
+  {
+    topic: '8051',
+    type: 'mc',
+    q: 'Pole RS1, RS0 w słowie stanu PSW (8051) odpowiada za:',
+    opts: [
+      'Reset Status flags',
+      'Wybór banku rejestrów (0-3)',
+      'Reset signal status',
+      'Real-time scheduling'
+    ],
+    correct: 1,
+    expl: 'PSW @ adres D0H. Bity RS1, RS0 wybierają jeden z 4 banków rejestrów (00, 01, 10, 11 → bank 0, 1, 2, 3). Każdy bank ma swoje R0–R7. Inne flagi: C, AC, F0, V, P.'
+  },
+  {
+    topic: '8051',
+    type: 'open',
+    q: 'Co wyróżnia DS89C450 (Maxim) od klasycznego 8051?',
+    answer: 'DS89C430/450 to "8051-kompatybilny o najwyższej wydajności" firmy Maxim:\n\n• Wykonuje instrukcje do 12× szybciej przy tej samej częstotliwości zegarowej\n• 1 MIPS/MHz (klasyk: ~0.094 MIPS/MHz)\n• Cykl maszynowy = 1 takt zegarowy (zamiast 12 w klasyku)\n• 33 MIPS przy 33 MHz\n• Czas instrukcji od 30 ns\n• Instrukcja INC dptr aż 24× szybsza\n• 256 B direct RAM + 1 kB MOVX RAM\n• 3 × 16-bit timer/counter, 2 full-duplex serial\n• Drop-in replacement dla 8xC51\n• Liczniki domyślnie w trybie 12 taktów (zgodność), ale każdy programowo w 1 takt\n• Dual data pointer — usuwa zbędne instrukcje przy kopiowaniu pamięci',
+    expl: 'Sekcja 2.2 programu kursu. Pamięć: 256 B direct RAM + 1 kB MOVX RAM (zewn. data).'
+  },
+  {
+    topic: '8051',
+    type: 'mc',
+    q: 'Procesor AT89LP firmy Atmel charakteryzuje się:',
+    opts: [
+      'Architekturą RISC z 32 rejestrami',
+      'Pojedynczym cyklem maszynowym (1 takt zamiast 12)',
+      '64-bitową szyną danych',
+      'Wbudowanym GPS'
+    ],
+    correct: 1,
+    expl: 'AT89LP: rdzeń 8051 z pojedynczym cyklem maszynowym. 12× przepustowości klasycznego 8051. 70% instrukcji wykonuje się w tej samej liczbie taktów co liczba pobieranych bajtów. 20 MIPS przy 20 MHz.'
+  },
+  {
+    topic: '8051',
+    type: 'mc',
+    q: 'Czym jest CIP-51 firmy Silicon Laboratories?',
+    opts: [
+      '32-bitowy rdzeń ARM',
+      'Modernizowany rdzeń 8051 z potokiem Fetch/Decode/Execute',
+      'Procesor sygnałowy DSP',
+      'Dedykowany koprocesor kryptograficzny'
+    ],
+    correct: 1,
+    expl: 'CIP-51 = rdzeń C8051 firmy Silicon Labs. Modernizacja architektury 8051 dla mixed-signal MCU: pipeline (Fetch/Decode/Execute), zachowuje zgodność kodu z Intelem. Dla mixed-signal MCU (analog+cyfra).'
+  },
+  {
+    topic: '8051',
+    type: 'open',
+    q: 'Co oferują procesory DQ8051 i DQ80251 firmy DCD i jaką technologią są wykonywane?',
+    answer: 'DQ8051/DQ80251 = implementacje rdzenia 8051 / 80251 jako IP core w FPGA przez firmę Digital Core Design (DCD).\n\nDQ8051:\n• 9 900 bramek\n• 29× szybszy niż klasyczny 8051\n• 0,237 DMIPS\n• 64 KB pamięci kodu, instrukcje 8051\n\nDQ80251:\n• 13 500 bramek\n• 75× szybszy niż klasyk\n• 0,706 DMIPS\n• 8 MB pamięci kodu, instrukcje 8051+80251\n\nKluczowa cecha: zawierają wbudowany emulator wewnątrz-układowy (ICE).\n\nTechnologia: FPGA (Field Programmable Gate Array) lub ASIC z opisem w VHDL/Verilog (IP — Intellectual Property).\n\nArgument biznesowy: 8-bit FPGA może wykonać te same funkcje co 32-bit przy mniejszym poborze i mniejszej powierzchni krzemu.',
+    expl: 'Sekcja 2.5 programu. DCD = Digital Core Design (polska firma). DMIPS = Dhrystone MIPS, miara wydajności względem VAX 11/780.'
+  },
+
+  // ───────── AVR ─────────
+  {
+    topic: 'avr',
+    type: 'mc',
+    q: 'Ile rejestrów ogólnego przeznaczenia ma ATmega32A?',
+    opts: ['8 (R0–R7)', '16 (R0–R15)', '32 (R0–R31)', '64 (R0–R63)'],
+    correct: 2,
+    expl: 'ATmega32A ma 32 × 8-bit rejestry ogólnego przeznaczenia (R0–R31). R26-R31 mogą służyć jako pary X (R27:R26), Y (R29:R28), Z (R31:R30) — 16-bit wskaźniki adresowe dla adresowania pośredniego.'
+  },
+  {
+    topic: 'avr',
+    type: 'open',
+    q: 'Wymień 5 trybów adresowania pamięci danych w AVR.',
+    answer: '1) Direct — bezpośredni adres\n2) Indirect — przez wskaźnik X, Y lub Z\n3) Indirect with Displacement — Y/Z + offset (max 63)\n4) Indirect with Pre-decrement — najpierw zmniejsz wskaźnik, potem dostęp\n5) Indirect with Post-increment — najpierw dostęp, potem zwiększ wskaźnik\n\nWskaźniki X, Y, Z to pary rejestrów: X=R27:R26, Y=R29:R28, Z=R31:R30. Tylko te wskaźniki obsługują pre-/post-modyfikację.',
+    expl: 'Pre-/post-increment są charakterystyczne dla AVR i ułatwiają iterację po tablicach. W 8051 trzeba ręcznie INC dptr.'
+  },
+  {
+    topic: 'avr',
+    type: 'open',
+    q: 'Wymień 4 zalety AVR w porównaniu z 8051.',
+    answer: '1) Cykl maszynowy = 1 takt (8051: 12 taktów) → wielokrotnie szybsze wykonanie instrukcji\n2) EEPROM dla przechowywania danych po wyłączeniu zasilania (8051 nie ma)\n3) Wewnętrzny RC oscillator + Power-On Reset → komputer bez zewnętrznych elementów\n4) Watchdog zwiększający niezawodność pracy\n\nDodatkowo: obie zmiany poziomu wejściowego mogą generować przerwanie (8051: tylko opadające). AVR zoptymalizowany pod programowanie w C.',
+    expl: 'Pytanie typu "AVR vs 8051" — bardzo prawdopodobne na egzaminie (cały rozdział kursu o tym).'
+  },
+  {
+    topic: 'avr',
+    type: 'open',
+    q: 'Wymień 4 wady AVR w porównaniu z 8051.',
+    answer: '1) AVR ma RISC → potrzebuje więcej pamięci programu (binarny kod RISC większy niż CISC)\n2) Tylko 1 poziom priorytetu przerwań (8051: 2 poziomy) — wymaga dodatkowych instrukcji\n3) Trudna obsługa przerwań — mało instrukcji NIE zmieniających rejestru stanu (SREG); trzeba ręcznie zapisywać/przywracać SREG na stosie (8 bajtów na każde przerwanie)\n4) Tylko 3 wskaźniki pamięci (X, Y, Z); 8051 ma 9 (DPTR + R0/R1 × 4 banki)\n\nDodatkowo: brak instrukcji wymiany bez wyłączania przerwań (8051: JBC, XCH); mniejszy podział wstępny UART.',
+    expl: 'Mimo wad AVR jest 5–10× szybszy. Ogólna zasada: "binarny program RISC jest większy niż CISC".'
+  },
+  {
+    topic: 'avr',
+    type: 'mc',
+    q: 'Ile trybów uśpienia (sleep modes) ma ATmega32A?',
+    opts: ['2', '4', '6', '8'],
+    correct: 2,
+    expl: '6 trybów: Idle, ADC Noise Reduction, Power-down, Power-save, Standby, Extended Standby. Wybór przez bity SM2/SM1/SM0 w MCUCR. Wejście: SE=1 + instrukcja SLEEP.'
+  },
+  {
+    topic: 'avr',
+    type: 'mc',
+    q: 'Jak organizowana jest pamięć Flash w ATmega32A (32 KB)?',
+    opts: [
+      '32K × 8',
+      '16K × 16 (instrukcje 16/32-bit)',
+      '8K × 32',
+      '4K × 64'
+    ],
+    correct: 1,
+    expl: 'Flash: 32 KB jako 16K × 16 (bo instrukcje AVR są 16 lub 32-bit). PC = 14-bit (adresuje 16K). Flash dzieli się na sekcję Boot + Application z osobnymi lock bits. 10 000 cykli zapisu.'
+  },
+
+  // ───────── PROGRAMOWANIE ─────────
+  {
+    topic: 'progr',
+    type: 'open',
+    q: 'Wymień 5 metod przekazywania parametrów do podprogramów w asemblerze 8051 (z zaletami/wadami).',
+    answer: '1) **Rejestry** — szybka i prosta metoda; ograniczona liczba rejestrów\n2) **Zmienne globalne** — nieograniczona liczba parametrów; wymaga rezerwacji pamięci w czasie asemblacji, bardziej złożona inicjacja\n3) **Tablica sterująca (control table)** — adres tablicy w rejestrze, parametry w komórkach; bardziej złożona inicjacja\n4) **Stos** — PUSH przed CALL; pozwala na rekurencję; większy narzut\n5) **In-line code** — parametry tuż za instrukcją CALL, adres = adres powrotu z LR/PC; trzeba przesunąć PC po wykonaniu',
+    expl: 'Metody zwracania wyników są takie same minus in-line (nie ma sensu dla return).'
+  },
+  {
+    topic: 'progr',
+    type: 'mc',
+    q: 'Model pamięci "small" w kompilatorze C dla 8051 oznacza:',
+    opts: [
+      'Domyślne dane w internal RAM, adresowanie pośrednie (256 B)',
+      'Domyślne dane w internal RAM, tylko bezpośrednie (128 B)',
+      'Domyślne dane w external RAM (XDATA, 64 KB)',
+      'Tylko dane w rejestrach R0–R7'
+    ],
+    correct: 0,
+    expl: 'Modele pamięci dla 8051: tiny (direct, 128 B, najszybciej), small (indirect, 256 B, średnio), large (XDATA, 64 KB, najwolniej). Trade-off: szybkość vs rozmiar.'
+  },
+  {
+    topic: 'progr',
+    type: 'open',
+    q: 'Co to jest moduł cstartup i co robi przed wywołaniem main()?',
+    answer: 'cstartup.s03 to moduł asemblerowy wykonywany przed wywołaniem funkcji main() w programie C dla 8051.\n\nZadania cstartup:\n1) Inicjalizacja stosu C (CSTACK) — używanego do LCALL i tymczasowych danych (operacji matematycznych)\n2) Inicjalizacja stosu asemblerowego (ISTACK) — używanego do RET\n3) Ustawienie banku rejestrów (RS1/RS0 w PSW)\n4) Skok z reset interrupt vector do init\n5) Wywołanie main()\n6) Po powrocie z main: skok do ?C_EXIT\n\nKomentarz: cstartup jest dostosowywalny pod konkretne wymagania sprzętowe.',
+    expl: 'cstartup łączy świat asemblera (gdzie wszystko trzeba zrobić ręcznie) ze światem C (gdzie main() oczekuje gotowego środowiska).'
+  },
+  {
+    topic: 'progr',
+    type: 'mc',
+    q: 'Segment "RSEG CODE" w asemblerze 8051 oznacza:',
+    opts: [
+      'Wewnętrzny stos',
+      'Pamięć programu (gdzie ląduje kod)',
+      'External XDATA',
+      'I/O space'
+    ],
+    correct: 1,
+    expl: 'Segmenty 8051: CODE = pamięć programu, ISTACK = internal stack, BYTES = bajtowe dane internal, XDATA = bajtowe dane external. RSEG = relocatable segment.'
+  },
+
+  // ───────── ARM ─────────
+  {
+    topic: 'arm',
+    type: 'open',
+    q: 'Wymień 6 podstawowych cech architektury ARM.',
+    answer: '1) Architektura load/store — tylko LDR i STR komunikują rejestry z pamięcią\n2) Wyrównanie pamięci: słowo na adresie ÷4, półsłowo ÷2, bajt dowolnie\n3) 16 rejestrów 32-bitowych (R0–R15), jednolity zestaw\n4) Stała długość instrukcji 32-bit → ułatwia dekodowanie i pipeline\n5) Większość instrukcji wykonuje się w 1 cyklu maszynowym\n6) Przetwarzanie potokowe (ARM7: 3-stop FE/DE/EX, ARM9: 5-stop)',
+    expl: 'Pyt. 6 z poprzedniego kolosa — kluczowe pytanie. Cechy kompensujące stałą długość: warunkowe wykonanie, sufiks S, barrel shifter, link register, 2-poziomowy IRQ.'
+  },
+  {
+    topic: 'arm',
+    type: 'mc',
+    q: 'Który rejestr ARM pełni funkcję licznika rozkazów (Program Counter)?',
+    opts: ['R13', 'R14', 'R15', 'CPSR'],
+    correct: 2,
+    expl: 'R15 = PC (Program Counter), R14 = LR (Link Register, adres powrotu), R13 = SP (Stack Pointer). CPSR to rejestr stanu (flagi N,Z,C,V + tryb pracy).'
+  },
+  {
+    topic: 'arm',
+    type: 'open',
+    q: 'Wymień 3 główne ulepszenia Thumb-2 względem Thumb.',
+    answer: '1) Dodanie instrukcji 32-bitowych do zestawu Thumb (dla obsługi wyjątków, dostępu do koprocesorów, DSP/multimedia, oraz tam gdzie 16-bit ogranicza wydajność)\n2) 16-bitowa instrukcja IT (If-Then) — warunkowe wykonanie bloku 1–4 instrukcji Thumb\n3) 16-bitowe CBZ/CBNZ (Compare and Branch on Zero/NonZero) — zastępują parę porównanie+skok jedną instrukcją\n\nWynik: Thumb-2 daje 31% mniej pamięci niż ARM i 38% wydajności więcej niż Thumb.',
+    expl: 'Pyt. 7 z poprzedniego kolosa. Thumb-2 wprowadzony w ARMv6, ale dopiero w ARMv7 (Cortex) wszystkie procesory go używają.'
+  },
+  {
+    topic: 'arm',
+    type: 'mc',
+    q: 'Profil "M" w architekturze ARMv7 jest przeznaczony dla:',
+    opts: [
+      'Aplikacji z OS (Linux, Android)',
+      'Systemów real-time (automotive, storage)',
+      'Mikrokontrolerów (IoT, sensory)',
+      'AI inference'
+    ],
+    correct: 2,
+    expl: 'ARMv7 definiuje 3 profile: M (Microcontroller), R (Real-time), A (Application OS). Cortex-A do OS, Cortex-R do real-time, Cortex-M do MCU. Inne rodziny (poza ARMv7): Neoverse (chmura), SecurCore (bezpieczeństwo), Ethos (ML).'
+  },
+  {
+    topic: 'arm',
+    type: 'open',
+    q: 'Wymień 5 kroków, które wykonuje procesor ARM przy wejściu w obsługę wyjątku.',
+    answer: '1) Zapisz PC → LR (R14) — adres powrotu\n2) Zapisz CPSR → SPSR nowego trybu — kopia stanu\n3) Ustaw bity trybu w CPSR odpowiadające wyjątkowi (FIQ, IRQ, SVC, Abort, Undef)\n4) Wyłącz przerwania niższego priorytetu (IRQ disable / FIQ disable)\n5) Załaduj wektor wyjątku do PC (skok do handlera)',
+    expl: 'Wektory: Reset=0x00, Undef=0x04, SWI=0x08, PrefetchAbort=0x0C, DataAbort=0x10, IRQ=0x18, FIQ=0x1C. Priorytet od najwyższego: Reset → DataAbort → FIQ → IRQ → PrefetchAbort → Undef/SWI.'
+  },
+  {
+    topic: 'arm',
+    type: 'mc',
+    q: 'Co dodała architektura ARMv4T?',
+    opts: [
+      'Instrukcje SIMD i NEON',
+      '16-bitowy zestaw instrukcji Thumb',
+      '64-bitową architekturę AArch64',
+      'TrustZone i Thumb-2'
+    ],
+    correct: 1,
+    expl: 'ARMv4T (T = Thumb) wprowadziła Thumb 16-bit. Kod Thumb ~65% rozmiaru ARM, 160% wydajności na 16-bit pamięci. SIMD/Thumb-2 to ARMv6, NEON to ARMv7, AArch64 to ARMv8-A.'
+  },
+  {
+    topic: 'arm',
+    type: 'mc',
+    q: 'Co oznacza sufiks "S" w instrukcji ARM, np. ADDS?',
+    opts: [
+      'Wykonanie warunkowe na flagi S',
+      'Skok (subroutine call)',
+      'Aktualizacja flag CPSR (N, Z, C, V) po wykonaniu',
+      'Operacja signed (ze znakiem)'
+    ],
+    correct: 2,
+    expl: 'ADDS = ADD + Set flags. Domyślnie ARM nie aktualizuje flag CPSR przy operacjach arytmetycznych — robi to tylko gdy programista doda S. Oszczędność energii gdy flagi nie są potrzebne.'
+  },
+  {
+    topic: 'arm',
+    type: 'open',
+    q: 'Wymień 6 rodzin procesorów ARM Cortex z ich zastosowaniami.',
+    answer: 'Cortex-M (Microcontrollers) — najbardziej energooszczędne, IoT, sensory, MCU\nCortex-R (Real-time) — automotive, storage, safety-critical missions\nCortex-A (Applications) — Linux, Android, najwyższa wydajność (32+64-bit)\nNeoverse — skalowalna infrastruktura, chmura → edge\nSecurCore — bezpieczeństwo fizyczne (smart cards, payment)\nEthos — ML / AI inference (neural processing)',
+    expl: 'Pyt. 8 z poprzedniego kolosa. Cortex-M = Thumb-only, Cortex-R i A = ARM + Thumb + Thumb-2.'
+  },
+  {
+    topic: 'arm',
+    type: 'mc',
+    q: 'Pojedyncza instrukcja warunkowa ARMEQ wykona się gdy:',
+    opts: [
+      'Flaga N = 1 (negative)',
+      'Flaga Z = 1 (równe)',
+      'Flaga C = 0',
+      'Flagi V = 1 i N = 0'
+    ],
+    correct: 1,
+    expl: 'EQ = Equal → Z=1 (zero flag set, czyli wynik poprzedniej operacji = 0). NE = Z=0. Sufiks dodaje się do mnemonika: ADDEQ, MOVNE, STRGT itd.'
+  },
+];
+
+// State
+let current = 0;
+let correct = 0;
+let wrong = 0;
+let userAnswers = [];
+let activeQuestions = QUESTIONS;
+let activeTopic = null;
+
+const root = document.getElementById('root');
+
+function updateStats() {
+  document.getElementById('statCorrect').textContent = correct;
+  document.getElementById('statWrong').textContent = wrong;
+  document.getElementById('statTotal').textContent = current;
+  document.getElementById('statAll').textContent = activeQuestions.length;
+  const pct = activeQuestions.length > 0 ? (current / activeQuestions.length) * 100 : 0;
+  document.getElementById('progress').style.width = pct + '%';
+}
+
+function startScreen() {
+  // Count questions per topic
+  const counts = {};
+  for (const t in TOPICS) counts[t] = QUESTIONS.filter(q => q.topic === t).length;
+
+  root.innerHTML = `
+    <div class="start-screen">
+      <h2>Powtórka <span>kolosa</span></h2>
+      <p>${QUESTIONS.length} pytań pokrywających cały syllabus. Mix ABCD i otwartych. Możesz przerobić wszystkie albo wybrać jeden temat.</p>
+
+      <div class="topic-filter">
+        <h3>Wybierz zakres</h3>
+        <div class="topic-grid">
+          <div class="topic-pill ${activeTopic === null ? 'active' : ''}" onclick="setTopic(null)">
+            🎲 Wszystkie <span class="count">(${QUESTIONS.length})</span>
+          </div>
+          ${Object.entries(TOPICS).map(([k, v]) => `
+            <div class="topic-pill ${activeTopic === k ? 'active' : ''}" onclick="setTopic('${k}')">
+              ${v} <span class="count">(${counts[k]})</span>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+
+      <div class="start-buttons" style="margin-top:2rem">
+        <button class="big-btn" onclick="start()">▶ Zaczynamy</button>
+      </div>
+    </div>
+  `;
+  updateStats();
+}
+
+function setTopic(topic) {
+  activeTopic = topic;
+  startScreen();
+}
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function start() {
+  current = 0; correct = 0; wrong = 0; userAnswers = [];
+  const filtered = activeTopic === null
+    ? QUESTIONS
+    : QUESTIONS.filter(q => q.topic === activeTopic);
+  activeQuestions = shuffle(filtered);
+  showQuestion();
+}
+
+function showQuestion() {
+  if (current >= activeQuestions.length) return endScreen();
+  const q = activeQuestions[current];
+  updateStats();
+
+  const tags = `
+    <div class="q-tags">
+      <span class="q-num">${current+1}/${activeQuestions.length}</span>
+      <span class="q-type">${q.type === 'mc' ? 'ABCD' : 'Otwarte'}</span>
+      <span class="q-topic">${TOPICS[q.topic]}</span>
+    </div>
+  `;
+
+  if (q.type === 'mc') {
+    root.innerHTML = `
+      <div class="question-card">
+        ${tags}
+        <div class="q-text">${q.q}</div>
+        <div class="options" id="options">
+          ${q.opts.map((o, i) => `
+            <div class="option" onclick="answerMC(${i})">
+              <span class="option-letter">${String.fromCharCode(65+i)}</span>
+              <span>${o}</span>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  } else {
+    root.innerHTML = `
+      <div class="question-card">
+        ${tags}
+        <div class="q-text">${q.q}</div>
+        <textarea class="open-answer" id="openInput" placeholder="Twoja odpowiedź..."></textarea>
+        <button class="reveal-btn" onclick="revealOpen()">Pokaż odpowiedź wzorcową</button>
+        <div id="openReveal"></div>
+      </div>
+    `;
+  }
+}
+
+function answerMC(idx) {
+  const q = activeQuestions[current];
+  const opts = document.querySelectorAll('.option');
+  opts.forEach(o => o.classList.add('disabled'));
+
+  if (idx === q.correct) {
+    opts[idx].classList.add('correct');
+    correct++;
+    userAnswers.push({ q: current, ok: true });
+  } else {
+    opts[idx].classList.add('wrong');
+    opts[q.correct].classList.add('correct');
+    wrong++;
+    userAnswers.push({ q: current, ok: false });
+  }
+
+  const card = document.querySelector('.question-card');
+  card.insertAdjacentHTML('beforeend', `
+    <div class="explanation"><strong>Wyjaśnienie:</strong> ${q.expl}</div>
+    <button class="reveal-btn" style="margin-top:.9rem" onclick="next()">Następne →</button>
+  `);
+  updateStats();
+}
+
+function revealOpen() {
+  const q = activeQuestions[current];
+  const input = document.getElementById('openInput');
+  input.classList.add('disabled');
+  document.querySelector('.reveal-btn').disabled = true;
+
+  document.getElementById('openReveal').innerHTML = `
+    <div class="explanation" style="margin-top:.9rem">
+      <strong>Odpowiedź wzorcowa:</strong>
+      <pre>${q.answer}</pre>
+    </div>
+    <div class="explanation" style="border-left-color:var(--accent3)">
+      <strong style="color:var(--accent3)">Wskazówka:</strong> ${q.expl}
+    </div>
+    <p style="margin-top:.9rem;color:var(--muted);font-size:.82rem">Oceń sam — czy umiałeś?</p>
+    <div class="self-grade">
+      <button class="btn-bad" onclick="gradeOpen(false)">✗ Nie umiałem</button>
+      <button class="btn-good" onclick="gradeOpen(true)">✓ Umiałem</button>
+    </div>
+  `;
+}
+
+function gradeOpen(ok) {
+  if (ok) correct++; else wrong++;
+  userAnswers.push({ q: current, ok });
+  setTimeout(next, 200);
+}
+
+function next() {
+  current++;
+  showQuestion();
+}
+
+function endScreen() {
+  const total = activeQuestions.length;
+  const pct = total > 0 ? Math.round((correct / total) * 100) : 0;
+  let cls = 'red', msg = 'Trzeba popowtarzać 📚';
+  if (pct >= 80) { cls = 'green'; msg = 'Świetnie! 💪 Gotowy na kolos.'; }
+  else if (pct >= 60) { cls = 'yellow'; msg = 'Nieźle! Sprawdź te niżej z czerwonym.'; }
+
+  const wrongQs = userAnswers.filter(a => !a.ok).map(a => a.q);
+
+  root.innerHTML = `
+    <div class="end-screen">
+      <h2>Wynik <span>${correct}/${total}</span></h2>
+      <div class="score-circle ${cls}">${pct}%</div>
+      <p>${msg}</p>
+      <div class="start-buttons">
+        <button class="big-btn" onclick="start()">↻ Jeszcze raz</button>
+        <button class="big-btn secondary" onclick="startScreen()">📚 Inny temat</button>
+      </div>
+      ${wrongQs.length > 0 ? `
+      <div class="review-list">
+        <h3>Do powtórki (${wrongQs.length})</h3>
+        ${wrongQs.map(i => `
+          <div class="review-item">
+            <span class="num">${i+1}.</span>
+            <div>
+              <div style="color:var(--text)">${activeQuestions[i].q}</div>
+              <div style="color:var(--muted);font-size:.8rem;margin-top:.2rem">
+                ${TOPICS[activeQuestions[i].topic]}
+              </div>
+            </div>
+          </div>
+        `).join('')}
+      </div>` : ''}
+    </div>
+  `;
+  updateStats();
+}
+
+startScreen();
+</script>
+
+</body>
+</html>
