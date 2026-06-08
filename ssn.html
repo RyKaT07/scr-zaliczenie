@@ -57,6 +57,9 @@
     .card-body ul,.card-body ol { padding-left:1.3rem; margin:0.3rem 0; }
     .card-body li { margin:0.2rem 0; }
     .card-body .formula { background:var(--surface2); border-left:3px solid var(--accent); border-radius:0 8px 8px 0; padding:0.8rem 1rem; margin:0.6rem 0; overflow-x:auto; }
+    .card-body .formula-explain { font-size:0.82rem; color:var(--text-dim); margin:-0.1rem 0 0.7rem; padding:0.1rem 0 0.1rem 0.9rem; border-left:2px solid var(--surface2); line-height:1.55; }
+    .card-body .formula-explain b { color:var(--text); font-weight:600; }
+    .card-body .formula-explain .lab { color:var(--accent); font-weight:700; }
     .card-body .important { background:rgba(251,146,60,0.08); border-left:3px solid var(--orange); border-radius:0 8px 8px 0; padding:0.6rem 1rem; margin:0.6rem 0; font-size:0.88rem; }
     .card-body .example { background:rgba(74,222,128,0.06); border-left:3px solid var(--green); border-radius:0 8px 8px 0; padding:0.6rem 1rem; margin:0.6rem 0; font-size:0.88rem; }
     .card-body .test { background:rgba(236,72,153,0.07); border-left:3px solid var(--accent); border-radius:0 8px 8px 0; padding:0.6rem 1rem; margin:0.6rem 0; font-size:0.88rem; }
@@ -152,6 +155,7 @@
     <div class="card-body">
       <p>Pierwszy matematyczny model neuronu (1943). Sumator wagowy + blok nieliniowy z <strong>progowa (skokowa)</strong> funkcja aktywacji.</p>
       <div class="formula">$$y_i = f\!\left(\sum_{j=1}^{N} w_{ij} x_j + w_{i0}\right), \qquad f(u)=\begin{cases}1 & u>0\\ 0 & u\le 0\end{cases}$$</div>
+      <p class="formula-explain"><span class="lab">Co to znaczy:</span> Neuron mnozy kazde wejscie <b>x<sub>j</sub></b> przez jego wage <b>w<sub>ij</sub></b>, sumuje wszystko i dodaje bias <b>w<sub>i0</sub></b>. Funkcja <b>f</b> patrzy tylko na znak sumy: gdy &gt; 0 &rarr; wyjscie = 1 (neuron &bdquo;odpala&rdquo;), w przeciwnym razie 0.</p>
       <ul>
         <li>Waga <strong>dodatnia</strong> = synapsa pobudzajaca, <strong>ujemna</strong> = hamujaca, <strong>zerowa</strong> = brak polaczenia.</li>
         <li><mark>Model binarny — <strong>nieprzydatny w uczeniu gradientowym z powodu nieciaglej pochodnej</strong></mark> funkcji skokowej.</li>
@@ -165,8 +169,10 @@
     <div class="card-body">
       <p>Struktura jak McCulloch-Pitts, ale funkcja aktywacji jest <strong>ciagla i rozniczkowalna</strong> — umozliwia uczenie gradientowe.</p>
       <div class="formula">$$f_u(u)=\frac{1}{1+e^{-bu}}\;\in(0,1), \qquad f_b(u)=\tanh(bu)\;\in(-1,1)$$</div>
+      <p class="formula-explain"><span class="lab">Co to znaczy:</span> Gladkie funkcje aktywacji. Unipolarna daje wynik w przedziale (0,1), bipolarna (tanh) w (&minus;1,1). Parametr <b>b</b> to stromosc &mdash; im wieksze b, tym bardziej przypomina skok.</p>
       <h4>Pochodne (okreslone przez sama wartosc funkcji)</h4>
       <div class="formula">$$f_u' = b\,f_u(1-f_u), \qquad f_b' = b\,(1-f_b^2)$$</div>
+      <p class="formula-explain"><span class="lab">Co to znaczy:</span> Pochodne sigmoid, potrzebne do uczenia gradientowego. Sztuczka: liczy sie je wprost z wartosci samej funkcji f (bez liczenia od zera). Sa najwieksze w srodku (u=0), maleja na krancach.</p>
       <ul>
         <li>Przy bardzo duzym \(b\) sigmoida przechodzi w funkcje skokowa (perceptron).</li>
         <li>Pochodna ma ksztalt krzywej dzwonowej, max w \(u=0\).</li>
@@ -180,6 +186,7 @@
     <div class="card-body">
       <p>Sigmoida ma stan <strong>nasycenia</strong> hamujacy uczenie w sieciach glebokich. ReLU (Rectified Linear Unit) eliminuje nasycenie:</p>
       <div class="formula">$$y(x)=\max(0,x)=\begin{cases}x & x>0\\ 0 & x\le 0\end{cases}, \qquad y'(x)=\begin{cases}1 & x>0\\ 0 & x\le 0\end{cases}$$</div>
+      <p class="formula-explain"><span class="lab">Co to znaczy:</span> ReLU przepuszcza wartosci dodatnie bez zmian, a ujemne scina do zera. Pochodna to po prostu <b>1</b> (dla x&gt;0) albo <b>0</b> (dla x&le;0) &mdash; szybka i nie &bdquo;nasyca sie&rdquo; jak sigmoida.</p>
       <ul>
         <li><strong>Pochodna ReLU jest nieciagla</strong> — gladka aproksymacja: softplus \(y=\ln(1+e^x)\).</li>
         <li>Warianty: Leaky ReLU (\(y=ax\) dla \(x\le0\)), ELU.</li>
@@ -192,6 +199,7 @@
     <div class="card-header">Neuron radialny (gaussowski) <span class="arrow">&#9660;</span></div>
     <div class="card-body">
       <div class="formula">$$\varphi(\mathbf{x})=\exp\!\left(-\frac{\lVert\mathbf{x}-\mathbf{c}\rVert^2}{\sigma^2}\right)$$</div>
+      <p class="formula-explain"><span class="lab">Co to znaczy:</span> Im dalej wektor <b>x</b> lezy od centrum <b>c</b> (odleglosc miedzy nimi), tym mniejsza odpowiedz. <b>&sigma;</b> to szerokosc dzwonu (duze &sigma; = szeroki zasieg). Maksimum (=1) wypada dokladnie w centrum.</p>
       <ul>
         <li><mark>Opisany dwoma parametrami: <strong>centrum \(c\)</strong> (polozenie) i <strong>szerokosc \(\sigma\)</strong></mark>.</li>
         <li>Nieliniowosc dotyczy <strong>odleglosci euklidesowej</strong> \(\lVert x-c\rVert\), a nie iloczynu skalarnego jak w sigmoidalnym.</li>
@@ -206,10 +214,12 @@
       <h4>Wspolzawodnictwo (konkurencja)</h4>
       <p>Zwyciezca = neuron o najwiekszym \(u_i=\mathbf{w}_i^T\mathbf{x}\) (przy znormalizowanych danych — <strong>najblizszy</strong> wektorowi \(x\)). Regula WTA (Grossberg):</p>
       <div class="formula">$$\mathbf{w}_i(k+1)=\mathbf{w}_i(k)+\eta[\mathbf{x}-\mathbf{w}_i(k)]$$</div>
+      <p class="formula-explain"><span class="lab">Co to znaczy:</span> Uczenie zwyciezcy: jego wagi przesuwaja sie o maly krok <b>&eta;</b> w strone aktualnego wektora x. Z kazda iteracja centrum neuronu &bdquo;dociaga sie&rdquo; do danych, ktore wygrywa.</p>
       <p>W <strong>WTA</strong> tylko zwyciezca aktualizuje wagi; w <strong>WTM</strong> takze sasiedztwo (slabiej z odlegloscia).</p>
       <h4>Regula Hebba</h4>
       <p>Waga rosnie, gdy obie komorki sa jednoczesnie pobudzone (uczenie <strong>korelacyjne</strong>):</p>
       <div class="formula">$$w_{ij}(k+1)=w_{ij}(k)+\eta\,y_i y_j$$</div>
+      <p class="formula-explain"><span class="lab">Co to znaczy:</span> Waga rosnie, gdy oba neurony sa aktywne jednoczesnie (iloczyn <b>y<sub>i</sub>&middot;y<sub>j</sub></b> duzy). Zasada Hebba: &bdquo;neurony, ktore odpalaja razem, lacza sie&rdquo;. &eta; to tempo uczenia.</p>
       <ul>
         <li>Wagi rosna nieograniczenie — stabilizacja przez wsp. zapominania \(\gamma\) lub <strong>regule Oji</strong>.</li>
         <li><mark><strong>Regula Oji</strong> = uczenie hebbowskie z normalizacja</mark>: \(w(k+1)=w(k)+\eta(x_j-w_{ij}y_i)\).</li>
@@ -231,6 +241,7 @@
         <li><strong>Uniwersalny aproksymator GLOBALNY</strong> — kazdy neuron dziala w calej przestrzeni.</li>
       </ul>
       <div class="formula">$$y_k = f\!\left(\sum_{i=0}^{K} w_{ki}^{(2)} f\!\left(\sum_{j=0}^{N} w_{ij}^{(1)} x_j\right)\right)$$</div>
+      <p class="formula-explain"><span class="lab">Co to znaczy:</span> Sygnal przechodzi przez dwie warstwy: ukryta <b>f(suma wejsc)</b> i wyjsciowa <b>f(suma sygnalow z ukrytej)</b>. Zlozenie dwoch nieliniowosci daje uniwersalny aproksymator. Gorny indeks (1)/(2) to numer warstwy.</p>
       <div class="test"><strong>Test:</strong> autoasocjacyjna (\(d=x\)) vs heteroasocjacyjna (\(d\ne x\)). Polaryzacja \(x_0=1\) (bias) przesuwa hiperplaszczyzne podzialu.</div>
     </div>
   </div>
@@ -239,6 +250,7 @@
     <div class="card-header">Funkcja celu i uczenie gradientowe <span class="arrow">&#9660;</span></div>
     <div class="card-body">
       <div class="formula">$$E = \frac{1}{2}\sum_{k=1}^{p}\sum_{i=1}^{M}\big(y_i(x_k)-d_i(x_k)\big)^2$$</div>
+      <p class="formula-explain"><span class="lab">Co to znaczy:</span> Blad sieci = suma kwadratow roznic miedzy wyjsciem <b>y</b> a wartoscia zadana <b>d</b>, po wszystkich <b>p</b> probkach i <b>M</b> wyjsciach. Uczenie polega na minimalizowaniu tej liczby.</p>
       <ul>
         <li><mark>Uczenie MLP <strong>MINIMALIZUJE funkcje bledu</strong></mark> (nie zeruje, nie maksymalizuje).</li>
         <li>Adaptacja wag: \(w(k+1)=w(k)+\eta\,p(k)\), kierunek \(p\), \(g=\partial E/\partial w\).</li>
@@ -258,6 +270,7 @@
         <li><strong>Regula lokalna</strong> — kazda skladowa gradientu = iloczyn dwoch sygnalow:</li>
       </ul>
       <div class="formula">$$\frac{\partial E}{\partial w_{ij}} = v_j\,\hat v_i \qquad(v_j \text{ z } G,\; \hat v_i \text{ z } \hat G)$$</div>
+      <p class="formula-explain"><span class="lab">Co to znaczy:</span> Kazda skladowa gradientu liczy sie jako <b>iloczyn dwoch sygnalow</b>: <b>v<sub>j</sub></b> z sieci &bdquo;w przod&rdquo; i <b>v&#770;<sub>i</sub></b> z sieci &bdquo;wstecznej&rdquo; (graf dolaczony). To istota wstecznej propagacji.</p>
     </div>
   </div>
 
@@ -267,12 +280,14 @@
       <p>Z rozwiniecia Taylora: \(E(w+p)=E(w)+g^Tp+\tfrac12 p^THp\). Minimum: \(g=0\) i hesjan \(H\) dodatnio okreslony.</p>
       <h4>Najwiekszy spadek (+ moment)</h4>
       <div class="formula">$$w_{k+1}=w_k-\eta g_k+\alpha(w_k-w_{k-1}),\qquad \alpha\in[0,1]$$</div>
+      <p class="formula-explain"><span class="lab">Co to znaczy:</span> Nowe wagi = krok w strone &minus;gradientu (<b>&eta;&middot;g</b>) plus &bdquo;rozped&rdquo; <b>&alpha;&middot;(poprzednia zmiana wag)</b>. Moment przyspiesza i pomaga przeskoczyc plytkie minimum lokalne. &alpha; &isin; [0,1].</p>
       <ul>
         <li>Nie uzywa hesjanu — zbieznosc liniowa (wolna), ale mala pamiec.</li>
         <li><mark>Moment: <strong>pozwala opuscic minimum lokalne</strong>, przyspiesza i tlumi oscylacje, ale <strong>NIE gwarantuje minimum globalnego</strong></mark>. \(\alpha=0.9\) → ~10× przyspieszenie.</li>
       </ul>
       <h4>Newtonowskie (2. rzedu)</h4>
       <div class="formula">$$p_k=-H_k^{-1}g_k$$</div>
+      <p class="formula-explain"><span class="lab">Co to znaczy:</span> Kierunek poprawy to gradient <b>g</b> przemnozony przez odwrotnosc hesjanu <b>H</b> (informacja o krzywiznie). Trafia do minimum w mniejszej liczbie krokow, ale liczenie H<sup>&minus;1</sup> jest kosztowne.</p>
       <ul>
         <li><mark>Metoda Newtona uzywa <strong>hesjanu I gradientu</strong></mark>.</li>
         <li><strong>BFGS (zmiennej metryki)</strong> — aproksymuje \(H^{-1}\); 1. krok = najwiekszy spadek.</li>
@@ -316,6 +331,7 @@
         <li>Uczenie przerwane w minimum bledu na zbiorze sprawdzajacym.</li>
       </ul>
       <div class="formula">$$E_i^2 = B_i^2 + V_i \quad(\text{obciazenie/bias} + \text{wariancja})$$</div>
+      <p class="formula-explain"><span class="lab">Co to znaczy:</span> Blad&sup2; rozklada sie na <b>obciazenie&sup2;</b> (bias &mdash; model za prosty) plus <b>wariancje</b> (czulosc na konkretny zbior uczacy). Zmniejszenie jednego zwykle zwieksza drugie &mdash; to kompromis.</p>
       <p>Male obciazenie okupione wieksza wariancja (kompromis bias-variance). Bias ≈ blad uczenia, wariancja ≈ blad testowania.</p>
     </div>
   </div>
@@ -356,6 +372,7 @@
     <div class="card-body">
       <div class="test"><mark>Selekcja cech = wybor cech <strong>najbardziej reprezentatywnych</strong></mark> (najlepiej skorelowanych z decyzja), nie najczestszych ani najwiekszych.</div>
       <div class="formula">$$S_{AB}(f)=\frac{|c_A-c_B|}{\sigma_A+\sigma_B}$$</div>
+      <p class="formula-explain"><span class="lab">Co to znaczy:</span> Roznica srednich obu klas <b>|c<sub>A</sub>&minus;c<sub>B</sub>|</b> podzielona przez sume ich rozrzutow <b>(&sigma;<sub>A</sub>+&sigma;<sub>B</sub>)</b>. Duza wartosc = cecha dobrze rozdziela klasy (centra daleko, malo rozmyte).</p>
       <ul>
         <li><mark>Miara Fishera bazuje na <strong>wartosciach srednich I odchyleniach std OBU klas</strong></mark>. Im wieksza, tym lepsza cecha.</li>
         <li>Inne: korelacja, test t / chi², ReliefF, MRMR, las losowy. Transformacje: PCA, LDA (Fishera).</li>
@@ -383,6 +400,7 @@
     <div class="card-header">Struktura i idea RBF <span class="arrow">&#9660;</span></div>
     <div class="card-body">
       <div class="formula">$$F(\mathbf{x})=\sum_{i=1}^{K} w_i\,\varphi(\lVert\mathbf{x}-\mathbf{c}_i\rVert)+w_0, \qquad K<p$$</div>
+      <p class="formula-explain"><span class="lab">Co to znaczy:</span> Wyjscie to <b>wazona suma K funkcji radialnych</b> &mdash; kazda &bdquo;czuje&rdquo; okolice swojego centrum c<sub>i</sub> &mdash; plus bias w<sub>0</sub>. Warstwa wyjsciowa jest liniowa. Liczba funkcji K &lt; liczba danych p.</p>
       <ul>
         <li><mark>Funkcje Gaussa w <strong>warstwie ukrytej</strong>, warstwa wyjsciowa <strong>liniowa</strong> (sumator)</mark>.</li>
         <li><mark><strong>RBF = aproksymator LOKALNY</strong></mark> (vs MLP globalny) — tylko nieliczne neurony aktywne dla danego \(x\).</li>
@@ -403,6 +421,7 @@
       </ul>
       <h4>2. Wagi wyjsciowe (liniowo)</h4>
       <div class="formula">$$[\mathbf{1}\;G]\,w=d \;\Rightarrow\; w=[\mathbf{1}\;G]^{+}d \;\;(\text{pseudoinwersja przez SVD})$$</div>
+      <p class="formula-explain"><span class="lab">Co to znaczy:</span> Skoro wyjscie jest liniowe, wagi <b>w</b> wylicza sie jednym rownaniem <b>G&middot;w = d</b>. Macierz G jest prostokatna, wiec uzywamy <b>pseudoinwersji G<sup>+</sup></b> (liczonej stabilnie przez rozklad SVD) &mdash; bez iteracji.</p>
       <ul>
         <li><mark><strong>Macierz Greena \(G\)</strong> zbudowana z funkcji radialnych — wartosci zwiazane <strong>WYLACZNIE z wektorami uczacymi \(x\)</strong></mark> (nie z \(d\)).</li>
         <li><mark><strong>Gram-Schmidt (OLS)</strong> → dobiera <strong>JEDNOCZESNIE liczbe centrow, ich polozenia I wagi</strong></mark> wyjsciowe (selekcja wg wkladu energetycznego \(\varepsilon_i\)).</li>
@@ -424,6 +443,7 @@
         <li>Hiperplaszczyzna \(y(x)=w^T x+b\). <strong>Wektory nosne</strong> = punkty z \(\alpha_i\ne0\) (na marginesie) — tylko one decyduja.</li>
       </ul>
       <div class="formula">$$\text{primal:}\quad \min\tfrac12 w^Tw + C\sum_i\xi_i \quad\text{p.w. } d_i(w^Tx_i+b)\ge 1-\xi_i,\; \xi_i\ge0$$</div>
+      <p class="formula-explain"><span class="lab">Co to znaczy:</span> Minimalizujemy <b>&frac12;&Vert;w&Vert;&sup2;</b> (czyli maksymalizujemy margines) plus kare <b>C&middot;&Sigma;&xi;</b> za bledy. Ograniczenie wymusza, by punkty lezaly po wlasciwej stronie z marginesem; <b>&xi; &ge; 0</b> to &bdquo;luz&rdquo; na pomylki.</p>
       <ul>
         <li><mark><strong>Problem pierwotny</strong>: funkcja celu <strong>z ograniczeniami nierownosciowymi</strong></mark>.</li>
         <li><mark><strong>Zmienna dopelniajaca \(\xi\)</strong> — <strong>nieujemna</strong>, czyni ograniczenie nierownosciowe rownosciowym</mark> (miekki margines).</li>
@@ -436,6 +456,7 @@
     <div class="card-header">Problem dualny i kernel <span class="arrow">&#9660;</span></div>
     <div class="card-body">
       <div class="formula">$$\max_\alpha Q(\alpha)=\sum_i\alpha_i-\tfrac12\sum_{i,j}\alpha_i\alpha_j d_i d_j K(x_i,x_j),\quad 0\le\alpha_i\le C,\;\sum_i\alpha_i d_i=0$$</div>
+      <p class="formula-explain"><span class="lab">Co to znaczy:</span> Ta sama optymalizacja, ale <b>wylacznie po mnoznikach &alpha;</b>. <b>K(x<sub>i</sub>,x<sub>j</sub>)</b> to jadro (iloczyn w przestrzeni cech). Warunki: 0 &le; &alpha; &le; C oraz &Sigma;&alpha;<sub>i</sub>d<sub>i</sub> = 0. Punkty z &alpha; &gt; 0 to wektory nosne.</p>
       <ul>
         <li><mark><strong>Problem dualny</strong> zalezy <strong>WYLACZNIE od mnoznikow Lagrange'a</strong>, jest <strong>kwadratowy</strong></mark> → jedno minimum globalne.</li>
         <li><mark><strong>Kernel (jadro)</strong> → odwzorowuje dane do przestrzeni o <strong>WYZSZYM wymiarze</strong></mark> (liniowo separowalnej, tw. Covera).</li>
@@ -478,6 +499,7 @@
         <li>ReLU, batch-norm, softmax + entropia krzyzowa. SGDM / ADAM.</li>
       </ul>
       <div class="formula">$$O=\frac{W-F+2P}{S}+1 \qquad \text{softmax}(u_i)=\frac{e^{u_i}}{\sum_j e^{u_j}}$$</div>
+      <p class="formula-explain"><span class="lab">Co to znaczy:</span> Po lewej: <b>rozmiar obrazu po konwolucji</b> &mdash; W (wejscie), F (filtr), P (padding), S (krok). Po prawej: <b>softmax</b> zamienia surowe wyjscia na prawdopodobienstwa klas (sumuja sie do 1).</p>
       <div class="example">AlexNet (227×227×3): \(O=(227-11)/4+1=55\). 5 conv + 3 FC, ~61 mln param., wyjscie 1000 klas (softmax). FC7 → 4096 cech.</div>
     </div>
   </div>
@@ -502,11 +524,13 @@
         <li>Enkoder + <strong>waskie gardlo (kod)</strong> + dekoder. <mark>Minimalizuje <strong>blad rekonstrukcji</strong></mark>. Uogolnienie nieliniowe PCA.</li>
       </ul>
       <div class="formula">$$E=\frac{1}{p}\sum_{n,k}\big(x_n^{(k)}-g_n(h(x^{(k)}))\big)^2$$</div>
+      <p class="formula-explain"><span class="lab">Co to znaczy:</span> <b>Blad rekonstrukcji</b>: roznica miedzy wejsciem <b>x</b> a tym, co dekoder <b>g</b> odtworzyl z kodu <b>h(x)</b>. Siec uczy sie odtwarzac wejscie przez waskie gardlo, wiec musi wylapac najwazniejsze cechy.</p>
       <h4>VAE (wariacyjny)</h4>
       <p>Koduje rozklad (\(\mu,\sigma\)) w przestrzeni ukrytej i probkuje → generacja obrazow. Kara KL do \(N(0,1)\).</p>
       <h4>GAN</h4>
       <p>Generator G vs dyskryminator D — gra min-max. Augmentacja danych, wykrywanie podrobek.</p>
       <div class="formula">$$\min_G\max_D \;\mathbb{E}[\log D(X)]+\mathbb{E}[\log(1-D(G(z)))]$$</div>
+      <p class="formula-explain"><span class="lab">Co to znaczy:</span> Gra dwoch sieci: <b>dyskryminator D</b> maksymalizuje trafnosc (odroznia prawdziwe X od podrobionych G(z)), <b>generator G</b> minimalizuje &mdash; uczy sie oszukiwac D. E[&middot;] to wartosc oczekiwana (srednia).</p>
     </div>
   </div>
 </div>
@@ -524,6 +548,7 @@
         <li>Zastosowanie: predykcja szeregow czasowych (np. obciazenia PSE).</li>
       </ul>
       <div class="formula">$$x(k)=[\,x_0,\dots,x_N,\; v_1(k-1),\dots,v_K(k-1)\,]$$</div>
+      <p class="formula-explain"><span class="lab">Co to znaczy:</span> Wektor wejsciowy = biezace wejscia <b>x</b> ORAZ sygnaly warstwy ukrytej z poprzedniego kroku <b>v(k&minus;1)</b>. Ta &bdquo;pamiec kontekstu&rdquo; pozwala modelowac zaleznosci w czasie (sekwencje).</p>
     </div>
   </div>
 
@@ -536,6 +561,7 @@
         <li>Stan komorki \(c_t\), wyjscie \(h_t\). Uczenie: BPTT (SGDM/ADAM).</li>
       </ul>
       <div class="formula">$$c_t=y_2\cdot y_3 + c_{t-1}\cdot y_1, \qquad h_t=y_4\cdot\tanh(c_t)$$</div>
+      <p class="formula-explain"><span class="lab">Co to znaczy:</span> Stan komorki <b>c<sub>t</sub></b> = nowa informacja (y<sub>2</sub>&middot;y<sub>3</sub>) plus zachowana czesc starej pamieci (c<sub>t&minus;1</sub>&middot;y<sub>1</sub>, gdzie <b>y<sub>1</sub> to bramka zapomnienia</b>). Wyjscie <b>h<sub>t</sub></b> = bramka wyjsciowa y<sub>4</sub> razy tanh(c<sub>t</sub>).</p>
     </div>
   </div>
 </div>
@@ -613,6 +639,7 @@
     <div class="card-body">
       <div class="test"><mark>Do miar jakosci regresji zalicza sie <strong>MAE</strong></mark> (tez MSE, RMSE, MAPE, R) — <strong>NIE czulosc, NIE F1</strong>.</div>
       <div class="formula">$$\text{MAE}=\frac1n\sum|d_i-y_i|, \quad \text{RMSE}=\sqrt{\tfrac1n\sum(d_i-y_i)^2}$$</div>
+      <p class="formula-explain"><span class="lab">Co to znaczy:</span> <b>MAE</b> = srednia z bezwzglednych roznic |d&minus;y| (prosty sredni blad). <b>RMSE</b> = pierwiastek ze sredniej kwadratow bledow, mocniej karze duze pomylki. Im mniejsze, tym lepsza regresja.</p>
     </div>
   </div>
 </div>
