@@ -1,0 +1,1203 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sztuczne Sieci Neuronowe — Powtorka do kolokwium</title>
+  <script>
+    MathJax = {
+      tex: { inlineMath: [['\\(', '\\)']], displayMath: [['$$', '$$']] },
+      options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+  <style>
+    :root {
+      --bg: #0f1117; --surface: #1a1d27; --surface2: #232734; --border: #2e3345;
+      --text: #e4e6ed; --text-dim: #8b90a0;
+      --accent: #ec4899; --accent2: #a78bfa; --green: #4ade80; --orange: #fb923c;
+      --red: #f87171; --cyan: #22d3ee; --yellow: #facc15; --radius: 12px;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; background:var(--bg); color:var(--text); line-height:1.7; }
+
+    .top-nav { position:sticky; top:0; z-index:100; background:rgba(15,17,23,0.85); backdrop-filter:blur(16px); border-bottom:1px solid var(--border); padding:0.6rem 1.5rem; display:flex; gap:0.5rem; overflow-x:auto; scrollbar-width:none; }
+    .top-nav::-webkit-scrollbar { display:none; }
+    .top-nav a { white-space:nowrap; padding:0.4rem 1rem; border-radius:999px; font-size:0.82rem; font-weight:600; color:var(--text-dim); text-decoration:none; border:1px solid transparent; transition:all 0.2s; }
+    .top-nav a:hover,.top-nav a.active { color:var(--accent); border-color:var(--accent); background:rgba(236,72,153,0.08); }
+    .home-link { color:var(--accent2)!important; }
+
+    .hero { text-align:center; padding:4rem 1.5rem 2.5rem; background:linear-gradient(180deg,rgba(236,72,153,0.08) 0%,transparent 100%); }
+    .hero h1 { font-size:clamp(1.8rem,4vw,2.8rem); font-weight:800; background:linear-gradient(135deg,var(--accent),var(--accent2)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin-bottom:0.5rem; }
+    .hero p { color:var(--text-dim); font-size:1rem; }
+    .hero .badge { display:inline-block; margin-top:0.8rem; padding:0.3rem 0.9rem; border-radius:999px; font-size:0.78rem; font-weight:600; color:var(--accent); background:rgba(236,72,153,0.1); border:1px solid rgba(236,72,153,0.25); }
+    .progress-bar { max-width:600px; margin:1.5rem auto 0; background:var(--surface); border-radius:999px; height:8px; overflow:hidden; }
+    .progress-bar .fill { height:100%; width:0%; background:linear-gradient(90deg,var(--accent),var(--accent2)); border-radius:999px; transition:width 0.5s; }
+    .progress-text { text-align:center; font-size:0.8rem; color:var(--text-dim); margin-top:0.4rem; }
+
+    .container { max-width:920px; margin:0 auto; padding:0 1.5rem 4rem; }
+    .lecture-section { margin-top:3rem; }
+    .lecture-section h2 { font-size:1.5rem; font-weight:700; margin-bottom:1rem; display:flex; align-items:center; gap:0.6rem; scroll-margin-top:60px; }
+    .lecture-section h2 .num { display:inline-flex; align-items:center; justify-content:center; width:36px; height:36px; border-radius:10px; font-size:0.9rem; font-weight:800; flex-shrink:0; }
+    .l1 .num { background:rgba(236,72,153,0.15); color:var(--accent); }
+    .l2 .num { background:rgba(167,139,250,0.15); color:var(--accent2); }
+    .l3 .num { background:rgba(34,211,238,0.15); color:var(--cyan); }
+    .l4 .num { background:rgba(251,146,60,0.15); color:var(--orange); }
+    .l5 .num { background:rgba(74,222,128,0.15); color:var(--green); }
+
+    .card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); margin-bottom:1rem; overflow:hidden; }
+    .card-header { padding:1rem 1.2rem; cursor:pointer; display:flex; justify-content:space-between; align-items:center; user-select:none; font-weight:600; font-size:0.95rem; transition:background 0.15s; gap:1rem; }
+    .card-header:hover { background:var(--surface2); }
+    .card-header .arrow { font-size:0.8rem; color:var(--text-dim); transition:transform 0.3s; flex-shrink:0; }
+    .card.open .card-header .arrow { transform:rotate(180deg); }
+    .card-body { display:none; padding:0 1.2rem 1.2rem; font-size:0.9rem; line-height:1.8; }
+    .card.open .card-body { display:block; }
+    .card-body h4 { font-size:0.92rem; font-weight:700; margin:1rem 0 0.4rem; color:var(--accent); }
+    .card-body h4:first-child { margin-top:0.2rem; }
+    .card-body ul,.card-body ol { padding-left:1.3rem; margin:0.3rem 0; }
+    .card-body li { margin:0.2rem 0; }
+    .card-body .formula { background:var(--surface2); border-left:3px solid var(--accent); border-radius:0 8px 8px 0; padding:0.8rem 1rem; margin:0.6rem 0; overflow-x:auto; }
+    .card-body .important { background:rgba(251,146,60,0.08); border-left:3px solid var(--orange); border-radius:0 8px 8px 0; padding:0.6rem 1rem; margin:0.6rem 0; font-size:0.88rem; }
+    .card-body .example { background:rgba(74,222,128,0.06); border-left:3px solid var(--green); border-radius:0 8px 8px 0; padding:0.6rem 1rem; margin:0.6rem 0; font-size:0.88rem; }
+    .card-body .test { background:rgba(236,72,153,0.07); border-left:3px solid var(--accent); border-radius:0 8px 8px 0; padding:0.6rem 1rem; margin:0.6rem 0; font-size:0.88rem; }
+    .card-body table { width:100%; border-collapse:collapse; margin:0.6rem 0; font-size:0.85rem; }
+    .card-body th,.card-body td { padding:0.5rem 0.7rem; border:1px solid var(--border); text-align:left; }
+    .card-body th { background:var(--surface2); font-weight:600; }
+    mark { background:rgba(236,72,153,0.22); color:var(--text); padding:0 3px; border-radius:3px; }
+
+    .section-desc { color:var(--text-dim); font-size:0.85rem; margin-bottom:1rem; }
+
+    /* Cheat grid */
+    .cheat-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:0.8rem; margin-top:1rem; }
+    .cheat-item { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:1rem; }
+    .cheat-item h4 { font-size:0.78rem; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.4rem; }
+    .cheat-item .val { font-size:0.9rem; font-weight:500; }
+
+    /* Flashcards */
+    .flashcard { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:1.5rem; text-align:center; min-height:200px; display:flex; flex-direction:column; align-items:center; justify-content:center; cursor:pointer; user-select:none; transition:all 0.2s; position:relative; }
+    .flashcard:hover { border-color:var(--accent); }
+    .flashcard .front { font-weight:600; font-size:1.05rem; }
+    .flashcard .back { display:none; font-size:0.92rem; line-height:1.7; white-space:pre-line; }
+    .flashcard.flipped .front { display:none; }
+    .flashcard.flipped .back { display:block; }
+    .flashcard .hint { position:absolute; bottom:0.6rem; font-size:0.72rem; color:var(--text-dim); }
+    .fc-nav { display:flex; justify-content:center; gap:0.8rem; margin-top:0.8rem; }
+    .fc-nav button { padding:0.5rem 1.5rem; border-radius:8px; border:1px solid var(--border); background:var(--surface); color:var(--text); font-weight:600; font-size:0.85rem; cursor:pointer; transition:all 0.15s; }
+    .fc-nav button:hover { border-color:var(--accent); color:var(--accent); }
+    .fc-counter { text-align:center; margin-top:0.4rem; font-size:0.8rem; color:var(--text-dim); }
+
+    /* Exam */
+    .exam-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:1.2rem; margin-bottom:0.8rem; }
+    .exam-card .eq-head { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:0.6rem; gap:0.6rem; }
+    .exam-card .question { font-weight:600; font-size:0.92rem; }
+    .exam-card .pts { font-size:0.72rem; color:var(--accent); font-weight:700; white-space:nowrap; }
+    .exam-card .options label { display:block; padding:0.45rem 0.8rem; margin:0.25rem 0; border-radius:8px; cursor:pointer; font-size:0.86rem; border:1px solid var(--border); transition:all 0.15s; }
+    .exam-card .options label:hover { border-color:var(--accent); background:rgba(236,72,153,0.05); }
+    .exam-card .options input { margin-right:0.5rem; }
+    .exam-card .answer { display:none; margin-top:0.7rem; padding:0.7rem; border-radius:8px; font-size:0.85rem; line-height:1.6; }
+    .exam-card .answer.show { display:block; }
+    .exam-card .answer.correct { background:rgba(74,222,128,0.08); border:1px solid rgba(74,222,128,0.2); }
+    .exam-card .answer.wrong { background:rgba(248,113,113,0.08); border:1px solid rgba(248,113,113,0.2); }
+    .btn-check { margin-top:0.6rem; padding:0.45rem 1.2rem; border-radius:8px; border:1px solid var(--accent); background:transparent; color:var(--accent); font-weight:600; font-size:0.82rem; cursor:pointer; transition:all 0.15s; }
+    .btn-check:hover { background:var(--accent); color:#fff; }
+    .exam-score { text-align:center; margin:1rem 0; padding:1rem; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); display:none; }
+    .exam-score .big { font-size:1.8rem; font-weight:800; }
+    .quiz-tabs { display:flex; gap:0.5rem; margin-bottom:1rem; flex-wrap:wrap; }
+    .quiz-tabs button { padding:0.5rem 1.1rem; border-radius:8px; border:1px solid var(--border); background:var(--surface); color:var(--text-dim); font-weight:600; font-size:0.84rem; cursor:pointer; }
+    .quiz-tabs button.active { border-color:var(--accent); color:var(--accent); background:rgba(236,72,153,0.08); }
+    .quiz-block { display:none; }
+    .quiz-block.active { display:block; }
+
+    @media (max-width:600px) {
+      .container { padding:0 1rem 3rem; }
+      .card-header { font-size:0.88rem; padding:0.8rem 1rem; }
+      .card-body { padding:0 1rem 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="top-nav" id="topnav">
+  <a href="index.html" class="home-link">&#8962; Start</a>
+  <a href="#neurony">Neurony</a>
+  <a href="#mlp">MLP</a>
+  <a href="#generalizacja">Generalizacja</a>
+  <a href="#rbf">RBF</a>
+  <a href="#svm">SVM</a>
+  <a href="#deep">Glebokie</a>
+  <a href="#rekur">Rekurencyjne</a>
+  <a href="#samoorg">PCA / ICA</a>
+  <a href="#miary">Miary</a>
+  <a href="#sciaga">Sciaga</a>
+  <a href="#fiszki">Fiszki</a>
+  <a href="#egzamin">Quiz</a>
+</nav>
+
+<div class="hero">
+  <h1>Sztuczne Sieci Neuronowe</h1>
+  <p>prof. S. Osowski, K. Siwek &bull; Politechnika Warszawska &bull; Przemyslowe zastosowania SSN</p>
+  <div class="badge">Kolokwium &bull; test wielokrotnego wyboru</div>
+  <div class="progress-bar"><div class="fill" id="progressFill"></div></div>
+  <div class="progress-text" id="progressText">Otwieraj karty, by sledzic postep</div>
+</div>
+
+<div class="container">
+
+<!-- ============ 1. MODELE NEURONOW ============ -->
+<div class="lecture-section l1" id="neurony">
+  <h2><span class="num">1</span> Modele neuronow</h2>
+
+  <div class="card">
+    <div class="card-header">Model McCullocha-Pittsa <span class="arrow">&#9660;</span></div>
+    <div class="card-body">
+      <p>Pierwszy matematyczny model neuronu (1943). Sumator wagowy + blok nieliniowy z <strong>progowa (skokowa)</strong> funkcja aktywacji.</p>
+      <div class="formula">$$y_i = f\!\left(\sum_{j=1}^{N} w_{ij} x_j + w_{i0}\right), \qquad f(u)=\begin{cases}1 & u>0\\ 0 & u\le 0\end{cases}$$</div>
+      <ul>
+        <li>Waga <strong>dodatnia</strong> = synapsa pobudzajaca, <strong>ujemna</strong> = hamujaca, <strong>zerowa</strong> = brak polaczenia.</li>
+        <li><mark>Model binarny — <strong>nieprzydatny w uczeniu gradientowym z powodu nieciaglej pochodnej</strong></mark> funkcji skokowej.</li>
+      </ul>
+      <div class="test"><strong>Test:</strong> 3 strategie uczenia — z nauczycielem (supervised, znane \(d\)), bez nauczyciela (unsupervised, tylko \(x\)), ze wzmocnieniem (reinforcement).</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">Neuron sigmoidalny <span class="arrow">&#9660;</span></div>
+    <div class="card-body">
+      <p>Struktura jak McCulloch-Pitts, ale funkcja aktywacji jest <strong>ciagla i rozniczkowalna</strong> — umozliwia uczenie gradientowe.</p>
+      <div class="formula">$$f_u(u)=\frac{1}{1+e^{-bu}}\;\in(0,1), \qquad f_b(u)=\tanh(bu)\;\in(-1,1)$$</div>
+      <h4>Pochodne (okreslone przez sama wartosc funkcji)</h4>
+      <div class="formula">$$f_u' = b\,f_u(1-f_u), \qquad f_b' = b\,(1-f_b^2)$$</div>
+      <ul>
+        <li>Przy bardzo duzym \(b\) sigmoida przechodzi w funkcje skokowa (perceptron).</li>
+        <li>Pochodna ma ksztalt krzywej dzwonowej, max w \(u=0\).</li>
+      </ul>
+      <div class="test"><strong>Test:</strong> w klasycznym uczeniu gradientowym <mark>pochodna funkcji aktywacji musi byc ciagla</mark> (ale ReLU — patrz nizej — jest wyjatkiem stosowanym w sieciach glebokich).</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">Funkcja ReLU <span class="arrow">&#9660;</span></div>
+    <div class="card-body">
+      <p>Sigmoida ma stan <strong>nasycenia</strong> hamujacy uczenie w sieciach glebokich. ReLU (Rectified Linear Unit) eliminuje nasycenie:</p>
+      <div class="formula">$$y(x)=\max(0,x)=\begin{cases}x & x>0\\ 0 & x\le 0\end{cases}, \qquad y'(x)=\begin{cases}1 & x>0\\ 0 & x\le 0\end{cases}$$</div>
+      <ul>
+        <li><strong>Pochodna ReLU jest nieciagla</strong> — gladka aproksymacja: softplus \(y=\ln(1+e^x)\).</li>
+        <li>Warianty: Leaky ReLU (\(y=ax\) dla \(x\le0\)), ELU.</li>
+        <li><mark>Ciaglosc pochodnej NIE jest warunkiem koniecznym</mark> dobrego dzialania — ReLU jest standardem w CNN.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">Neuron radialny (gaussowski) <span class="arrow">&#9660;</span></div>
+    <div class="card-body">
+      <div class="formula">$$\varphi(\mathbf{x})=\exp\!\left(-\frac{\lVert\mathbf{x}-\mathbf{c}\rVert^2}{\sigma^2}\right)$$</div>
+      <ul>
+        <li><mark>Opisany dwoma parametrami: <strong>centrum \(c\)</strong> (polozenie) i <strong>szerokosc \(\sigma\)</strong></mark>.</li>
+        <li>Nieliniowosc dotyczy <strong>odleglosci euklidesowej</strong> \(\lVert x-c\rVert\), a nie iloczynu skalarnego jak w sigmoidalnym.</li>
+        <li>Funkcja <strong>lokalna</strong> — niezerowa tylko w poblizu centrum.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">Neuron samoorganizujacy (wspolzawodnictwo) + neuron Hebba <span class="arrow">&#9660;</span></div>
+    <div class="card-body">
+      <h4>Wspolzawodnictwo (konkurencja)</h4>
+      <p>Zwyciezca = neuron o najwiekszym \(u_i=\mathbf{w}_i^T\mathbf{x}\) (przy znormalizowanych danych — <strong>najblizszy</strong> wektorowi \(x\)). Regula WTA (Grossberg):</p>
+      <div class="formula">$$\mathbf{w}_i(k+1)=\mathbf{w}_i(k)+\eta[\mathbf{x}-\mathbf{w}_i(k)]$$</div>
+      <p>W <strong>WTA</strong> tylko zwyciezca aktualizuje wagi; w <strong>WTM</strong> takze sasiedztwo (slabiej z odlegloscia).</p>
+      <h4>Regula Hebba</h4>
+      <p>Waga rosnie, gdy obie komorki sa jednoczesnie pobudzone (uczenie <strong>korelacyjne</strong>):</p>
+      <div class="formula">$$w_{ij}(k+1)=w_{ij}(k)+\eta\,y_i y_j$$</div>
+      <ul>
+        <li>Wagi rosna nieograniczenie — stabilizacja przez wsp. zapominania \(\gamma\) lub <strong>regule Oji</strong>.</li>
+        <li><mark><strong>Regula Oji</strong> = uczenie hebbowskie z normalizacja</mark>: \(w(k+1)=w(k)+\eta(x_j-w_{ij}y_i)\).</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 2. MLP ============ -->
+<div class="lecture-section l2" id="mlp">
+  <h2><span class="num">2</span> Siec perceptronu wielowarstwowego MLP</h2>
+
+  <div class="card">
+    <div class="card-header">Struktura MLP <span class="arrow">&#9660;</span></div>
+    <div class="card-body">
+      <ul>
+        <li><mark>Podstawowa cecha MLP: <strong>warstwy ukryte z neuronami sigmoidalnymi</strong></mark>.</li>
+        <li>Siec <strong>jednokierunkowa</strong> (feedforward), polaczenia tylko miedzy sasiednimi warstwami.</li>
+        <li><strong>Uniwersalny aproksymator GLOBALNY</strong> — kazdy neuron dziala w calej przestrzeni.</li>
+      </ul>
+      <div class="formula">$$y_k = f\!\left(\sum_{i=0}^{K} w_{ki}^{(2)} f\!\left(\sum_{j=0}^{N} w_{ij}^{(1)} x_j\right)\right)$$</div>
+      <div class="test"><strong>Test:</strong> autoasocjacyjna (\(d=x\)) vs heteroasocjacyjna (\(d\ne x\)). Polaryzacja \(x_0=1\) (bias) przesuwa hiperplaszczyzne podzialu.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">Funkcja celu i uczenie gradientowe <span class="arrow">&#9660;</span></div>
+    <div class="card-body">
+      <div class="formula">$$E = \frac{1}{2}\sum_{k=1}^{p}\sum_{i=1}^{M}\big(y_i(x_k)-d_i(x_k)\big)^2$$</div>
+      <ul>
+        <li><mark>Uczenie MLP <strong>MINIMALIZUJE funkcje bledu</strong></mark> (nie zeruje, nie maksymalizuje).</li>
+        <li>Adaptacja wag: \(w(k+1)=w(k)+\eta\,p(k)\), kierunek \(p\), \(g=\partial E/\partial w\).</li>
+        <li><strong>On-line</strong>: aktualizacja po kazdej probce. <strong>Off-line (wsadowe)</strong>: po calym cyklu.</li>
+        <li>Warunek stopu: norma gradientu < tolerancja.</li>
+      </ul>
+      <div class="test"><strong>Test:</strong> <mark>cykl uczacy (epoka) = ciag operacji obejmujacy <strong>WSZYSTKIE dane uczace</strong></mark> (≠ pojedyncza iteracja).</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">Wsteczna propagacja bledu (backpropagation) <span class="arrow">&#9660;</span></div>
+    <div class="card-body">
+      <p>Algorytm wyznaczania gradientu funkcji celu po wszystkich wagach — wykorzystuje <strong>graf dolaczony \(\hat G\)</strong> (graf \(G\) z odwroconymi kierunkami galezi, pobudzany roznica \(y_i-d_i\)).</p>
+      <ul>
+        <li>Galaz nieliniowa \(f(u)\) w \(\hat G\) staje sie galezia zlinearyzowana o wzmocnieniu \(\partial f/\partial u\).</li>
+        <li><strong>Regula lokalna</strong> — kazda skladowa gradientu = iloczyn dwoch sygnalow:</li>
+      </ul>
+      <div class="formula">$$\frac{\partial E}{\partial w_{ij}} = v_j\,\hat v_i \qquad(v_j \text{ z } G,\; \hat v_i \text{ z } \hat G)$$</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">Metody wyznaczania kierunku minimalizacji <span class="arrow">&#9660;</span></div>
+    <div class="card-body">
+      <p>Z rozwiniecia Taylora: \(E(w+p)=E(w)+g^Tp+\tfrac12 p^THp\). Minimum: \(g=0\) i hesjan \(H\) dodatnio okreslony.</p>
+      <h4>Najwiekszy spadek (+ moment)</h4>
+      <div class="formula">$$w_{k+1}=w_k-\eta g_k+\alpha(w_k-w_{k-1}),\qquad \alpha\in[0,1]$$</div>
+      <ul>
+        <li>Nie uzywa hesjanu — zbieznosc liniowa (wolna), ale mala pamiec.</li>
+        <li><mark>Moment: <strong>pozwala opuscic minimum lokalne</strong>, przyspiesza i tlumi oscylacje, ale <strong>NIE gwarantuje minimum globalnego</strong></mark>. \(\alpha=0.9\) → ~10× przyspieszenie.</li>
+      </ul>
+      <h4>Newtonowskie (2. rzedu)</h4>
+      <div class="formula">$$p_k=-H_k^{-1}g_k$$</div>
+      <ul>
+        <li><mark>Metoda Newtona uzywa <strong>hesjanu I gradientu</strong></mark>.</li>
+        <li><strong>BFGS (zmiennej metryki)</strong> — aproksymuje \(H^{-1}\); 1. krok = najwiekszy spadek.</li>
+        <li><strong>Levenberg-Marquardt</strong> — \(H\approx J^TJ+\nu\mathbf{1}\) (jakobian); blisko optimum → Gauss-Newton.</li>
+        <li>Newtonowskie tylko dla <strong>malej liczby wag (< ~1000)</strong>.</li>
+      </ul>
+      <h4>Bardzo duzo wag</h4>
+      <ul>
+        <li><mark><strong>Gradienty sprzezone</strong> (\(p_k=-g_k+\beta p_{k-1}\), Polak-Ribiere) i <strong>SGD</strong></mark> — bez hesjanu, mala pamiec.</li>
+      </ul>
+      <div class="important">Wszystkie metody gradientowe znajduja jedynie <strong>minimum LOKALNE</strong> zalezne od inicjalizacji wag.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">Wspolczynnik uczenia, heurystyki, inicjalizacja <span class="arrow">&#9660;</span></div>
+    <div class="card-body">
+      <ul>
+        <li><strong>Dobor \(\eta\)</strong>: staly, adaptacyjny (rosnie gdy blad maleje), minimalizacja kierunkowa (najlepsza).</li>
+        <li><strong>RPROP</strong>: uwzglednia tylko <strong>znak</strong> gradientu, indywidualne \(\eta_{ij}\). Quickprop.</li>
+        <li><mark>Inicjalizacja wag: <strong>losowo, male wartosci</strong></mark> (zakres ok. [0,1] lub [-0.5,0.5], metoda Nguyena-Widrowa).</li>
+        <li>Zbyt duze wagi startowe → przedwczesne nasycenie neuronow (pochodna ≈ 0, utkniecie).</li>
+        <li>"Jogging of weights" — przy utknieciu dodaje do wag <strong>wartosci losowe</strong>.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 3. GENERALIZACJA ============ -->
+<div class="lecture-section l3" id="generalizacja">
+  <h2><span class="num">3</span> Zdolnosci generalizacyjne</h2>
+
+  <div class="card">
+    <div class="card-header">Pojecie generalizacji + bias-variance <span class="arrow">&#9660;</span></div>
+    <div class="card-body">
+      <div class="test"><mark>Generalizacja = zdolnosc generowania wlasciwej odpowiedzi na dane <strong>nie biorace udzialu w uczeniu</strong> (testujace, nie uczace!)</mark>.</div>
+      <h4>Warunki dobrej generalizacji</h4>
+      <ul>
+        <li><mark>Liczba danych uczacych <strong>wielokrotnie wieksza od liczby wag</strong></mark>.</li>
+        <li>Struktura o mozliwie najmniejszej liczbie wag (liczba neuronow ukrytych < liczby danych uczacych).</li>
+        <li>Uczenie przerwane w minimum bledu na zbiorze sprawdzajacym.</li>
+      </ul>
+      <div class="formula">$$E_i^2 = B_i^2 + V_i \quad(\text{obciazenie/bias} + \text{wariancja})$$</div>
+      <p>Male obciazenie okupione wieksza wariancja (kompromis bias-variance). Bias ≈ blad uczenia, wariancja ≈ blad testowania.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">Miara VCdim <span class="arrow">&#9660;</span></div>
+    <div class="card-body">
+      <ul>
+        <li><mark><strong>VCdim</strong> (Vapnika-Czerwonenkisa) = licznosc \(n\) najwiekszego zbioru, dla ktorego siec realizuje wszystkie \(2^n\) dychotomii — miara <strong>zdolnosci rozrozniania zbiorow</strong></mark>.</li>
+        <li>Warunek dobrej generalizacji: \(p \gg \text{VCdim}\) (wg Vapnika \(p \ge 20\cdot\text{VCdim}\)).</li>
+        <li>Siec 1-warstwowa N wejsc: \(\text{VCdim}=N+1\). Sigmoidalna MLP: \(\propto n_w^2\). Skokowa: \(\propto n_w\lg n_w\).</li>
+        <li>Wraz ze wzrostem \(p\) maleje gorne ograniczenie bledu testowania; istnieje \(h_{opt}\).</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">Przeuczenie i metody poprawy <span class="arrow">&#9660;</span></div>
+    <div class="card-body">
+      <div class="test"><mark><strong>Przeuczenie (overfitting)</strong> ← <strong>zbyt dlugie uczenie + nadmiarowa liczba wag</strong></mark> (dopasowanie do szumu). Blad uczenia maleje, ale blad testowania rosnie.</div>
+      <h4>Metody poprawy generalizacji</h4>
+      <ul>
+        <li><strong>Obcinanie wag (pruning)</strong> — metody wrazliwosciowe <strong>OBD</strong> (\(S_i=\tfrac12 h_{ii}w_i^2\)) i <strong>OBS</strong> (\(S_i=\tfrac12 w_i^2/[H^{-1}]_{ii}\)).</li>
+        <li><strong>Regularyzacja</strong> (kara za wagi): \(E=E_0+\gamma\sum w_{ij}^2\).</li>
+        <li><strong>Early stopping</strong> (proporcja uczace:weryfikujace = 4:1).</li>
+        <li><strong>Dropout</strong> — losowe zerowanie polaczen. Wtracanie szumu / augmentacja. Wiecej danych.</li>
+      </ul>
+      <h4>Ocena: walidacja krzyzowa</h4>
+      <ul>
+        <li><strong>Cross-validation</strong>: M podzbiorow, ucz na M-1, testuj na 1, usrednij.</li>
+        <li><strong>Leave-one-out</strong>: podzbiory 1-elementowe (przy malej liczbie danych).</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">Selekcja cech diagnostycznych (miara Fishera) <span class="arrow">&#9660;</span></div>
+    <div class="card-body">
+      <div class="test"><mark>Selekcja cech = wybor cech <strong>najbardziej reprezentatywnych</strong></mark> (najlepiej skorelowanych z decyzja), nie najczestszych ani najwiekszych.</div>
+      <div class="formula">$$S_{AB}(f)=\frac{|c_A-c_B|}{\sigma_A+\sigma_B}$$</div>
+      <ul>
+        <li><mark>Miara Fishera bazuje na <strong>wartosciach srednich I odchyleniach std OBU klas</strong></mark>. Im wieksza, tym lepsza cecha.</li>
+        <li>Inne: korelacja, test t / chi², ReliefF, MRMR, las losowy. Transformacje: PCA, LDA (Fishera).</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">Zespol wielu sieci (ensemble) <span class="arrow">&#9660;</span></div>
+    <div class="card-body">
+      <ul>
+        <li>Rownolegle wiele sieci → lepsza generalizacja. Warunek: <strong>niezaleznosc / roznorodnosc</strong>. <mark>Zespol = dowolna liczba klasyfikatorow dowolnego typu</mark>.</li>
+        <li><mark><strong>Bagging</strong> (bootstrap) = technika <strong>KSZTALTOWANIA zespolu</strong></mark> — losowanie danych ze zwracaniem. Tez boosting, random forest.</li>
+        <li><mark><strong>Glosowanie wiekszosciowe</strong> = technika <strong>INTEGRACJI</strong></mark> — wygrywa klasa wskazana przez wiekszosc. Regresja → usrednianie. Wersja wazona: silniejszy klasyfikator = wieksza waga.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 4. RBF ============ -->
+<div class="lecture-section l4" id="rbf">
+  <h2><span class="num">4</span> Sieci radialne RBF</h2>
+
+  <div class="card">
+    <div class="card-header">Struktura i idea RBF <span class="arrow">&#9660;</span></div>
+    <div class="card-body">
+      <div class="formula">$$F(\mathbf{x})=\sum_{i=1}^{K} w_i\,\varphi(\lVert\mathbf{x}-\mathbf{c}_i\rVert)+w_0, \qquad K<p$$</div>
+      <ul>
+        <li><mark>Funkcje Gaussa w <strong>warstwie ukrytej</strong>, warstwa wyjsciowa <strong>liniowa</strong> (sumator)</mark>.</li>
+        <li><mark><strong>RBF = aproksymator LOKALNY</strong></mark> (vs MLP globalny) — tylko nieliczne neurony aktywne dla danego \(x\).</li>
+        <li>Warstwa ukryta: transformacja do przestrzeni liniowo separowalnej (tw. Covera).</li>
+        <li>Kazdy neuron ma indywidualne \(c_i,\sigma_i\). Generalizacja RBF zwykle gorsza niz MLP na granicach danych.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">Uczenie RBF — dwa etapy <span class="arrow">&#9660;</span></div>
+    <div class="card-body">
+      <p>Parametry dzielone na <strong>dwie niezalezne grupy</strong> (algorytm hybrydowy):</p>
+      <h4>1. Centra i szerokosci (samoorganizacja)</h4>
+      <ul>
+        <li><mark><strong>K-means (LBG) → ustala POLOZENIA CENTROW</strong></mark> funkcji radialnych (podzial Voronoi).</li>
+        <li>Szerokosc \(\sigma_j\) ≈ odleglosc od najblizszych sasiadow; dla danych znorm. czesto \(\sigma\approx1\).</li>
+      </ul>
+      <h4>2. Wagi wyjsciowe (liniowo)</h4>
+      <div class="formula">$$[\mathbf{1}\;G]\,w=d \;\Rightarrow\; w=[\mathbf{1}\;G]^{+}d \;\;(\text{pseudoinwersja przez SVD})$$</div>
+      <ul>
+        <li><mark><strong>Macierz Greena \(G\)</strong> zbudowana z funkcji radialnych — wartosci zwiazane <strong>WYLACZNIE z wektorami uczacymi \(x\)</strong></mark> (nie z \(d\)).</li>
+        <li><mark><strong>Gram-Schmidt (OLS)</strong> → dobiera <strong>JEDNOCZESNIE liczbe centrow, ich polozenia I wagi</strong></mark> wyjsciowe (selekcja wg wkladu energetycznego \(\varepsilon_i\)).</li>
+      </ul>
+      <div class="important">Zbyt mala liczba funkcji bazowych K → niedouczenie; zbyt duza → przeuczenie. Zwykle \(K\approx\) 1/3 liczby par uczacych.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 5. SVM ============ -->
+<div class="lecture-section l5" id="svm">
+  <h2><span class="num">5</span> Sieci wektorow nosnych SVM</h2>
+
+  <div class="card">
+    <div class="card-header">Idea, margines, wektory nosne <span class="arrow">&#9660;</span></div>
+    <div class="card-body">
+      <ul>
+        <li><mark>SVM (Vapnik) = <strong>maksymalizacja MARGINESU separacji</strong></mark> = przestrzen miedzy <strong>najblizszymi</strong> danymi obu klas. \(\rho=2/\lVert w\rVert\).</li>
+        <li>Hiperplaszczyzna \(y(x)=w^T x+b\). <strong>Wektory nosne</strong> = punkty z \(\alpha_i\ne0\) (na marginesie) — tylko one decyduja.</li>
+      </ul>
+      <div class="formula">$$\text{primal:}\quad \min\tfrac12 w^Tw + C\sum_i\xi_i \quad\text{p.w. } d_i(w^Tx_i+b)\ge 1-\xi_i,\; \xi_i\ge0$$</div>
+      <ul>
+        <li><mark><strong>Problem pierwotny</strong>: funkcja celu <strong>z ograniczeniami nierownosciowymi</strong></mark>.</li>
+        <li><mark><strong>Zmienna dopelniajaca \(\xi\)</strong> — <strong>nieujemna</strong>, czyni ograniczenie nierownosciowe rownosciowym</mark> (miekki margines).</li>
+        <li><mark><strong>Mnoznik Lagrange'a \(\alpha\)</strong> = wspolczynnik <strong>kary za niedopelnienie ograniczen</strong></mark>. Parametr \(C\) = waga bledow.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">Problem dualny i kernel <span class="arrow">&#9660;</span></div>
+    <div class="card-body">
+      <div class="formula">$$\max_\alpha Q(\alpha)=\sum_i\alpha_i-\tfrac12\sum_{i,j}\alpha_i\alpha_j d_i d_j K(x_i,x_j),\quad 0\le\alpha_i\le C,\;\sum_i\alpha_i d_i=0$$</div>
+      <ul>
+        <li><mark><strong>Problem dualny</strong> zalezy <strong>WYLACZNIE od mnoznikow Lagrange'a</strong>, jest <strong>kwadratowy</strong></mark> → jedno minimum globalne.</li>
+        <li><mark><strong>Kernel (jadro)</strong> → odwzorowuje dane do przestrzeni o <strong>WYZSZYM wymiarze</strong></mark> (liniowo separowalnej, tw. Covera).</li>
+        <li>Trik kernelowy: \(K(x_i,x_j)=\varphi^T(x_i)\varphi(x_j)\) — warunek Mercera.</li>
+      </ul>
+      <table>
+        <tr><th>Jadro</th><th>Wzor</th><th>Siec</th></tr>
+        <tr><td>liniowe</td><td>\(x^Tx_i+\gamma\)</td><td>liniowa</td></tr>
+        <tr><td>wielomianowe</td><td>\((x^Tx_i+\gamma)^q\)</td><td>wielomianowa</td></tr>
+        <tr><td>gaussowskie</td><td>\(e^{-\gamma\lVert x-x_i\rVert^2}\)</td><td>RBF</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">Regresja (ε-SVR) i wieloklasowosc <span class="arrow">&#9660;</span></div>
+    <div class="card-body">
+      <ul>
+        <li><mark><strong>Regresja: model ε-SVR</strong></mark> — blad 0 wewnatrz "rury" \(\varepsilon\): \(L_\varepsilon=\max(0,|d-y|-\varepsilon)\). Dwie zmienne \(\xi,\xi'\). Mala \(\varepsilon\) / duze \(C\) → wiecej wektorow nosnych.</li>
+        <li>Wieloklasowo: <mark><strong>one-vs-all</strong> (M klasyfikatorow) vs <strong>one-vs-one</strong> (M(M-1)/2)</mark>.</li>
+        <li>Algorytmy dualne: <strong>SMO</strong> (2 mnozniki naraz), SVMLight, BSVM — pamiec rosnie liniowo z liczba danych.</li>
+        <li>Zaleta SVM: dobra generalizacja przy malej liczbie danych, sterowanie VCdim szerokoscia marginesu, jedno minimum globalne.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 6. GLEBOKIE ============ -->
+<div class="lecture-section l1" id="deep">
+  <h2><span class="num">6</span> Sieci glebokie</h2>
+
+  <div class="card">
+    <div class="card-header">Siec konwolucyjna CNN <span class="arrow">&#9660;</span></div>
+    <div class="card-body">
+      <ul>
+        <li><mark>Podstawa: <strong>operacja KONWOLUCJI (splotu)</strong></mark>. Siec sama generuje cechy diagnostyczne.</li>
+        <li><mark><strong>Filtry (wagi) sa UCZONE podczas treningu</strong></mark> — nie sa stale.</li>
+        <li><strong>Lokalne pola receptywne</strong>, wspoldzielenie wag, ekwiwariancja wzgledem przesuniecia.</li>
+        <li><mark><strong>Pooling (max/avg) → REDUKCJA WYMIARU</strong></mark> (podprobkowanie 2×2).</li>
+        <li>ReLU, batch-norm, softmax + entropia krzyzowa. SGDM / ADAM.</li>
+      </ul>
+      <div class="formula">$$O=\frac{W-F+2P}{S}+1 \qquad \text{softmax}(u_i)=\frac{e^{u_i}}{\sum_j e^{u_j}}$$</div>
+      <div class="example">AlexNet (227×227×3): \(O=(227-11)/4+1=55\). 5 conv + 3 FC, ~61 mln param., wyjscie 1000 klas (softmax). FC7 → 4096 cech.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">Transfer learning + architektury <span class="arrow">&#9660;</span></div>
+    <div class="card-body">
+      <ul>
+        <li><mark><strong>Transfer learning</strong> = wykorzystanie <strong>wstepnie wytrenowanej sieci</strong></mark> (np. <strong>AlexNet</strong>) i douczenie tylko klasyfikatora; warstwy cech zamrozone.</li>
+        <li><strong>GoogLeNet</strong> (Inception, filtry 1×1/3×3/5×5, average pooling, 7 mln param.). <strong>ResNet</strong> (polaczenia residualne \(F(x)+x\) + batch norm — przeciw zanikaniu gradientu).</li>
+        <li>Detekcja: <strong>R-CNN / YOLO</strong> (IOU, kotwice). Segmentacja biomedyczna: <strong>U-Net</strong> (enkoder-dekoder, bez FC).</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">Autoenkoder, VAE, GAN <span class="arrow">&#9660;</span></div>
+    <div class="card-body">
+      <h4>Autoenkoder</h4>
+      <ul>
+        <li><mark><strong>System automatycznej generacji cech / kompresji</strong>, uczenie <strong>nienadzorowane</strong> (autoasocjacja \(d=x\))</mark>.</li>
+        <li>Enkoder + <strong>waskie gardlo (kod)</strong> + dekoder. <mark>Minimalizuje <strong>blad rekonstrukcji</strong></mark>. Uogolnienie nieliniowe PCA.</li>
+      </ul>
+      <div class="formula">$$E=\frac{1}{p}\sum_{n,k}\big(x_n^{(k)}-g_n(h(x^{(k)}))\big)^2$$</div>
+      <h4>VAE (wariacyjny)</h4>
+      <p>Koduje rozklad (\(\mu,\sigma\)) w przestrzeni ukrytej i probkuje → generacja obrazow. Kara KL do \(N(0,1)\).</p>
+      <h4>GAN</h4>
+      <p>Generator G vs dyskryminator D — gra min-max. Augmentacja danych, wykrywanie podrobek.</p>
+      <div class="formula">$$\min_G\max_D \;\mathbb{E}[\log D(X)]+\mathbb{E}[\log(1-D(G(z)))]$$</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 7. REKURENCYJNE ============ -->
+<div class="lecture-section l2" id="rekur">
+  <h2><span class="num">7</span> Sieci rekurencyjne</h2>
+
+  <div class="card">
+    <div class="card-header">Siec Elmana <span class="arrow">&#9660;</span></div>
+    <div class="card-body">
+      <ul>
+        <li><mark>Siec <strong>rekurencyjna</strong> ze sprzezeniem od warstwy ukrytej do wejscia; <strong>uniwersalny aproksymator</strong></mark>.</li>
+        <li><strong>Warstwa kontekstowa</strong> = pamiec poprzedniego stanu, liczba neuronow = liczbie neuronow ukrytych.</li>
+        <li>Zastosowanie: predykcja szeregow czasowych (np. obciazenia PSE).</li>
+      </ul>
+      <div class="formula">$$x(k)=[\,x_0,\dots,x_N,\; v_1(k-1),\dots,v_K(k-1)\,]$$</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">Siec LSTM <span class="arrow">&#9660;</span></div>
+    <div class="card-body">
+      <ul>
+        <li><mark>Rekurencyjna siec gleboka do <strong>danych sekwencyjnych / szeregow czasowych</strong></mark>; rozwiazuje problem <strong>zanikajacego gradientu</strong>.</li>
+        <li>Bloki pamieciowe (komorki) z <strong>trzema bramkami</strong>: <strong>zapomnienia, wejsciowa, wyjsciowa</strong>.</li>
+        <li>Stan komorki \(c_t\), wyjscie \(h_t\). Uczenie: BPTT (SGDM/ADAM).</li>
+      </ul>
+      <div class="formula">$$c_t=y_2\cdot y_3 + c_{t-1}\cdot y_1, \qquad h_t=y_4\cdot\tanh(c_t)$$</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 8. SAMOORGANIZACJA / PCA / ICA ============ -->
+<div class="lecture-section l3" id="samoorg">
+  <h2><span class="num">8</span> Samoorganizacja, PCA, ICA</h2>
+
+  <div class="card">
+    <div class="card-header">Grupowanie i mapa Kohonena <span class="arrow">&#9660;</span></div>
+    <div class="card-body">
+      <ul>
+        <li>Uczenie ze <strong>wspolzawodnictwem, bez nauczyciela</strong>. <strong>WTA</strong> (tylko zwyciezca) vs <strong>WTM</strong> (zwyciezca + sasiedztwo).</li>
+        <li><mark><strong>Neuron martwy</strong> = neuron <strong>NIGDY nie zwyciezajacy</strong></mark>. Zapobiega: mechanizm sumienia (conscience).</li>
+        <li><mark><strong>K-means wymaga podania liczby klastrow</strong></mark>; odleglosc euklidesowa, podzial Voronoi. Hierarchiczne → dendrogram. Jakosc bez etykiet: indeks Silhouette.</li>
+        <li><mark><strong>Mapa Kohonena (SOM)</strong> rzutuje dane z przestrzeni <strong>WIELOWYMIAROWEJ w 2-D</strong></mark> (lub 1-D), zachowuje topologie. Uczenie WTM, malejacy promien i \(\eta\).</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">PCA — analiza skladnikow glownych <span class="arrow">&#9660;</span></div>
+    <div class="card-body">
+      <ul>
+        <li><mark><strong>Metoda LINIOWA</strong>, znajduje kierunki <strong>NAJWIEKSZEJ WARIANCJI</strong></mark>. \(y=Wx\).</li>
+        <li>Pojecia: skladnik glowny, <strong>wektor wlasny</strong> (kierunek), <strong>wartosc wlasna</strong> (wariancja), macierz korelacji. Skladniki ortogonalne. Wartosci wlasne autokorelacji: <strong>rzeczywiste i nieujemne</strong>.</li>
+        <li><mark><strong>Regula Oji</strong> = uczenie hebbowskie → <strong>JEDEN, najwazniejszy</strong> skladnik. <strong>Regula Sangera</strong> → <strong>WIELE skladnikow naraz</strong></mark>.</li>
+        <li>Kompresja: <mark>↑ liczby skladnikow glownych → <strong>POLEPSZA jakosc</strong></mark> obrazu (↓ wsp. kompresji \(\alpha=N/K\)). PCA redukuje szum.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">ICA i slepa separacja sygnalow (BSS) <span class="arrow">&#9660;</span></div>
+    <div class="card-body">
+      <ul>
+        <li><mark><strong>Slepa separacja</strong>: NIEZNANE <strong>ZAROWNO postacie sygnalow zrodlowych JAK I wspolczynniki ich mieszania</strong></mark>. Model \(x=As\), szukamy W: \(y=Wx\approx s\).</li>
+        <li><mark><strong>ICA → skladniki STATYSTYCZNIE NIEZALEZNE</strong></mark> (PCA: tylko nieskorelowane). Zaklada niegaussowskosc.</li>
+        <li><mark><strong>Algorytm uczenia ICA = GRADIENTOWY</strong></mark> (uogolnienie Hebba), FastICA, kurtoza.</li>
+        <li><mark><strong>Deflacja</strong> = sekwencyjne wyodrebnianie zrodel — odtworzenie przy <strong>wyzerowaniu wybranych</strong> odseparowanych</mark>. Sieci: rekurencyjna vs jednokierunkowa. Ograniczenie: nieoznaczonosc skali i kolejnosci.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">Kompresja stratna <span class="arrow">&#9660;</span></div>
+    <div class="card-body">
+      <ul>
+        <li><strong>PCA</strong>: ramki (np. 8×8), K wektorow wlasnych, \(\alpha=N/K\).</li>
+        <li><strong>MLP</strong>: autoasocjacyjna, waskie gardlo.</li>
+        <li><strong>Kohonen</strong>: kwantyzacja wektorowa, <strong>ksiazka kodowa</strong> (codebook), przesyla sie numer zwyciezcy.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 9. MIARY JAKOSCI ============ -->
+<div class="lecture-section l4" id="miary">
+  <h2><span class="num">9</span> Miary jakosci</h2>
+
+  <div class="card">
+    <div class="card-header">Klasyfikacja — macierz konfuzji <span class="arrow">&#9660;</span></div>
+    <div class="card-body">
+      <div class="test"><mark><strong>Macierz pomylek (konfuzji)</strong> → pozwala wyznaczyc <strong>czulosc, specyficznosc, AUC</strong></mark> (NIE postac funkcji aktywacji, NIE bledy regresji).</div>
+      <ul>
+        <li>TP/TN/FP/FN. <strong>Czulosc</strong> = TP/(TP+FN), specyficznosc = TN/(TN+FP), precyzja = TP/(TP+FP).</li>
+        <li><strong>F1</strong> — srednia harmoniczna czulosci i precyzji. <strong>ROC/AUC</strong>: 1 = idealny, 0.5 = losowy.</li>
+        <li>Roznicowanie kosztu FP vs FN poprawia jakosc systemu.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">Regresja <span class="arrow">&#9660;</span></div>
+    <div class="card-body">
+      <div class="test"><mark>Do miar jakosci regresji zalicza sie <strong>MAE</strong></mark> (tez MSE, RMSE, MAPE, R) — <strong>NIE czulosc, NIE F1</strong>.</div>
+      <div class="formula">$$\text{MAE}=\frac1n\sum|d_i-y_i|, \quad \text{RMSE}=\sqrt{\tfrac1n\sum(d_i-y_i)^2}$$</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SCIAGA ============ -->
+<div class="lecture-section l5" id="sciaga">
+  <h2><span class="num">&#9889;</span> Sciaga blyskawiczna</h2>
+  <p class="section-desc">Najczestsze pulapki testowe — do powtorki na ostatnia chwile.</p>
+  <div class="cheat-grid">
+    <div class="cheat-item"><h4>Moment rozpedowy</h4><div class="val">Opuszcza minimum lokalne, <strong>ale NIE daje globalnego</strong></div></div>
+    <div class="cheat-item"><h4>Generalizacja</h4><div class="val">Dane <strong>testujace</strong>, nie uczace</div></div>
+    <div class="cheat-item"><h4>Macierz Greena</h4><div class="val">Tylko wektory <strong>x</strong> (nie d)</div></div>
+    <div class="cheat-item"><h4>ICA vs PCA</h4><div class="val">ICA = <strong>niezalezne</strong>; PCA = tylko nieskorelowane</div></div>
+    <div class="cheat-item"><h4>Bagging vs glosowanie</h4><div class="val">Bagging = <strong>ksztaltowanie</strong>; glosowanie = <strong>integracja</strong></div></div>
+    <div class="cheat-item"><h4>RBF: K-means vs Gram-Schmidt</h4><div class="val">K-means = <strong>centra</strong>; Gram-Schmidt = <strong>wszystko naraz</strong></div></div>
+    <div class="cheat-item"><h4>Oja vs Sanger</h4><div class="val">Oja = <strong>jeden</strong> skladnik; Sanger = <strong>wiele</strong></div></div>
+    <div class="cheat-item"><h4>CNN</h4><div class="val">Pooling = <strong>redukcja wymiaru</strong>; filtry <strong>uczone</strong></div></div>
+    <div class="cheat-item"><h4>Neuron radialny</h4><div class="val"><strong>Centrum + szerokosc</strong>; aproksymator lokalny</div></div>
+    <div class="cheat-item"><h4>SVM dual</h4><div class="val">Tylko <strong>mnozniki Lagrange'a</strong>, kwadratowy</div></div>
+    <div class="cheat-item"><h4>Newton</h4><div class="val"><strong>Hesjan + gradient</strong>; tylko male sieci</div></div>
+    <div class="cheat-item"><h4>Epoka</h4><div class="val"><strong>Wszystkie dane uczace</strong> raz</div></div>
+    <div class="cheat-item"><h4>Neuron martwy</h4><div class="val"><strong>Nigdy</strong> nie zwyciezajacy</div></div>
+    <div class="cheat-item"><h4>Autoenkoder</h4><div class="val">Automatyczna <strong>generacja cech</strong>, nienadzorowany</div></div>
+    <div class="cheat-item"><h4>LSTM</h4><div class="val"><strong>Rekurencyjna</strong>, sekwencje, 3 bramki</div></div>
+    <div class="cheat-item"><h4>Przeuczenie</h4><div class="val"><strong>Dlugie uczenie + nadmiar wag</strong></div></div>
+  </div>
+</div>
+
+<!-- ============ FISZKI ============ -->
+<div class="lecture-section l1" id="fiszki">
+  <h2><span class="num">&#9733;</span> Fiszki</h2>
+  <p class="section-desc">Kliknij karte, by zobaczyc odpowiedz.</p>
+  <div class="flashcard" id="fc" onclick="flipCard()">
+    <div class="front" id="fcFront">...</div>
+    <div class="back" id="fcBack">...</div>
+    <div class="hint">kliknij, by odwrocic</div>
+  </div>
+  <div class="fc-nav">
+    <button onclick="prevCard()">&#8592; Poprzednia</button>
+    <button onclick="nextCard()">Nastepna &#8594;</button>
+  </div>
+  <div class="fc-counter" id="fcCounter">1 / 1</div>
+</div>
+
+<!-- ============ QUIZ ============ -->
+<div class="lecture-section l2" id="egzamin">
+  <h2><span class="num">&#9998;</span> Quiz egzaminacyjny</h2>
+  <p class="section-desc">Dwie wersje testu z poprzednich lat. <strong>Test B</strong> jest w formacie zgodnym z kolokwium (wielokrotny wybor — moze byc &gt;1 poprawna odpowiedz).</p>
+
+  <div class="quiz-tabs">
+    <button class="active" onclick="showQuiz('qA',this)">Test A &middot; jednokrotny</button>
+    <button onclick="showQuiz('qB',this)">Test B &middot; wielokrotny</button>
+  </div>
+
+  <!-- ===== TEST A (radio) ===== -->
+  <div class="quiz-block active" id="qA">
+
+    <div class="exam-card">
+      <div class="eq-head"><span class="question">1. Moment rozpedowy stosowany w uczeniu neuronu sigmoidalnego</span><span class="pts">1 pkt</span></div>
+      <div class="options">
+        <label><input type="radio" name="a1" value="a">zapewnia najlepsze wyniki uczenia</label>
+        <label><input type="radio" name="a1" value="b">pozwala zawsze osiagnac minimum globalne</label>
+        <label><input type="radio" name="a1" value="c">pozwala opuscic niekorzystne minimum lokalne</label>
+      </div>
+      <button class="btn-check" onclick="checkExam('a1','c','Moment pozwala opuscic minimum lokalne, ale NIE gwarantuje globalnego.')">Sprawdz</button>
+      <div class="answer" id="a1-a"></div>
+    </div>
+
+    <div class="exam-card">
+      <div class="eq-head"><span class="question">2. Neuron radialny gaussowski opisany jest</span><span class="pts">1 pkt</span></div>
+      <div class="options">
+        <label><input type="radio" name="a2" value="a">parametrami: centrum i szerokoscia</label>
+        <label><input type="radio" name="a2" value="b">wartosciami wag polaczen synaptycznych</label>
+        <label><input type="radio" name="a2" value="c">parametrami: srodkiem wagowym i odchyleniem wag</label>
+      </div>
+      <button class="btn-check" onclick="checkExam('a2','a','Centrum c (polozenie) + szerokosc sigma.')">Sprawdz</button>
+      <div class="answer" id="a2-a"></div>
+    </div>
+
+    <div class="exam-card">
+      <div class="eq-head"><span class="question">3. Regula Oji dotyczy</span><span class="pts">1 pkt</span></div>
+      <div class="options">
+        <label><input type="radio" name="a3" value="a">uczenia gradientowego</label>
+        <label><input type="radio" name="a3" value="b">uczenia ze wspolzawodnictwem</label>
+        <label><input type="radio" name="a3" value="c">uczenia hebbowskiego</label>
+      </div>
+      <button class="btn-check" onclick="checkExam('a3','c','Oja = ustabilizowana, znormalizowana regula Hebba (1 skladnik glowny).')">Sprawdz</button>
+      <div class="answer" id="a3-a"></div>
+    </div>
+
+    <div class="exam-card">
+      <div class="eq-head"><span class="question">4. Uczenie newtonowskie wykorzystuje wylacznie informacje zawarta w</span><span class="pts">1 pkt</span></div>
+      <div class="options">
+        <label><input type="radio" name="a4" value="a">gradiencie</label>
+        <label><input type="radio" name="a4" value="b">hesjanie i gradiencie</label>
+        <label><input type="radio" name="a4" value="c">hesjanie</label>
+      </div>
+      <button class="btn-check" onclick="checkExam('a4','b','Metoda 2. rzedu: p = -H^(-1) g.')">Sprawdz</button>
+      <div class="answer" id="a4-a"></div>
+    </div>
+
+    <div class="exam-card">
+      <div class="eq-head"><span class="question">5. Generalizacja sieci neuronowej to</span><span class="pts">1 pkt</span></div>
+      <div class="options">
+        <label><input type="radio" name="a5" value="a">mozliwosc zredukowania funkcji celu do zera</label>
+        <label><input type="radio" name="a5" value="b">zdolnosc odtwarzania danych testujacych nie uczestniczacych w uczeniu</label>
+        <label><input type="radio" name="a5" value="c">zdolnosc odtwarzania danych uczacych</label>
+      </div>
+      <button class="btn-check" onclick="checkExam('a5','b','Kluczowe: dane TESTUJACE, nie uczace.')">Sprawdz</button>
+      <div class="answer" id="a5-a"></div>
+    </div>
+
+    <div class="exam-card">
+      <div class="eq-head"><span class="question">6. Dla dobrej generalizacji liczba danych uczacych powinna byc</span><span class="pts">1 pkt</span></div>
+      <div class="options">
+        <label><input type="radio" name="a6" value="a">mniejsza niz liczba wag</label>
+        <label><input type="radio" name="a6" value="b">rowna podwojnej liczbie wag</label>
+        <label><input type="radio" name="a6" value="c">wielokrotnie wieksza od liczby wag</label>
+      </div>
+      <button class="btn-check" onclick="checkExam('a6','c','p &gt;&gt; liczba wag (wg Vapnika p &ge; 20&middot;VCdim).')">Sprawdz</button>
+      <div class="answer" id="a6-a"></div>
+    </div>
+
+    <div class="exam-card">
+      <div class="eq-head"><span class="question">7. "Przeuczenie" sieci zwiazane jest z</span><span class="pts">1 pkt</span></div>
+      <div class="options">
+        <label><input type="radio" name="a7" value="a">zastosowaniem malo efektywnego algorytmu uczenia</label>
+        <label><input type="radio" name="a7" value="b">liczba danych uczacych</label>
+        <label><input type="radio" name="a7" value="c">dlugoscia uczenia i nadmiarowa liczba wag</label>
+      </div>
+      <button class="btn-check" onclick="checkExam('a7','c','Dlugie uczenie + za duzo wag = dopasowanie do szumu.')">Sprawdz</button>
+      <div class="answer" id="a7-a"></div>
+    </div>
+
+    <div class="exam-card">
+      <div class="eq-head"><span class="question">8. "Bagging" to</span><span class="pts">1 pkt</span></div>
+      <div class="options">
+        <label><input type="radio" name="a8" value="a">algorytm uczacy sieci</label>
+        <label><input type="radio" name="a8" value="b">technika budowy rekurencyjnych predyktorow</label>
+        <label><input type="radio" name="a8" value="c">metoda ksztaltowania zespolu klasyfikatorow</label>
+      </div>
+      <button class="btn-check" onclick="checkExam('a8','c','Bootstrap aggregating = ksztaltowanie zespolu (losowanie ze zwracaniem).')">Sprawdz</button>
+      <div class="answer" id="a8-a"></div>
+    </div>
+
+    <div class="exam-card">
+      <div class="eq-head"><span class="question">9. Algorytm K-means w sieci RBF sluzy do</span><span class="pts">1 pkt</span></div>
+      <div class="options">
+        <label><input type="radio" name="a9" value="a">doboru wag sieci RBF w warstwie wyjsciowej</label>
+        <label><input type="radio" name="a9" value="b">ustalenia polozen centrow funkcji radialnych</label>
+        <label><input type="radio" name="a9" value="c">jednoczesnego doboru centrow i wag</label>
+      </div>
+      <button class="btn-check" onclick="checkExam('a9','b','K-means → polozenia centrow. (Wszystko naraz robi Gram-Schmidt.)')">Sprawdz</button>
+      <div class="answer" id="a9-a"></div>
+    </div>
+
+    <div class="exam-card">
+      <div class="eq-head"><span class="question">10. Macierz Greena w sieci RBF definiowana jest przez</span><span class="pts">1 pkt</span></div>
+      <div class="options">
+        <label><input type="radio" name="a10" value="a">wartosci zwiazane wylacznie z wektorami uczacymi x</label>
+        <label><input type="radio" name="a10" value="b">wartosci zwiazane z wektorami x oraz d</label>
+        <label><input type="radio" name="a10" value="c">wartosci zwiazane wylacznie z wektorami d</label>
+      </div>
+      <button class="btn-check" onclick="checkExam('a10','a','G zbudowana z funkcji radialnych na danych x — nie zalezy od d.')">Sprawdz</button>
+      <div class="answer" id="a10-a"></div>
+    </div>
+
+    <div class="exam-card">
+      <div class="eq-head"><span class="question">11. Problem pierwotny uczenia SVM sformulowany jest jako</span><span class="pts">1 pkt</span></div>
+      <div class="options">
+        <label><input type="radio" name="a11" value="a">optymalizacja funkcji celu z ograniczeniami funkcyjnymi</label>
+        <label><input type="radio" name="a11" value="b">optymalizacja wylacznie z ograniczeniami nieliniowymi</label>
+        <label><input type="radio" name="a11" value="c">optymalizacja funkcji celu bez ograniczen</label>
+      </div>
+      <button class="btn-check" onclick="checkExam('a11','a','Primal: min ½wᵀw + CΣξ z ograniczeniami nierownosciowymi.')">Sprawdz</button>
+      <div class="answer" id="a11-a"></div>
+    </div>
+
+    <div class="exam-card">
+      <div class="eq-head"><span class="question">12. Problem dualny uczenia SVM jest zdefiniowany</span><span class="pts">1 pkt</span></div>
+      <div class="options">
+        <label><input type="radio" name="a12" value="a">jako niekwadratowy problem optymalizacyjny</label>
+        <label><input type="radio" name="a12" value="b">jako funkcja zmiennych oryginalnych i mnoznikow Lagrange'a</label>
+        <label><input type="radio" name="a12" value="c">wylacznie wzgledem mnoznikow Lagrange'a</label>
+      </div>
+      <button class="btn-check" onclick="checkExam('a12','c','Dual zalezy tylko od mnoznikow α; jest kwadratowy.')">Sprawdz</button>
+      <div class="answer" id="a12-a"></div>
+    </div>
+
+    <div class="exam-card">
+      <div class="eq-head"><span class="question">13. Deflacja to</span><span class="pts">1 pkt</span></div>
+      <div class="options">
+        <label><input type="radio" name="a13" value="a">odtworzenie sygnalow na podstawie skladnikow odseparowanych</label>
+        <label><input type="radio" name="a13" value="b">odtworzenie sygnalow przy wyzerowaniu wybranych odseparowanych skladnikow</label>
+        <label><input type="radio" name="a13" value="c">odtworzenie sygnalow przy wyzerowaniu polowy skladnikow</label>
+      </div>
+      <button class="btn-check" onclick="checkExam('a13','b','Sekwencyjne wyodrebnianie zrodel z zerowaniem wybranych skladnikow.')">Sprawdz</button>
+      <div class="answer" id="a13-a"></div>
+    </div>
+
+    <div class="exam-card">
+      <div class="eq-head"><span class="question">14. Miara Fishera bazuje na</span><span class="pts">1 pkt</span></div>
+      <div class="options">
+        <label><input type="radio" name="a14" value="a">znajomosci srednich i std danych obu klas</label>
+        <label><input type="radio" name="a14" value="b">znajomosci tylko odchylenia std obu klas</label>
+        <label><input type="radio" name="a14" value="c">znajomosci tylko wartosci srednich obu klas</label>
+      </div>
+      <button class="btn-check" onclick="checkExam('a14','a','S = |c1-c2| / (σ1+σ2) — srednie I odchylenia.')">Sprawdz</button>
+      <div class="answer" id="a14-a"></div>
+    </div>
+
+    <div class="exam-card">
+      <div class="eq-head"><span class="question">15. Reguła Sangera jest algorytmem uczacym sieci PCA</span><span class="pts">1 pkt</span></div>
+      <div class="options">
+        <label><input type="radio" name="a15" value="a">dla dowolnego, ale pojedynczego skladnika glownego</label>
+        <label><input type="radio" name="a15" value="b">tylko dla jednego, najwazniejszego skladnika</label>
+        <label><input type="radio" name="a15" value="c">dla wielu skladnikow glownych na raz</label>
+      </div>
+      <button class="btn-check" onclick="checkExam('a15','c','Sanger (GHA) → wiele skladnikow naraz. (Oja = jeden.)')">Sprawdz</button>
+      <div class="answer" id="a15-a"></div>
+    </div>
+
+    <div class="exam-card">
+      <div class="eq-head"><span class="question">16. Mapa Kohonena rzutuje</span><span class="pts">1 pkt</span></div>
+      <div class="options">
+        <label><input type="radio" name="a16" value="a">dane z przestrzeni wielowymiarowej w przestrzen 2-D</label>
+        <label><input type="radio" name="a16" value="b">dane z przestrzeni 2-D w wielowymiarowa</label>
+        <label><input type="radio" name="a16" value="c">dane z wielowymiarowej w inna wielowymiarowa</label>
+      </div>
+      <button class="btn-check" onclick="checkExam('a16','a','SOM: redukcja do 2-D (lub 1-D) z zachowaniem topologii.')">Sprawdz</button>
+      <div class="answer" id="a16-a"></div>
+    </div>
+
+    <div class="exam-card">
+      <div class="eq-head"><span class="question">17. Macierz pomylek (konfuzji) pozwala wyznaczyc</span><span class="pts">1 pkt</span></div>
+      <div class="options">
+        <label><input type="radio" name="a17" value="a">postac funkcji aktywacji</label>
+        <label><input type="radio" name="a17" value="b">bledy regresji</label>
+        <label><input type="radio" name="a17" value="c">AUC</label>
+      </div>
+      <button class="btn-check" onclick="checkExam('a17','c','Z macierzy konfuzji: czulosc, specyficznosc, AUC.')">Sprawdz</button>
+      <div class="answer" id="a17-a"></div>
+    </div>
+
+    <div class="exam-card">
+      <div class="eq-head"><span class="question">18. Do miar jakosci regresji zalicza sie</span><span class="pts">1 pkt</span></div>
+      <div class="options">
+        <label><input type="radio" name="a18" value="a">czulosc</label>
+        <label><input type="radio" name="a18" value="b">MAE</label>
+        <label><input type="radio" name="a18" value="c">miare F1</label>
+      </div>
+      <button class="btn-check" onclick="checkExam('a18','b','MAE/MSE/RMSE/MAPE. Czulosc i F1 to klasyfikacja.')">Sprawdz</button>
+      <div class="answer" id="a18-a"></div>
+    </div>
+
+    <div class="exam-card">
+      <div class="eq-head"><span class="question">19. W uczeniu sieci CNN wazna role odgrywa</span><span class="pts">1 pkt</span></div>
+      <div class="options">
+        <label><input type="radio" name="a19" value="a">dekompozycja Grama-Schmidta</label>
+        <label><input type="radio" name="a19" value="b">slepa separacja sygnalow</label>
+        <label><input type="radio" name="a19" value="c">operacja "pooling"</label>
+      </div>
+      <button class="btn-check" onclick="checkExam('a19','c','Pooling = redukcja wymiaru obrazu.')">Sprawdz</button>
+      <div class="answer" id="a19-a"></div>
+    </div>
+
+    <div class="exam-card">
+      <div class="eq-head"><span class="question">20. Autoenkoder jest</span><span class="pts">1 pkt</span></div>
+      <div class="options">
+        <label><input type="radio" name="a20" value="a">systemem separacji danych</label>
+        <label><input type="radio" name="a20" value="b">systemem automatycznej generacji cech procesu</label>
+        <label><input type="radio" name="a20" value="c">systemem grupowania danych</label>
+      </div>
+      <button class="btn-check" onclick="checkExam('a20','b','Autoenkoder = automatyczna generacja cech / kompresja, nienadzorowany.')">Sprawdz</button>
+      <div class="answer" id="a20-a"></div>
+    </div>
+
+  </div>
+
+  <!-- ===== TEST B (checkbox, multi) ===== -->
+  <div class="quiz-block" id="qB">
+
+    <div class="exam-card">
+      <div class="eq-head"><span class="question">1. Uczenie nadzorowane z nauczycielem wymaga danych uczacych w postaci</span><span class="pts">wielokr.</span></div>
+      <div class="options">
+        <label><input type="checkbox" name="b1" value="a">par danych (x, d)</label>
+        <label><input type="checkbox" name="b1" value="b">jedynie zbioru wektorow x</label>
+        <label><input type="checkbox" name="b1" value="c">jedynie zbioru wektorow d</label>
+      </div>
+      <button class="btn-check" onclick="checkExamMulti('b1',['a'],'Para wejscie-wartosc zadana (x, d).')">Sprawdz</button>
+      <div class="answer" id="b1-a"></div>
+    </div>
+
+    <div class="exam-card">
+      <div class="eq-head"><span class="question">2. Dla dobrej generalizacji liczba neuronow ukrytych powinna byc</span><span class="pts">wielokr.</span></div>
+      <div class="options">
+        <label><input type="checkbox" name="b2" value="a">rowna liczbie danych uczacych</label>
+        <label><input type="checkbox" name="b2" value="b">wieksza od liczby danych uczacych</label>
+        <label><input type="checkbox" name="b2" value="c">mniejsza od liczby danych uczacych</label>
+      </div>
+      <button class="btn-check" onclick="checkExamMulti('b2',['c'],'Uboga struktura → mniej neuronow niz danych.')">Sprawdz</button>
+      <div class="answer" id="b2-a"></div>
+    </div>
+
+    <div class="exam-card">
+      <div class="eq-head"><span class="question">3. Procedury OBD i OBS dotycza</span><span class="pts">wielokr.</span></div>
+      <div class="options">
+        <label><input type="checkbox" name="b3" value="a">rozbudowy struktury sieci</label>
+        <label><input type="checkbox" name="b3" value="b">obcinania pewnych wag w sieci</label>
+        <label><input type="checkbox" name="b3" value="c">ustalenia optymalnej liczby neuronow ukrytych</label>
+        <label><input type="checkbox" name="b3" value="d">przerwania uczenia w odpowiednim momencie</label>
+      </div>
+      <button class="btn-check" onclick="checkExamMulti('b3',['b','c'],'Metody wrazliwosciowe: obcinaja wagi i redukuja liczbe neuronow.')">Sprawdz</button>
+      <div class="answer" id="b3-a"></div>
+    </div>
+
+    <div class="exam-card">
+      <div class="eq-head"><span class="question">4. Ktore problemy moga wystapic w sieci RBF przy zlym doborze parametrow?</span><span class="pts">wielokr.</span></div>
+      <div class="options">
+        <label><input type="checkbox" name="b4" value="a">przeuczenie</label>
+        <label><input type="checkbox" name="b4" value="b">niedouczenie</label>
+        <label><input type="checkbox" name="b4" value="c">niedobor centrow</label>
+        <label><input type="checkbox" name="b4" value="d">nadmiar danych</label>
+      </div>
+      <button class="btn-check" onclick="checkExamMulti('b4',['a','b','c'],'Zla liczba/polozenie centrow → przeuczenie, niedouczenie, niedobor centrow.')">Sprawdz</button>
+      <div class="answer" id="b4-a"></div>
+    </div>
+
+    <div class="exam-card">
+      <div class="eq-head"><span class="question">5. Funkcja ReLU jest</span><span class="pts">wielokr.</span></div>
+      <div class="options">
+        <label><input type="checkbox" name="b5" value="a">rozniczkowalna</label>
+        <label><input type="checkbox" name="b5" value="b">rosnaca i bez miejsca zerowego</label>
+        <label><input type="checkbox" name="b5" value="c">nierozniczkowalna</label>
+        <label><input type="checkbox" name="b5" value="d">zeruje wartosci ujemne</label>
+      </div>
+      <button class="btn-check" onclick="checkExamMulti('b5',['c','d'],'ReLU: nierozniczkowalna w 0 i zeruje wartosci ujemne.')">Sprawdz</button>
+      <div class="answer" id="b5-a"></div>
+    </div>
+
+    <div class="exam-card">
+      <div class="eq-head"><span class="question">6. Ktore stwierdzenia sa prawdziwe dla wstecznej propagacji bledu w MLP?</span><span class="pts">wielokr.</span></div>
+      <div class="options">
+        <label><input type="checkbox" name="b6" value="a">jest algorytmem do trenowania sieci neuronowych</label>
+        <label><input type="checkbox" name="b6" value="b">aktualizuje wagi propagujac blad wstecz przez siec</label>
+        <label><input type="checkbox" name="b6" value="c">jest uzywany tylko w sieciach jednokierunkowych</label>
+        <label><input type="checkbox" name="b6" value="d">wymaga obliczenia gradientow funkcji kosztu</label>
+      </div>
+      <button class="btn-check" onclick="checkExamMulti('b6',['a','b','d'],'Backprop trenuje siec, propaguje blad wstecz i liczy gradient.')">Sprawdz</button>
+      <div class="answer" id="b6-a"></div>
+    </div>
+
+    <div class="exam-card">
+      <div class="eq-head"><span class="question">7. Ktore problemy moga wystapic podczas trenowania sieci neuronowych?</span><span class="pts">wielokr.</span></div>
+      <div class="options">
+        <label><input type="checkbox" name="b7" value="a">zanikajacy gradient</label>
+        <label><input type="checkbox" name="b7" value="b">eksplodujacy gradient</label>
+        <label><input type="checkbox" name="b7" value="c">przeuczenie</label>
+        <label><input type="checkbox" name="b7" value="d">niedouczenie</label>
+        <label><input type="checkbox" name="b7" value="e">nadmiar danych</label>
+      </div>
+      <button class="btn-check" onclick="checkExamMulti('b7',['a','b','c','d'],'Zanikajacy/eksplodujacy gradient, prze- i niedouczenie. Nadmiar danych nie jest problemem.')">Sprawdz</button>
+      <div class="answer" id="b7-a"></div>
+    </div>
+
+    <div class="exam-card">
+      <div class="eq-head"><span class="question">8. Ktore z ponizszych techniki zapobiegaja przeuczeniu (overfitting)?</span><span class="pts">wielokr.</span></div>
+      <div class="options">
+        <label><input type="checkbox" name="b8" value="a">dropout</label>
+        <label><input type="checkbox" name="b8" value="b">normalizacja danych</label>
+        <label><input type="checkbox" name="b8" value="c">zwiekszanie liczby epok</label>
+        <label><input type="checkbox" name="b8" value="d">wzrost wielkosci zbioru treningowego</label>
+        <label><input type="checkbox" name="b8" value="e">zaszumienie danych uczacych</label>
+      </div>
+      <button class="btn-check" onclick="checkExamMulti('b8',['a','d','e'],'Dropout, wiecej danych, szum. Wiecej epok wlasnie zwieksza overfitting.')">Sprawdz</button>
+      <div class="answer" id="b8-a"></div>
+    </div>
+
+    <div class="exam-card">
+      <div class="eq-head"><span class="question">9. Ktore typy funkcji aktywacji sa uzywane w sieciach neuronowych?</span><span class="pts">wielokr.</span></div>
+      <div class="options">
+        <label><input type="checkbox" name="b9" value="a">funkcja sigmoidalna</label>
+        <label><input type="checkbox" name="b9" value="b">funkcja tanh</label>
+        <label><input type="checkbox" name="b9" value="c">funkcja softmax</label>
+        <label><input type="checkbox" name="b9" value="d">funkcja ReLU</label>
+      </div>
+      <button class="btn-check" onclick="checkExamMulti('b9',['a','b','c','d'],'Wszystkie wymienione sa funkcjami aktywacji.')">Sprawdz</button>
+      <div class="answer" id="b9-a"></div>
+    </div>
+
+    <div class="exam-card">
+      <div class="eq-head"><span class="question">10. Ktore parametry sa modyfikowane podczas trenowania sieci?</span><span class="pts">wielokr.</span></div>
+      <div class="options">
+        <label><input type="checkbox" name="b10" value="a">liczba neuronow</label>
+        <label><input type="checkbox" name="b10" value="b">wartosci wag i bias</label>
+        <label><input type="checkbox" name="b10" value="c">struktura sieci</label>
+        <label><input type="checkbox" name="b10" value="d">liczba warstw ukrytych</label>
+      </div>
+      <button class="btn-check" onclick="checkExamMulti('b10',['b'],'W treningu zmieniaja sie wagi i bias; reszta to hiperparametry.')">Sprawdz</button>
+      <div class="answer" id="b10-a"></div>
+    </div>
+
+    <div class="exam-card">
+      <div class="eq-head"><span class="question">11. Sieci rekurencyjne sluza do rozwiazywania problemow</span><span class="pts">wielokr.</span></div>
+      <div class="options">
+        <label><input type="checkbox" name="b11" value="a">szukania minimum w przestrzeni wielowymiarowej</label>
+        <label><input type="checkbox" name="b11" value="b">minimalizacji bledow predykcji procesow dynamicznych</label>
+        <label><input type="checkbox" name="b11" value="c">obliczania najwiekszych bledow klasyfikacji</label>
+      </div>
+      <button class="btn-check" onclick="checkExamMulti('b11',['b'],'RNN/LSTM/Elman → predykcja procesow dynamicznych (szeregi czasowe).')">Sprawdz</button>
+      <div class="answer" id="b11-a"></div>
+    </div>
+
+    <div class="exam-card">
+      <div class="eq-head"><span class="question">12. Co oznacza "overfitting"?</span><span class="pts">wielokr.</span></div>
+      <div class="options">
+        <label><input type="checkbox" name="b12" value="a">siec zbyt skomplikowana, zbyt dobrze dopasowana do danych treningowych</label>
+        <label><input type="checkbox" name="b12" value="b">siec zbyt prosta, slabo dopasowana do danych treningowych</label>
+        <label><input type="checkbox" name="b12" value="c">siec zbyt wolna w uczeniu</label>
+      </div>
+      <button class="btn-check" onclick="checkExamMulti('b12',['a'],'Overfitting = przeuczenie, zbyt dobre dopasowanie do treningu, slaba generalizacja.')">Sprawdz</button>
+      <div class="answer" id="b12-a"></div>
+    </div>
+
+    <div class="exam-card">
+      <div class="eq-head"><span class="question">13. Co to jest epoka?</span><span class="pts">wielokr.</span></div>
+      <div class="options">
+        <label><input type="checkbox" name="b13" value="a">jeden krok optymalizacji</label>
+        <label><input type="checkbox" name="b13" value="b">przebieg algorytmu przez wszystkie dane treningowe jeden raz</label>
+        <label><input type="checkbox" name="b13" value="c">liczba wag w jednej warstwie</label>
+      </div>
+      <button class="btn-check" onclick="checkExamMulti('b13',['b'],'Epoka = jedno przejscie przez caly zbior uczacy.')">Sprawdz</button>
+      <div class="answer" id="b13-a"></div>
+    </div>
+
+    <div class="exam-card">
+      <div class="eq-head"><span class="question">14. Ktore metody moga wskazywac na problem z generalizacja?</span><span class="pts">wielokr.</span></div>
+      <div class="options">
+        <label><input type="checkbox" name="b14" value="a">niskie bledy na zbiorze treningowym, ale wysokie na testowym</label>
+        <label><input type="checkbox" name="b14" value="b">wysokie bledy na obu zbiorach</label>
+        <label><input type="checkbox" name="b14" value="c">niskie bledy na obu zbiorach</label>
+        <label><input type="checkbox" name="b14" value="d">znaczna roznica miedzy wynikami treningowym i testowym</label>
+      </div>
+      <button class="btn-check" onclick="checkExamMulti('b14',['a','d'],'Niski blad treningowy + wysoki testowy oraz duza roznica = problem z generalizacja.')">Sprawdz</button>
+      <div class="answer" id="b14-a"></div>
+    </div>
+
+    <div class="exam-card">
+      <div class="eq-head"><span class="question">15. Strategia uczenia w sieci samoorganizujacej Kohonena to</span><span class="pts">wielokr.</span></div>
+      <div class="options">
+        <label><input type="checkbox" name="b15" value="a">WTA</label>
+        <label><input type="checkbox" name="b15" value="b">WTM</label>
+        <label><input type="checkbox" name="b15" value="c">korelacyjna</label>
+        <label><input type="checkbox" name="b15" value="d">najwiekszego spadku</label>
+      </div>
+      <button class="btn-check" onclick="checkExamMulti('b15',['b'],'Kohonen uczy sie strategia WTM (zwyciezca + sasiedztwo).')">Sprawdz</button>
+      <div class="answer" id="b15-a"></div>
+    </div>
+
+  </div>
+
+  <button class="btn-check" style="margin-top:1rem" onclick="showScore()">Pokaz wynik</button>
+  <div class="exam-score" id="examScore">
+    <div class="big" id="scoreVal">0 / 0</div>
+    <div id="scoreText"></div>
+  </div>
+</div>
+
+</div>
+
+<script>
+// ===== CARD TOGGLE =====
+document.querySelectorAll('.card-header').forEach(h=>{
+  h.addEventListener('click',()=>{h.parentElement.classList.toggle('open');updateProgress();});
+});
+function updateProgress(){
+  const t=document.querySelectorAll('.card').length, o=document.querySelectorAll('.card.open').length;
+  const p=Math.round(o/t*100);
+  document.getElementById('progressFill').style.width=p+'%';
+  document.getElementById('progressText').textContent=`Przerobiono ${o} z ${t} tematow (${p}%)`;
+}
+
+// ===== QUIZ TABS =====
+function showQuiz(id,btn){
+  document.querySelectorAll('.quiz-block').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.quiz-tabs button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+// ===== EXAM =====
+const examAnswers={};
+function checkExam(id,correct,explanation){
+  const sel=document.querySelector(`input[name="${id}"]:checked`);
+  const d=document.getElementById(id+'-a');
+  if(!sel){d.className='answer show wrong';d.innerHTML='Zaznacz odpowiedz!';return;}
+  examAnswers[id]=sel.value===correct;
+  if(sel.value===correct){d.className='answer show correct';d.innerHTML='&#10004; '+explanation;}
+  else{d.className='answer show wrong';d.innerHTML='&#10008; Blednie. '+explanation;}
+}
+function checkExamMulti(id,correct,explanation){
+  const checked=[...document.querySelectorAll(`input[name="${id}"]:checked`)].map(i=>i.value);
+  const d=document.getElementById(id+'-a');
+  if(!checked.length){d.className='answer show wrong';d.innerHTML='Zaznacz odpowiedz!';return;}
+  const ok=correct.length===checked.length&&correct.every(c=>checked.includes(c));
+  examAnswers[id]=ok;
+  if(ok){d.className='answer show correct';d.innerHTML='&#10004; '+explanation;}
+  else{d.className='answer show wrong';d.innerHTML='&#10008; Blednie. Poprawne: '+correct.join(', ').toUpperCase()+'. '+explanation;}
+}
+function showScore(){
+  const answered=Object.keys(examAnswers).length;
+  const correct=Object.values(examAnswers).filter(v=>v).length;
+  const total=document.querySelectorAll('.exam-card').length;
+  const d=document.getElementById('examScore');
+  d.style.display='block';
+  document.getElementById('scoreVal').textContent=correct+' / '+answered;
+  document.getElementById('scoreVal').style.color=answered&&correct/answered>0.6?'var(--green)':'var(--red)';
+  document.getElementById('scoreText').textContent=`Odpowiedziano na ${answered} z ${total} pytan. Poprawnych: ${correct} (${Math.round(correct/Math.max(answered,1)*100)}%).`;
+  d.scrollIntoView({behavior:'smooth'});
+}
+
+// ===== FLASHCARDS =====
+const flashcards=[
+  {q:"Podstawowa cecha sieci MLP?",a:"Warstwy ukryte z neuronami sigmoidalnymi.\nAproksymator GLOBALNY."},
+  {q:"Czym opisany jest neuron radialny?",a:"Centrum c (polozenie) + szerokosc σ.\nAproksymator LOKALNY."},
+  {q:"Moment rozpedowy — co daje?",a:"Pozwala opuscic minimum lokalne,\nprzyspiesza, tlumi oscylacje.\nNIE gwarantuje minimum globalnego!"},
+  {q:"Uczenie newtonowskie wykorzystuje?",a:"Hesjan I gradient (2. rzad).\np = -H⁻¹g.\nTylko dla malej liczby wag."},
+  {q:"Dla bardzo duzej liczby wag?",a:"Gradienty sprzezone, SGD.\n(Nie licza hesjanu.)"},
+  {q:"Co to epoka (cykl uczacy)?",a:"Ciag operacji obejmujacy\nWSZYSTKIE dane uczace."},
+  {q:"Generalizacja to?",a:"Zdolnosc odtwarzania danych\nTESTUJACYCH (nie uczacych)."},
+  {q:"Liczba danych uczacych vs wag?",a:"Wielokrotnie WIEKSZA od liczby wag.\n(Vapnik: p ≥ 20·VCdim)"},
+  {q:"Przeuczenie zwiazane z?",a:"Dlugie uczenie + nadmiarowa liczba wag.\n(Dopasowanie do szumu.)"},
+  {q:"VCdim to?",a:"Miara zdolnosci klasyfikatora\ndo rozrozniania zbiorow (2ⁿ dychotomii)."},
+  {q:"Bagging to?",a:"Metoda KSZTALTOWANIA zespolu\n(losowanie ze zwracaniem)."},
+  {q:"Glosowanie wiekszosciowe to?",a:"Metoda INTEGRACJI klasyfikatorow.\nWygrywa klasa wiekszosci."},
+  {q:"K-means w RBF sluzy do?",a:"Ustalenia POLOZEN CENTROW\nfunkcji radialnych."},
+  {q:"Gram-Schmidt (OLS) w RBF?",a:"Dobiera JEDNOCZESNIE liczbe centrow,\nich polozenia I wagi wyjsciowe."},
+  {q:"Macierz Greena definiowana przez?",a:"Wartosci zwiazane WYLACZNIE\nz wektorami uczacymi x (nie d)."},
+  {q:"Siec Elmana pelni role?",a:"Rekurencyjny uniwersalny aproksymator.\n(Warstwa kontekstowa = pamiec.)"},
+  {q:"Problem pierwotny SVM?",a:"Optymalizacja funkcji celu\nZ ograniczeniami nierownosciowymi."},
+  {q:"Zmienna dopelniajaca (slack) ξ?",a:"Nieujemna; dodana do ograniczenia\nnierownosciowego czyni je rownosciowym."},
+  {q:"Mnoznik Lagrange'a to?",a:"Wspolczynnik KARY za niedopelnienie\nograniczen w optymalizacji."},
+  {q:"Problem dualny SVM?",a:"Zdefiniowany WYLACZNIE wzgledem\nmnoznikow Lagrange'a. Kwadratowy."},
+  {q:"Kernel (jadro) w SVM?",a:"Odwzorowuje dane do przestrzeni\no WYZSZYM wymiarze (liniowo separow.)."},
+  {q:"Deflacja to?",a:"Odtworzenie sygnalow przy WYZEROWANIU\nWYBRANYCH skladnikow odseparowanych."},
+  {q:"Algorytm uczenia ICA jest typu?",a:"Gradientowego (uogolnienie Hebba)."},
+  {q:"ICA vs PCA?",a:"ICA = skladniki NIEZALEZNE statystycznie.\nPCA = tylko nieskorelowane (liniowa)."},
+  {q:"Slepa separacja zaklada, ze?",a:"Nieznane SA ZAROWNO postacie sygnalow\nzrodlowych JAK I wspolczynniki mieszania."},
+  {q:"Regula Oji vs Sangera?",a:"Oja = uczenie hebbowskie, 1 skladnik.\nSanger = wiele skladnikow naraz."},
+  {q:"Neuron martwy to?",a:"Neuron NIGDY nie zwyciezajacy\nwe wspolzawodnictwie."},
+  {q:"Mapa Kohonena rzutuje?",a:"Dane z przestrzeni WIELOWYMIAROWEJ\nw 2-D (zachowuje topologie)."},
+  {q:"Selekcja cech diagnostycznych?",a:"Wybor cech NAJBARDZIEJ\nREPREZENTATYWNYCH dla procesu."},
+  {q:"Miara Fishera bazuje na?",a:"Srednich I odchyleniach std OBU klas.\nS = |c1-c2| / (σ1+σ2)"},
+  {q:"↑ skladnikow glownych w kompresji PCA?",a:"POLEPSZA jakosc obrazu\n(zmniejsza wsp. kompresji)."},
+  {q:"W CNN wazna role odgrywa?",a:"Operacja POOLING (redukcja wymiaru).\nFiltry sa UCZONE podczas treningu."},
+  {q:"Autoenkoder jest?",a:"System automatycznej generacji cech /\nkompresji. Minimalizuje blad rekonstrukcji."},
+  {q:"LSTM to?",a:"Rekurencyjna siec do danych sekwencyjnych.\nBramki: zapomnienia, wejscia, wyjscia."},
+  {q:"Macierz konfuzji pozwala wyznaczyc?",a:"Czulosc, specyficznosc, AUC.\n(NIE bledy regresji.)"},
+  {q:"Miary jakosci regresji?",a:"MAE, MSE, RMSE, MAPE.\n(NIE czulosc, NIE F1.)"}
+];
+let fcIdx=0;
+function showCard(){
+  document.getElementById('fc').classList.remove('flipped');
+  document.getElementById('fcFront').textContent=flashcards[fcIdx].q;
+  document.getElementById('fcBack').textContent=flashcards[fcIdx].a;
+  document.getElementById('fcCounter').textContent=`${fcIdx+1} / ${flashcards.length}`;
+}
+function flipCard(){document.getElementById('fc').classList.toggle('flipped');}
+function nextCard(){fcIdx=(fcIdx+1)%flashcards.length;showCard();}
+function prevCard(){fcIdx=(fcIdx-1+flashcards.length)%flashcards.length;showCard();}
+showCard();
+
+// ===== NAV =====
+document.querySelectorAll('.top-nav a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',e=>{e.preventDefault();document.querySelector(a.getAttribute('href'))?.scrollIntoView({behavior:'smooth'});});
+});
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){
+    document.querySelectorAll('.top-nav a').forEach(a=>a.classList.remove('active'));
+    document.querySelector(`.top-nav a[href="#${e.target.id}"]`)?.classList.add('active');
+  }});
+},{threshold:0.1});
+['neurony','mlp','generalizacja','rbf','svm','deep','rekur','samoorg','miary','sciaga','fiszki','egzamin'].forEach(id=>{
+  const el=document.getElementById(id);if(el)obs.observe(el);
+});
+</script>
+</body>
+</html>
