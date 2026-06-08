@@ -70,6 +70,16 @@
 
     .section-desc { color:var(--text-dim); font-size:0.85rem; margin-bottom:1rem; }
 
+    /* YouTube */
+    .yt-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:0.8rem; margin-top:1rem; }
+    .yt-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:1rem; transition:border-color 0.2s; }
+    .yt-card:hover { border-color:var(--accent); }
+    .yt-card a { color:var(--accent); text-decoration:none; font-weight:600; font-size:0.9rem; display:block; margin-bottom:0.3rem; }
+    .yt-card a:hover { text-decoration:underline; }
+    .yt-card .yt-meta { font-size:0.78rem; color:var(--text-dim); }
+    .yt-card .yt-desc { font-size:0.82rem; color:var(--text); margin-top:0.3rem; }
+    .yt-group-label { font-size:0.8rem; font-weight:700; color:var(--accent2); text-transform:uppercase; letter-spacing:0.06em; margin:1.4rem 0 0.2rem; }
+
     /* Cheat grid */
     .cheat-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:0.8rem; margin-top:1rem; }
     .cheat-item { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:1rem; }
@@ -131,6 +141,7 @@
   <a href="#rekur">Rekurencyjne</a>
   <a href="#samoorg">PCA / ICA</a>
   <a href="#miary">Miary</a>
+  <a href="#youtube">Filmy</a>
   <a href="#sciaga">Sciaga</a>
   <a href="#fiszki">Fiszki</a>
   <a href="#egzamin">Quiz</a>
@@ -640,6 +651,88 @@
       <div class="test"><mark>Do miar jakosci regresji zalicza sie <strong>MAE</strong></mark> (tez MSE, RMSE, MAPE, R) — <strong>NIE czulosc, NIE F1</strong>.</div>
       <div class="formula">$$\text{MAE}=\frac1n\sum|d_i-y_i|, \quad \text{RMSE}=\sqrt{\tfrac1n\sum(d_i-y_i)^2}$$</div>
       <p class="formula-explain"><span class="lab">Co to znaczy:</span> <b>MAE</b> = srednia z bezwzglednych roznic |d&minus;y| (prosty sredni blad). <b>RMSE</b> = pierwiastek ze sredniej kwadratow bledow, mocniej karze duze pomylki. Im mniejsze, tym lepsza regresja.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ============ FILMY YT ============ -->
+<div class="lecture-section l3" id="youtube">
+  <h2><span class="num">&#9654;</span> Filmy na YouTube</h2>
+  <p class="section-desc">Wyselekcjonowane, sprawdzone materialy. Najpierw po polsku, potem swiatowe klasyki z najlepsza wizualizacja (3Blue1Brown ma polskie napisy).</p>
+
+  <div class="yt-group-label">Dla intuicji &middot; na przykladach (styl Veritasium)</div>
+  <div class="yt-grid">
+    <div class="yt-card">
+      <a href="https://www.youtube.com/watch?v=SmZmBKc7Lrs" target="_blank">The Most Important Algorithm in Machine Learning</a>
+      <div class="yt-meta">~31 min &bull; Artem Kirsanov</div>
+      <div class="yt-desc">Backpropagation i gradient opowiedziane z historia, intuicja i przykladami - dlaczego to w ogole dziala. Idealne, jesli chcesz ZROZUMIEC, a nie wkuc wzory.</div>
+    </div>
+    <div class="yt-card">
+      <a href="https://www.youtube.com/watch?v=0QczhVg5HaI" target="_blank">Why Neural Networks can learn (almost) anything</a>
+      <div class="yt-meta">~10 min &bull; Emergent Garden</div>
+      <div class="yt-desc">Na przykladach pokazuje, jak siec aproksymuje dowolna funkcje - swietna intuicja pod &bdquo;uniwersalny aproksymator&rdquo; (MLP/RBF).</div>
+    </div>
+    <div class="yt-card">
+      <a href="https://www.youtube.com/watch?v=TkwXa7Cvfr8" target="_blank">Watching Neural Networks Learn</a>
+      <div class="yt-meta">~25 min &bull; Emergent Garden</div>
+      <div class="yt-desc">Wizualnie &bdquo;na zywo&rdquo; widac, jak siec dopasowuje sie do danych podczas uczenia. Buduje czucie tego, co robi gradient.</div>
+    </div>
+  </div>
+
+  <div class="yt-group-label">Po polsku</div>
+  <div class="yt-grid">
+    <div class="yt-card">
+      <a href="https://www.youtube.com/watch?v=lU9COyVX9_A" target="_blank">Budowa sztucznych neuronow i sieci</a>
+      <div class="yt-meta">Strefa Inzynierii Biomedycznej</div>
+      <div class="yt-desc">Wyklad legendy polskiej SI: model neuronu, sumator wagowy, funkcja aktywacji, budowa sieci. Idealne wprowadzenie do rozdz. 1-2.</div>
+    </div>
+    <div class="yt-card">
+      <a href="https://www.youtube.com/watch?v=5WCfXlMHkzw" target="_blank">Czym sa i jak dzialaja sieci neuronowe?</a>
+      <div class="yt-meta">Komputer Swiat &bull; KS Wyjasnia</div>
+      <div class="yt-desc">Przystepne intro: neuron, wagi, warstwy, uczenie. Dobre na start, jezyk bez zbednej matematyki.</div>
+    </div>
+    <div class="yt-card">
+      <a href="https://www.youtube.com/watch?v=IC_Dx0J8Fv8" target="_blank">Sieci neuronowe od podstaw: AI od srodka</a>
+      <div class="yt-meta">po polsku</div>
+      <div class="yt-desc">Jak to wszystko dziala od srodka - intuicja stojaca za uczeniem sieci.</div>
+    </div>
+  </div>
+
+  <div class="yt-group-label">3Blue1Brown &middot; Deep Learning (EN + napisy PL)</div>
+  <div class="yt-grid">
+    <div class="yt-card">
+      <a href="https://www.youtube.com/watch?v=aircAruvnKk" target="_blank">But what is a neural network? (cz. 1)</a>
+      <div class="yt-meta">27:16 &bull; 3Blue1Brown</div>
+      <div class="yt-desc">Najlepsza wizualnie eksplikacja: neuron, warstwy, dlaczego to dziala. Must-see do rozdz. 1-2.</div>
+    </div>
+    <div class="yt-card">
+      <a href="https://www.youtube.com/watch?v=IHZwWFHWa-w" target="_blank">Gradient descent - jak sieci sie ucza (cz. 2)</a>
+      <div class="yt-meta">20:33 &bull; 3Blue1Brown</div>
+      <div class="yt-desc">Funkcja celu, gradient, minimalizacja bledu. Dokladnie temat z rozdz. 2 (uczenie gradientowe).</div>
+    </div>
+    <div class="yt-card">
+      <a href="https://www.youtube.com/watch?v=Ilg3gGewQ5U" target="_blank">Backpropagation, intuicyjnie (cz. 3)</a>
+      <div class="yt-meta">13:54 &bull; 3Blue1Brown</div>
+      <div class="yt-desc">Wsteczna propagacja bledu bez wzorow - sama intuicja. Klucz do zrozumienia rozdz. 2.</div>
+    </div>
+    <div class="yt-card">
+      <a href="https://www.youtube.com/watch?v=tIeHLnjs5U8" target="_blank">Backpropagation - rachunek (cz. 4)</a>
+      <div class="yt-meta">10:18 &bull; 3Blue1Brown</div>
+      <div class="yt-desc">Dla chetnych: pochodne czastkowe i regula lancuchowa stojace za gradientem.</div>
+    </div>
+  </div>
+
+  <div class="yt-group-label">StatQuest &middot; SVM (EN)</div>
+  <div class="yt-grid">
+    <div class="yt-card">
+      <a href="https://www.youtube.com/watch?v=efR1C6CvhmE" target="_blank">Support Vector Machines, cz. 1: Main Ideas</a>
+      <div class="yt-meta">20:32 &bull; StatQuest</div>
+      <div class="yt-desc">Margines, hiperplaszczyzna, wektory nosne, miekki margines. Caly rozdz. 5 w jednym filmie.</div>
+    </div>
+    <div class="yt-card">
+      <a href="https://www.youtube.com/watch?v=Qc5IyLW_hns" target="_blank">SVM: jadro radialne (RBF)</a>
+      <div class="yt-meta">15:52 &bull; StatQuest</div>
+      <div class="yt-desc">Trik kernelowy i jadro RBF - przejscie do wyzszego wymiaru. Laczy rozdz. 4 (RBF) i 5 (SVM).</div>
     </div>
   </div>
 </div>
@@ -1222,7 +1315,7 @@ const obs=new IntersectionObserver(entries=>{
     document.querySelector(`.top-nav a[href="#${e.target.id}"]`)?.classList.add('active');
   }});
 },{threshold:0.1});
-['neurony','mlp','generalizacja','rbf','svm','deep','rekur','samoorg','miary','sciaga','fiszki','egzamin'].forEach(id=>{
+['neurony','mlp','generalizacja','rbf','svm','deep','rekur','samoorg','miary','youtube','sciaga','fiszki','egzamin'].forEach(id=>{
   const el=document.getElementById(id);if(el)obs.observe(el);
 });
 </script>
